@@ -597,16 +597,17 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
   <section class="sd-page" id="bud27" aria-labelledby="tab-bud27" hidden>
     <p class="sd-note sd-intro">BUD 2027 is the sell-out (IMS) budget: <b>Final Amount EURO 2027 with CIF 2027</b>, parameter SO only. It is compared with LO 2026 (ACT 2026 + YTG) from the ACT/BUD/YTG file. Brand names are aligned between the two files (for example Pafinur = Rupatadine, Movapo = APO-GO, Infaxa = Rivaroxaban); SKU names differ, so each BUD 2027 SKU is matched by name to its 2026 SKU. The country, class and brand filters apply here; channel and region do not.</p>
+    <div class="sd-tools"><span class="sd-lab" id="lab-b27t">PRODUCTS</span><div class="sd-seg" role="group" aria-labelledby="lab-b27t"><button type="button" data-b27t="all">All products</button><button type="button" data-b27t="existing">Existing products</button><button type="button" data-b27t="new">New launches</button></div><span class="sd-note" id="b27-tnote"></span></div>
     <div class="sd-kpis" id="b27-kpis" data-source="bud27_brand"></div>
     <div class="sd-grid2">
       <article class="sd-card" id="card-b27bridge">
         <h2>From LO 2026 to BUD 2027</h2>
-        <p class="sd-note" id="b27-bridge-note">Growth of continuing products at 2026 CIF prices, new launches, and the effect of the 2027 CIF prices.</p>
+        <p class="sd-note" id="b27-bridge-note">Growth of existing products at 2026 CIF prices, new launches, and the effect of the 2027 CIF prices.</p>
         <div class="sd-chart" id="b27-bridge" data-source="bud27_brand" style="min-height:260px"></div>
       </article>
       <article class="sd-card" id="card-b27cif">
         <h2>CIF price change 2026 → 2027 and its impact</h2>
-        <p class="sd-note">Per brand: the change in BUD 2027 value from moving continuing products to 2027 CIF prices, in euro and as a percentage of their value at 2026 CIF. New launches have no 2026 CIF, so they are left out.</p>
+        <p class="sd-note">Per brand: the change in BUD 2027 value from moving existing products to 2027 CIF prices, in euro and as a percentage of their value at 2026 CIF. New launches have no 2026 CIF, so they are left out.</p>
         <div class="sd-chart" id="b27-cif" data-source="bud27_brand" style="min-height:260px"></div>
       </article>
     </div>
@@ -617,7 +618,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     </article>
     <article class="sd-card" id="card-b27brands">
       <h2>Brands: BUD 2027 vs LO 2026</h2>
-      <p class="sd-note">Click a brand to focus the dashboard on it. CIF impact is the change from moving continuing products to 2027 CIF prices; growth at constant CIF leaves that change out, so it shows volume, mix and new launches.</p>
+      <p class="sd-note">Click a brand to focus the dashboard on it. CIF impact is the change from moving existing products to 2027 CIF prices; growth at constant CIF leaves that change out, so it shows volume, mix and new launches.</p>
       <div class="sd-tablebox"><table class="sd-table clickable" id="b27-brands" data-source="bud27_brand"><thead></thead><tbody></tbody></table></div>
     </article>
     <article class="sd-card" id="card-b27skus">
@@ -973,7 +974,7 @@ dash.calc('bud27_brand', {
     return [...acc.values()].filter((a) => a.b27_eur || a.lo26_eur || a.b27_units || a.lo26_units).map((a) => {
       const o = { ...a };
       for (const k of Object.keys(o)) if (typeof o[k] === 'number' && k !== 'skus27') o[k] = r2(o[k]);
-      o.status = a.lo26_eur <= 0 && a.b27_eur > 0 ? 'New' : a.lo26_eur > 0 && a.b27_eur <= 0 ? 'Not in BUD 27' : 'Continuing';
+      o.status = a.lo26_eur <= 0 && a.b27_eur > 0 ? 'New' : a.lo26_eur > 0 && a.b27_eur <= 0 ? 'Not in BUD 27' : 'Existing';
       return o;
     });
   },
@@ -982,15 +983,18 @@ dash.calc('bud27_brand', {
 dash.calc('bud27_month', {
   inputs: ['bud27', 'plan'],
   title: 'BUD 2027 and LO 2026 per month',
-  description: 'Per country, brand and month: BUD 2027 sell-out in euro (CIF 2027 and CIF 2026) and units, LO 2026 (ACT for the months closed, YTG for the rest) and ACT 2025, from the BUD 2027 file and the ACT/BUD/YTG file.',
+  description: 'Per country, brand and month: BUD 2027 sell-out in euro (CIF 2027 and CIF 2026) and units, with the part from new launches, LO 2026 (ACT for the months closed, YTG for the rest) and ACT 2025, from the BUD 2027 file and the ACT/BUD/YTG file.',
   fn: (bud27, plan) => {
     const acc = new Map(), r2 = (v) => Math.round(v * 100) / 100;
     const get = (co, br, cls, mo) => {
       const id = co + '|' + br + '|' + mo; let a = acc.get(id);
-      if (!a) { a = { id, country: co, brand: br, cls, month: mo, b27_eur: 0, b27_eur26: 0, b27_units: 0, lo26_eur: 0, lo26_units: 0, act25_eur: 0, act25_units: 0 }; acc.set(id, a); }
+      if (!a) { a = { id, country: co, brand: br, cls, month: mo, b27_eur: 0, b27_eur26: 0, b27_units: 0, new_eur: 0, new_units: 0, lo26_eur: 0, lo26_units: 0, act25_eur: 0, act25_units: 0 }; acc.set(id, a); }
       return a;
     };
-    for (const r of bud27) { const a = get(r.country, r.brand, r.cls, +r.month); a.b27_eur += +r.eur_cif27 || 0; a.b27_eur26 += +r.eur_cif26 || 0; a.b27_units += +r.units || 0; }
+    for (const r of bud27) {
+      const a = get(r.country, r.brand, r.cls, +r.month); a.b27_eur += +r.eur_cif27 || 0; a.b27_eur26 += +r.eur_cif26 || 0; a.b27_units += +r.units || 0;
+      if (r.launch === 'New Launches') { a.new_eur += +r.eur_cif27 || 0; a.new_units += +r.units || 0; }
+    }
     for (const r of plan) {
       const a = get(r.country, r.brand, r.class, +r.month);
       if (+r.year === 2026) { a.lo26_eur += (+r.act_eur || 0) + (+r.ytg_eur || 0); a.lo26_units += (+r.act_units || 0) + (+r.ytg_units || 0); }
@@ -3599,6 +3603,9 @@ dash.calc('iq_adjusted', {
   });
   $('#b27-search').addEventListener('input', () => render());
   const b27In = (p, r) => (p.countries.length ? p.countries.includes(r.country) : true) && p.brandOk(r.brand, r.cls);
+  /* products shown: all, existing (base) products only, or new launches only */
+  let b27Type = 'all';
+  root.querySelectorAll('[data-b27t]').forEach((b) => b.addEventListener('click', () => { b27Type = b.dataset.b27t; render(); }));
   const drawBud27 = (p) => {
     const db = dash.data('bud27_brand'), dm = dash.data('bud27_month'), ds = dash.data('bud27_sku');
     const kp = $('#b27-kpis');
@@ -3606,21 +3613,28 @@ dash.calc('iq_adjusted', {
     if (db.status !== 'ok') { kp.replaceChildren(); kp.classList.toggle('dash-skeleton', db.status === 'loading'); return; }
     kp.classList.remove('dash-skeleton');
     const rows = db.data.filter((r) => b27In(p, r));
-    /* brand rows summed over the countries chosen */
+    const PT = b27Type, ex = PT !== 'new', nw = PT !== 'existing';
+    root.querySelectorAll('[data-b27t]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.b27t === PT)));
+    $('#b27-tnote').textContent = PT === 'existing' ? 'Products already sold in 2026 (launch type "Base"), against their LO 2026.' : PT === 'new' ? 'Launch type "New Launches": no LO 2026 to compare with.' : 'Existing products and new launches together.';
+    /* brand rows summed over the countries chosen, for the product type chosen */
     const byB = [...d3.group(rows, (r) => r.brand)].map(([b, l]) => {
       const sm = (f) => d3.sum(l, (r) => +r[f] || 0);
-      const o = { id: 'b27|' + b, brand: b, cls: l[0].cls, b27: sm('b27_' + m), b27_26: sm('b27_eur26'), b27e: sm('b27_eur'), lo: sm('lo26_' + m), fy: sm('fy25_' + m),
-        new27: sm('new_' + m), b27u: sm('b27_units'), lou: sm('lo26_units'), price: (sm('b27_eur') - sm('new_eur')) - (sm('b27_eur26') - sm('new_eur26')) };
+      const nm_ = sm('new_' + m), ne = sm('new_eur'), ne26 = sm('new_eur26'), nu = sm('new_units');
+      const o = { id: 'b27|' + b, brand: b, cls: l[0].cls,
+        b27: (ex ? sm('b27_' + m) - nm_ : 0) + (nw ? nm_ : 0), b27_26: (ex ? sm('b27_eur26') - ne26 : 0) + (nw ? ne26 : 0), b27e: (ex ? sm('b27_eur') - ne : 0) + (nw ? ne : 0),
+        lo: ex ? sm('lo26_' + m) : 0, loE: ex ? sm('lo26_eur') : 0, fy: ex ? sm('fy25_' + m) : 0, new27: nw ? nm_ : 0, ne26: nw ? ne26 : 0, ne27: nw ? ne : 0,
+        b27u: (ex ? sm('b27_units') - nu : 0) + (nw ? nu : 0), lou: ex ? sm('lo26_units') : 0,
+        price: ex ? (sm('b27_eur') - ne) - (sm('b27_eur26') - ne26) : 0 };
       o.g = o.lo > 0 ? o.b27 / o.lo - 1 : null;
-      o.gc = sm('lo26_eur') > 0 ? (o.b27e - o.price) / sm('lo26_eur') - 1 : null;
+      o.gc = o.loE > 0 ? (o.b27e - o.price) / o.loE - 1 : null;
       o.gu = o.lou > 0 ? o.b27u / o.lou - 1 : null;
-      o.pchg = o.b27_26 - sm('new_eur26') > 0 ? o.price / (o.b27_26 - sm('new_eur26')) : null;
-      o.status = o.lo <= 0 && o.b27 > 0 ? 'New' : o.lo > 0 && o.b27 <= 0 ? 'Not in BUD 27' : 'Continuing';
+      o.pchg = ex && sm('b27_eur26') - ne26 > 0 ? o.price / (sm('b27_eur26') - ne26) : null;
+      o.status = o.lo <= 0 && o.b27 > 0 ? 'New' : o.lo > 0 && o.b27 <= 0 ? 'Not in BUD 27' : 'Existing';
       return o;
-    }).filter((o) => o.b27 || o.lo);
+    }).filter((o) => Math.abs(o.b27) > 0.005 || Math.abs(o.lo) > 0.005);
     const T = (f) => d3.sum(byB, (o) => o[f] || 0);
-    const b27 = T('b27'), lo = T('lo'), b27e = T('b27e'), b2726 = T('b27_26'), loE = d3.sum(rows, (r) => +r.lo26_eur || 0), price = T('price');
-    const newV = T('new27'), newE26 = d3.sum(rows, (r) => +r.new_eur26 || 0), newE27 = d3.sum(rows, (r) => +r.new_eur || 0), contE26 = b2726 - newE26, b27u = T('b27u'), lou = T('lou');
+    const b27 = T('b27'), lo = T('lo'), b27e = T('b27e'), b2726 = T('b27_26'), loE = T('loE'), price = T('price');
+    const newV = T('new27'), newE26 = T('ne26'), newE27 = T('ne27'), contE26 = b2726 - newE26, b27u = T('b27u'), lou = T('lou');
     byB.forEach((o) => { o.share = b27 ? o.b27 / b27 : null; });
     const tile = (h, val, sub, tn, chip) => {
       const a = document.createElement('article'); a.className = 'sd-kpi';
@@ -3633,18 +3647,21 @@ dash.calc('iq_adjusted', {
     };
     const g = lo > 0 ? b27 / lo - 1 : null, gc = loE > 0 ? (b27e - price) / loE - 1 : null, gu = lou > 0 ? b27u / lou - 1 : null;
     kp.replaceChildren(
-      tile('BUD 2027' + (u ? ' · units' : ' · CIF 2027'), big(m, b27), u ? 'Final quantity 2027' : 'At 2026 CIF prices: ' + big('eur', b27e - price), null, [pct(g) + ' vs LO 2026', g]),
-      tile('LO 2026', big(m, lo), 'ACT Jan–' + MON[LM - 1] + ' + YTG ' + (LM < 12 ? MON[LM] + '–Dec' : '')),
-      tile('Growth at constant CIF', pct(gc), 'BUD 2027 at 2026 CIF prices vs LO 2026: volume, mix and new launches', gc),
-      tile('CIF price impact', sbig('eur', price), 'Continuing products, 2027 vs 2026 CIF (' + pct(contE26 > 0 ? price / contE26 : null) + ')', price),
-      tile('New launches', big(m, newV), (b27 ? shr(newV / b27) : '—') + ' of BUD 2027'),
+      tile('BUD 2027' + (u ? ' · units' : ' · CIF 2027'), big(m, b27), u ? 'Final quantity 2027' : PT === 'new' ? 'New launches at their 2027 CIF' : 'At 2026 CIF prices: ' + big('eur', b27e - price), null, PT === 'new' ? null : [pct(g) + ' vs LO 2026', g]),
+      tile('LO 2026', ex ? big(m, lo) : '—', ex ? 'ACT Jan–' + MON[LM - 1] + ' + YTG ' + (LM < 12 ? MON[LM] + '–Dec' : '') : 'New launches have no 2026 sales'),
+      tile('Growth at constant CIF', pct(gc), 'BUD 2027 at 2026 CIF prices vs LO 2026: ' + (PT === 'existing' ? 'volume and mix of existing products' : 'volume, mix and new launches'), gc),
+      tile('CIF price impact', ex ? sbig('eur', price) : '—', ex ? 'Existing products, 2027 vs 2026 CIF (' + pct(contE26 > 0 ? price / contE26 : null) + ')' : 'New launches have no 2026 CIF', ex ? price : null),
+      tile('New launches', nw ? big(m, newV) : '—', nw ? (b27 ? shr(newV / b27) : '—') + ' of BUD 2027' : 'Not included: existing products only'),
       tile('Units', big('units', b27u), 'LO 2026: ' + big('units', lou), null, [pct(gu) + ' vs LO 2026', gu]));
 
     /* bridge */
     const bb = $('#b27-bridge'); bb.replaceChildren();
-    const steps = u ? [['LO 2026', lou, 'total'], ['Continuing products', (b27u - T('new27')) - lou, 'step'], ['New launches', T('new27'), 'step'], ['BUD 2027', b27u, 'total']]
-      : [['LO 2026', loE, 'total'], ['Continuing products', contE26 - loE, 'step'], ['New launches', newE27, 'step'], ['CIF price change', price, 'step'], ['BUD 2027', b27e, 'total']];
-    $('#b27-bridge-note').textContent = u ? 'Units: growth of continuing products and new launches.' : 'Continuing products at 2026 CIF prices, new launches at their 2027 CIF, then the move of continuing products to 2027 CIF prices.';
+    const EG = 'Existing products growth';
+    let steps;
+    if (PT === 'new') steps = [['LO 2026', 0, 'total'], ['New launches', u ? b27u : newE27, 'step'], ['BUD 2027', u ? b27u : b27e, 'total']];
+    else if (u) steps = [['LO 2026', lou, 'total'], [EG, (b27u - T('new27')) - lou, 'step'], ...(nw ? [['New launches', T('new27'), 'step']] : []), ['BUD 2027', b27u, 'total']];
+    else steps = [['LO 2026', loE, 'total'], [EG, contE26 - loE, 'step'], ...(nw ? [['New launches', newE27, 'step']] : []), ['CIF price change', price, 'step'], ['BUD 2027', b27e, 'total']];
+    $('#b27-bridge-note').textContent = PT === 'new' ? 'New launches only: all of their BUD 2027 is new business.' : u ? 'Units: growth of existing products' + (nw ? ' and new launches.' : '.') : 'Existing products at 2026 CIF prices' + (nw ? ', new launches at their 2027 CIF,' : '') + ' then the move of existing products to 2027 CIF prices.';
     {
       const W = Math.max(300, bb.clientWidth), H = 260, mt = 24, mb = 40;
       let run = 0; const bars = steps.map(([lab, v, kind]) => { let y0, y1; if (kind === 'total') { y0 = 0; y1 = v; run = v; } else { y0 = run; y1 = run + v; run = y1; } return { lab, v, kind, y0, y1 }; });
@@ -3680,13 +3697,17 @@ dash.calc('iq_adjusted', {
       svg.append('g').selectAll('rect').data(pr).join('rect').attr('x', (o) => Math.min(x(0), x(o.price))).attr('width', (o) => Math.max(2, Math.abs(x(o.price) - x(0))))
         .attr('y', (o, i) => yy(i) + 5).attr('height', rh - 10).attr('rx', 3).style('fill', (o) => o.price >= 0 ? 'var(--sd-up)' : 'var(--sd-down)');
       vl.attr('x', (o) => o.price >= 0 ? x(o.price) + 6 : x(o.price) - 6).attr('text-anchor', (o) => o.price >= 0 ? 'start' : 'end').attr('y', (o, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
-    } else { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = 'No CIF price change for this selection.'; cb.append(n); }
+    } else { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = PT === 'new' ? 'New launches have no 2026 CIF price, so there is no price change to show.' : 'No CIF price change for this selection.'; cb.append(n); }
 
     /* monthly */
     const mb = $('#b27-month');
     if (ready(mb, dm)) {
       const a = new Map(), b = new Map();
-      for (const r of dm.data) if (b27In(p, r)) { a.set(+r.month, (a.get(+r.month) || 0) + (+r['lo26_' + m] || 0)); b.set(+r.month, (b.get(+r.month) || 0) + (+r['b27_' + m] || 0)); }
+      for (const r of dm.data) if (b27In(p, r)) {
+        const nv = +r['new_' + m] || 0, bv = PT === 'new' ? nv : PT === 'existing' ? (+r['b27_' + m] || 0) - nv : +r['b27_' + m] || 0;
+        if (ex) a.set(+r.month, (a.get(+r.month) || 0) + (+r['lo26_' + m] || 0));
+        b.set(+r.month, (b.get(+r.month) || 0) + bv);
+      }
       monthBars(mb, a, b, new Map(), m, new Set(), 'Monthly BUD 2027 vs LO 2026', { a: 'LO 2026', b: 'BUD 2027' });
     }
 
@@ -3710,7 +3731,7 @@ dash.calc('iq_adjusted', {
     const st = $('#b27-skus');
     if (ds.status !== 'ok') { st.tBodies[0].replaceChildren(); return; }
     const q = $('#b27-search').value.trim().toLowerCase();
-    const sk = ds.data.filter((r) => b27In(p, r) && (!q || [r.sku, r.brand, r.lo_sku].join(' ').toLowerCase().includes(q)))
+    const sk = ds.data.filter((r) => b27In(p, r) && (PT === 'all' || (PT === 'new') === (r.launch === 'New Launches')) && (!q || [r.sku, r.brand, r.lo_sku].join(' ').toLowerCase().includes(q)))
       .map((r) => ({ ...r, b27: u ? r.b27_units : r.b27_eur, lo: u ? r.lo26_units : r.lo26_eur, g: u ? r.g_units : r.g_eur }));
     $('#b27-sku-title').textContent = 'SKUs: BUD 2027 vs LO 2026' + (p.skus.length ? ' (SKU filter not applied: names differ in BUD 2027)' : '');
     drawTable(st, sk, [
