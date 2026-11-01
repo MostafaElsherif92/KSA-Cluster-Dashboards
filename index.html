@@ -93,7 +93,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   --sd-down: #ED1651;
   --sd-tint: rgba(12, 77, 162, 0.07);
   --sd-ytg: #8FB0DE;
-  --sd-bud: #B8860B;
+  --sd-bud: #ED1651;
   --sd-py: #6B7A90;
   font-family: var(--font-anthropic-sans);
   color: var(--color-fg);
@@ -106,14 +106,14 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     --sd-blue: #6E9FE6; --sd-navy: #A9C4F0; --sd-red: #FF5C86;
     --sd-c26: #5B8FE0; --sd-c25: #3A4A68; --sd-up: #6E9FE6; --sd-down: #FF5C86;
     --sd-tint: rgba(110, 159, 230, 0.12);
-    --sd-ytg: #2F4E80; --sd-bud: #E0B54A; --sd-py: #9AA7BA;
+    --sd-ytg: #2F4E80; --sd-bud: #F2557F; --sd-py: #9AA7BA;
   }
 }
 :root[data-theme="dark"] .sd {
   --sd-blue: #6E9FE6; --sd-navy: #A9C4F0; --sd-red: #FF5C86;
   --sd-c26: #5B8FE0; --sd-c25: #3A4A68; --sd-up: #6E9FE6; --sd-down: #FF5C86;
   --sd-tint: rgba(110, 159, 230, 0.12);
-  --sd-ytg: #2F4E80; --sd-bud: #E0B54A; --sd-py: #9AA7BA;
+  --sd-ytg: #2F4E80; --sd-bud: #F2557F; --sd-py: #9AA7BA;
 }
 
 .sd-head { display: grid; gap: var(--cds-gap-sm); padding-bottom: var(--cds-pad-md); border-bottom: 2px solid var(--sd-blue); }
@@ -181,6 +181,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .swytg { background: var(--sd-ytg); }
 .sd-legend i.swdash { outline: 1px dashed var(--sd-c26); outline-offset: -1px; }
 .sd-barval { font-size: 10px; font-weight: 600; }
+.sd-legend.ms-lg { flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; } .sd-legend.ms-lg span.main { color: var(--color-fg); font-weight: 600; }
 .sd-legend i.swbud { background: var(--sd-bud); height: 3px; width: 14px; border-radius: 0; }
 .sd-legend i.sw25dot { background: var(--sd-py); border-radius: 50%; width: 7px; height: 7px; }
 .sd-plannote { display: grid; gap: var(--cds-gap-sm); background: var(--sd-tint); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
@@ -208,6 +209,18 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .sd-bar .vl { text-align: right; white-space: nowrap; }
 .sd-bar .vl small { display: block; }
 
+.sd-movers > div + div { border-left: 2px solid var(--color-border-line); padding-left: var(--cds-gap-lg); }
+@media (max-width: 640px) { .sd .sd-movers > div + div { border-left: 0; padding-left: 0; border-top: 2px solid var(--color-border-line); padding-top: var(--cds-gap-md); } }
+.sd-card, .sd-modal-panel { position: relative; }
+.sd-dots { position: absolute; top: 8px; right: 8px; z-index: 5; font: inherit; font-size: 18px; line-height: 1; padding: 2px 8px 6px; border: 1px solid transparent; border-radius: var(--cds-radius); background: transparent; color: var(--color-fg-muted); cursor: pointer; }
+.sd-dots:hover, .sd-dots[aria-expanded="true"] { border-color: var(--color-border-line); background: var(--color-panel); }
+.sd-modal-panel > .sd-dots { right: 96px; top: 22px; }
+.sd-card > .sd-cardhd, .sd-card > .sd-tools:first-child { padding-right: 34px; }
+.sd-dmenu { position: absolute; top: 38px; right: 8px; z-index: 40; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); box-shadow: 0 8px 24px rgb(0 0 0 / .14); padding: 4px; display: grid; min-width: 13rem; }
+.sd-dmenu button { font: inherit; text-align: left; background: none; border: 0; padding: 7px 10px; border-radius: 4px; color: var(--color-fg); cursor: pointer; }
+.sd-dmenu button:hover { background: var(--sd-tint); }
+.sd-pc-lbl { font-size: 11px; font-weight: 600; fill: var(--sd-navy); }
+.sd-pc-sub { font-size: 10px; fill: var(--color-fg-muted); }
 .sd-movers { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-lg); }
 .sd-movers h3 { margin: 0 0 6px; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-fg-muted); font-weight: 500; }
 .sd-mv > :last-child { text-align: right; white-space: nowrap; }
@@ -288,6 +301,21 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   .sd-bar .b26, .sd-mv .b { animation: sd-grow var(--cds-dur-slow) var(--cds-ease-out) both; transform-origin: left; }
   @keyframes sd-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 }
+.xp-filters { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px 12px; margin-top: 10px; }
+.xp-f label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--color-fg-muted); margin-bottom: 2px; }
+.xp-f input, .xp-top input, .xp-focus input { font: inherit; color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 5px 8px; width: 100%; box-sizing: border-box; }
+.xp-top input { flex: 1 1 260px; width: auto; } .xp-focus input { flex: 1 1 220px; width: auto; max-width: 420px; }
+.xp-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.xp-chip { font: inherit; font-size: 0.75rem; border: 0; border-radius: 10px; padding: 1px 8px; background: var(--sd-tint); color: var(--sd-blue); cursor: pointer; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.xp-chip::after { content: ' ×'; }
+.xp-focus { margin: 12px 0; gap: 8px; align-items: center; }
+.sv-take { margin: 6px 0 12px; padding-left: 18px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sv-take li { margin: 2px 0; } .sv-take b { color: var(--color-fg); }
+.sv-gap { display: grid; grid-template-columns: minmax(110px, 230px) 1fr 70px; gap: 4px 10px; align-items: center; font-size: var(--cds-font-size-caption); }
+.sv-gap .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sv-gap .tr { position: relative; height: 12px; } .sv-gap .tr::before { content: ''; position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1px solid var(--color-border-line); }
+.sv-gap .bb { position: absolute; top: 0; height: 12px; border-radius: 2px; background: var(--sd-up); } .sv-gap .bb.neg { background: var(--sd-down); }
+.sv-gap .vl { text-align: right; font-variant-numeric: tabular-nums; }
 </style>
 
 <div class="sd" id="top">
@@ -332,7 +360,9 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <button type="button" role="tab" id="tab-brands" data-page="brands" aria-selected="false">Brands &amp; SKUs</button>
     <button type="button" role="tab" id="tab-plan" data-page="plan" aria-selected="false">Budget &amp; LO 2026</button>
     <button type="button" role="tab" id="tab-bud27" data-page="bud27" aria-selected="false">BUD 2027</button>
-    <button type="button" role="tab" id="tab-market" data-page="market" aria-selected="false">Market (IQVIA)</button>
+    <button type="button" role="tab" id="tab-stada" data-page="stada" aria-selected="false">STADA view (IQVIA)</button>
+    <button type="button" role="tab" id="tab-market" data-page="market" aria-selected="false">Defined Market (IQVIA)</button>
+    <button type="button" role="tab" id="tab-explore" data-page="explore" aria-selected="false">Market explorer</button>
   </nav>
 
   <section class="sd-page" id="overview" aria-labelledby="tab-overview">
@@ -388,6 +418,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <div class="sd-chip" id="k-lo-ach">—</div>
         <div class="sd-sub">Latest outlook vs BUD FY 2026</div>
       </article>
+      <article class="sd-kpi" id="kpi-b27">
+        <h3>BUD 2027 (sell-out)</h3>
+        <div class="sd-big dash-skeleton" id="k-b27" data-source="bud27_brand">—</div>
+        <div class="sd-chip" id="k-b27-g">—</div>
+        <div class="sd-sub">At CIF 2027, vs LO 2026</div>
+      </article>
     </div>
 
     <article class="sd-card" id="card-trend">
@@ -433,6 +469,11 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <div class="sd-bars dash-skeleton" id="mix-distributor" data-source="mix"></div>
       </article>
     </div>
+    <article class="sd-card" id="card-years">
+      <h2>Year-on-year trend: 2024 to BUD 2027</h2>
+      <p class="sd-note" id="years-note">Full-year totals with the number of brands sold each year. 2024 and 2025 are IMS sales, LO 2026 is ACT + YTG from the budget file and BUD 2027 the sell-out budget at CIF 2027. Country, class and brand filters apply.</p>
+      <div class="sd-chart" id="years-chart" data-source="yearly trend" style="min-height:300px"></div>
+    </article>
   </section>
 
   <section class="sd-page" id="customers" aria-labelledby="tab-customers" hidden>
@@ -441,6 +482,19 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <p class="sd-note">Change in YTD sales vs the same months of 2025, for the brand, channel and region selected.</p>
       <div class="sd-movers dash-skeleton" id="movers" data-source="customers"></div>
     </article>
+    <div class="sd-grid2">
+      <article class="sd-card" id="card-region">
+        <h2>By region: <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025</h2>
+        <p class="sd-note">The arrows show growth vs the same months of 2025. Brand, class, channel and country filters apply.</p>
+        <div class="sd-chart" id="reg-chart" data-source="mix" style="min-height:280px"></div>
+      </article>
+      <article class="sd-card" id="card-sector">
+        <h2>By sector and channel</h2>
+        <p class="sd-note">Sales <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025 per customer sector, with growth and contribution to the country's growth (percentage points), then split by channel.</p>
+        <div class="sd-chart" id="sec-chart" data-source="customers" style="min-height:220px"></div>
+        <div class="sd-tablebox" style="max-height:20rem"><table class="sd-table" id="sec-table" data-source="customers"><thead></thead><tbody></tbody></table></div>
+      </article>
+    </div>
     <article class="sd-card" id="card-custtable">
       <h2>Sales per STADA customer</h2>
       <p class="sd-note">Click a customer to open its page with monthly sales and brand detail. RR is the run rate, the average per month: RR FY 2025 is full-year 2025 divided by 12, RR 2026 is YTD 2026 divided by the months so far. Share and contribution are against the country's total for the selected brand; contribution is the customer's change as percentage points of the country's total a year earlier.</p>
@@ -454,6 +508,9 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
           <option value="Lost">Lost in 2026</option>
           <option value="Steady">Steady</option>
         </select>
+        <select id="cust-region" aria-label="Region"><option value="">All regions</option></select>
+        <select id="cust-channel" aria-label="Channel"><option value="">All channels</option></select>
+        <select id="cust-sector" aria-label="Sector"><option value="">All sectors</option></select>
         <select id="cust-level" aria-label="Group customers by">
           <option value="customer">STADA customer</option>
           <option value="parent">Parent group</option>
@@ -487,19 +544,22 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="sd-modal-panel">
         <div class="sd-tools" style="justify-content:space-between;align-items:flex-start">
           <div><h2 id="so-title" style="margin:0">Sell-out</h2><p class="sd-note" id="so-sub" style="margin:4px 0 0"></p></div>
-          <div class="sd-tools"><div class="sd-seg" role="group" aria-label="Brand"><button type="button" data-so="Versatis">Versatis</button><button type="button" data-so="Proxen">Proxen</button></div><button type="button" class="sd-btn" id="so-close">Close</button></div>
+          <div class="sd-tools"><select id="so-brand" aria-label="Brand"></select><select id="so-branch" aria-label="Branch"></select><button type="button" class="sd-btn" id="so-close">Close</button></div>
         </div>
-        <div class="sd-kpis" id="so-kpis" data-source="sellout_branch"></div>
+        <div class="sd-kpis" id="so-kpis" data-source="sellout_rows"></div>
         <div>
           <h3 class="sd-h3" id="so-chart-title">Monthly sell-out, 2026 vs 2025 (units)</h3>
           <div class="sd-legend"><span><i class="sw25"></i>2025</span><span><i class="sw26"></i>2026</span></div>
-          <div class="sd-chart" id="so-chart" data-source="sellout_branch" style="min-height:260px"></div>
+          <div class="sd-chart" id="so-chart" data-source="sellout_rows" style="min-height:260px"></div>
         </div>
         <div class="sd-grid2">
-          <div><h3 class="sd-h3">By branch</h3><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-branches" data-source="sellout_branch"><thead></thead><tbody></tbody></table></div></div>
-          <div><h3 class="sd-h3">Sell-in (IMS) vs sell-out, 2026 units</h3><p class="sd-note">Sell-in is what STADA invoiced to the account (IMS); sell-out is what the hospitals report using. A positive gap means stock is building.</p><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-sisO" data-source="sellout_branch cust_monthly"><thead></thead><tbody></tbody></table></div></div>
+          <div><h3 class="sd-h3">By branch</h3><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-branches" data-source="sellout_rows"><thead></thead><tbody></tbody></table></div></div>
+          <div><h3 class="sd-h3" id="so-it-title">By brand</h3><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-items" data-source="sellout_rows"><thead></thead><tbody></tbody></table></div></div>
         </div>
-        <p class="sd-foot">Source: <span data-source="sellout">hospital sell-out reports for Sulaiman Al Habib (FY 25 vs 26) and Al Mouwasat (25 vs 26), Versatis and Proxen, units</span>. Totals are the sum of the branches.</p>
+        <div>
+          <div><h3 class="sd-h3">Sell-in (IMS) vs sell-out, 2026 units</h3><p class="sd-note">Sell-in is what STADA invoiced to the account (IMS); sell-out is what the hospitals report using. A positive gap means stock is building.</p><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-sisO" data-source="sellout_rows cust_monthly"><thead></thead><tbody></tbody></table></div></div>
+        </div>
+        <p class="sd-foot">Source: <span data-source="sellout">hospital sell-out reports: Versatis and Proxen 2024 to 2026 from the 25 vs 26 summaries; all other brands from the 2026 monthly reports (Sulaiman Al Habib per pharmacy code, mapped to its hospital; Al Mouwasat per branch, no June report)</span>. Units; totals are the sum of the branches.</p>
       </div>
     </div>
   </section>
@@ -528,6 +588,11 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <div class="sd-plannote">
       <p class="sd-note"><b>ACT</b> is actual sales, <b>BUD</b> the 2026 budget, <b>YTG</b> the year-to-go forecast for the remaining months, and <b>LO 2026</b> (latest outlook) is ACT 2026 + YTG 2026. The class, brand and SKU filters and the measure above apply here; channel and region don't, as the budget file has no customer split. <span id="plan-sarnote" hidden>Budget and YTG have no local-currency values, so this page shows euro.</span></p>
     </div>
+    <article class="sd-card" id="card-planov">
+      <h2>Overview: YTD, rest of year and full year</h2>
+      <p class="sd-note">ACT 2025 vs ACT 2026 vs budget for the months closed, the months to go (2025 actuals vs YTG vs budget) and the full year (FY 2025, LO 2026, BUD 2026 and BUD 2027). Arrows show growth vs last year; dashed lines the gap to budget.</p>
+      <div class="sd-chart" id="planov-chart" data-source="plan_kpi bud27_brand" style="min-height:300px"></div>
+    </article>
     <div class="sd-kpis" id="plan-kpis">
       <article class="sd-kpi" id="pk-act-card">
         <h3>ACT <span class="sd-plab">YTD Jan–Sep</span> 2026</h3>
@@ -633,7 +698,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   <section class="sd-page" id="market" aria-labelledby="tab-market" hidden></section>
   <template id="tpl-market">
     <div class="sd-plannote">
-      <p class="sd-note"><b>IQVIA Saudi Arabia</b>, quarterly to <span class="iq-period">Q2 2026</span>. Each brand's market follows <b>your pivot definition</b> where one exists (Versatis, Proxen, Tramal and others), otherwise its <b>ATC4 class</b>; the definition shows under the brand's title. <b>MAT</b> is the last 12 months, <b>YTD</b> this calendar year, <b>Growth vs market</b> is brand growth minus market growth in percentage points (above 0 = gaining share), and <b>CAGR 4Y</b> compares MAT now with MAT four years earlier. Product class and measure are shared with the filters above; country, brand, channel and region there don't apply.</p>
+      <p class="sd-note"><b>IQVIA Saudi Arabia</b>, quarterly to <span class="iq-period">Q3 2026</span>. Each brand's market follows <b>your pivot definition</b> where one exists (Versatis, Proxen, Tramal and others), otherwise its <b>ATC4 class</b>; the definition shows under the brand's title. <b>MAT</b> is the last 12 months, <b>YTD</b> this calendar year, <b>Growth vs market</b> is brand growth minus market growth in percentage points (above 0 = gaining share), and <b>CAGR 4Y</b> compares MAT now with MAT four years earlier. Product class and measure are shared with the filters above; country, brand, channel and region there don't apply.</p>
       <div class="sd-controls">
         <div class="sd-field"><label for="iq-measure">Measure</label><select id="iq-measure"><option value="eur">Value (€)</option><option value="units">Units</option></select></div>
         <div class="sd-field"><span class="sd-lab" id="lab-iqcls">Product class</span><div class="sd-ms" id="iq-cls" data-source="iq_items"></div></div>
@@ -657,7 +722,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
     <div id="iq-overview" class="iq-mode">
       <article class="sd-card" id="card-iqmap">
-        <h2>STADA brands in their markets · MAT <span class="iq-period">Q2 2026</span></h2>
+        <h2>STADA brands in their markets · MAT <span class="iq-period">Q3 2026</span></h2>
         <p class="sd-note">Across: market growth vs the previous MAT. Up: brand market share. Bubble size: brand sales. Blue brands grow faster than their market (growth vs market above 0), red ones slower.</p>
         <div class="sd-chart dash-skeleton" id="iq-map" data-source="iq_items" style="min-height:340px"></div>
       </article>
@@ -668,13 +733,18 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
           <table class="sd-table clickable" id="iq-over-table" data-source="iq_items" data-row-key="id"><thead></thead><tbody></tbody></table>
         </div>
       </article>
+      <article class="sd-card" id="card-iqcov">
+        <h2>Are all STADA brands in the IQVIA data?</h2>
+        <p class="sd-note" id="iq-cov-note">Each STADA brand sold in Saudi Arabia against the STADA products IQVIA reports.</p>
+        <div class="sd-tablebox"><table class="sd-table" id="iq-cov" data-source="iq_coverage" data-row-key="id"><thead></thead><tbody></tbody></table></div>
+      </article>
     </div>
 
     <div id="iq-detail" class="iq-mode" hidden>
       <div class="sd-tools"><button type="button" class="sd-reset" id="iq-back">← All STADA brands</button><h2 class="sd-title" id="iq-title" style="font-size:var(--cds-font-size-heading)">—</h2><button type="button" class="sd-btn" id="iq-adj-open" hidden>Adjusted market view</button></div>
       <p class="sd-note" id="iq-def" data-source="iq_markets"></p>
       <div class="sd-kpis">
-        <article class="sd-kpi"><h3>Market · MAT <span class="iq-period">Q2 2026</span></h3><div class="sd-big" id="iqk-mkt">—</div><div class="sd-chip" id="iqk-mkt-g">—</div><div class="sd-sub">CAGR 4Y: <span id="iqk-mkt-cagr">—</span></div></article>
+        <article class="sd-kpi"><h3>Market · MAT <span class="iq-period">Q3 2026</span></h3><div class="sd-big" id="iqk-mkt">—</div><div class="sd-chip" id="iqk-mkt-g">—</div><div class="sd-sub">CAGR 4Y: <span id="iqk-mkt-cagr">—</span></div></article>
         <article class="sd-kpi"><h3><span class="iq-bname">Brand</span> · MAT</h3><div class="sd-big" id="iqk-br">—</div><div class="sd-chip" id="iqk-br-g">—</div><div class="sd-sub">CAGR 4Y: <span id="iqk-br-cagr">—</span></div></article>
         <article class="sd-kpi"><h3>Market share · MAT</h3><div class="sd-big" id="iqk-ms">—</div><div class="sd-chip" id="iqk-dms">—</div><div class="sd-sub">A year earlier: <span id="iqk-ms25">—</span></div></article>
         <article class="sd-kpi"><h3>Growth vs market · MAT</h3><div class="sd-big" id="iqk-ei">—</div><div class="sd-sub">Brand growth minus market growth; above 0 = gaining share</div></article>
@@ -704,7 +774,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
       <div class="sd-grid2">
         <article class="sd-card" id="card-iqms">
-          <div class="sd-cardhd"><h2 id="iq-ms-title">Market share trend (rolling MAT)</h2><div class="sd-seg sm" role="group" aria-label="Period"><button type="button" data-pvk="ms" data-v="q">Quarter</button><button type="button" data-pvk="ms" data-v="ytd">YTD</button><button type="button" data-pvk="ms" data-v="mat">MAT</button></div></div>
+          <div class="sd-cardhd"><h2 id="iq-ms-title">Market share trend (rolling MAT)</h2><div class="sd-seg sm" role="group" aria-label="Lines"><button type="button" data-msv="brand">Top brands</button><button type="button" data-msv="mol">Molecules</button></div><div class="sd-seg sm" role="group" aria-label="Period"><button type="button" data-pvk="ms" data-v="q">Quarter</button><button type="button" data-pvk="ms" data-v="ytd">YTD</button><button type="button" data-pvk="ms" data-v="mat">MAT</button></div></div>
           <p class="sd-note" id="iq-ms-note">Each point is the share over the 12 months ending that quarter.</p>
           <div class="sd-chart dash-skeleton" id="iq-mschart" data-source="iq_trend"></div>
         </article>
@@ -757,7 +827,89 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <div class="sd-tablebox" style="max-height:22rem"><table class="sd-table" id="iq-adj-prod" data-source="iq_adjusted"><thead></thead><tbody></tbody></table></div>
       </div>
     </div>
-    <p class="sd-foot">Market source: <span data-source="iqvia">IQVIA Saudi Arabia, Q3 2021 to Q2 2026 (Export for Pivot sheet), units and euro, all STADA markets</span>; market definitions: <span data-source="iq_markets">brand pivots in the same workbook</span>.</p>
+    <p class="sd-foot">Market source: <span data-source="iqvia">IQVIA Saudi Arabia, Q4 2021 to Q3 2026 (raw data sheet of the Q3 2026 file), units and euro, all STADA markets</span>; market definitions: <span data-source="iq_markets">the brand pivots of the Q2 2026 analysis workbook, applied to the Q3 data</span>; coverage check against <span data-source="plan">the ACT, BUD and YTG export</span>.</p>
+  </template>
+
+  <section class="sd-page" id="stada" aria-labelledby="tab-stada" hidden></section>
+  <template id="tpl-stada">
+    <div class="sd-plannote">
+      <p class="sd-note"><b>STADA KSA brands against their IQVIA markets</b>, to <span class="sv-period">Q3 2026</span>, as in the Overview Brands sheet of the Q3 2026 IQVIA analysis: each brand line is its STADA SKUs from the IQVIA-to-STADA mapping, and its market is the mapped ATC4 class (all forms), except Versatis and Qutenza (NP market) and Yondelis (STS market). Hospital is LPO + Tender, Retail is private. QTR is the latest quarter, YTD this year's quarters and MAT the last four, each against a year earlier.</p>
+      <div class="sd-tools">
+        <div class="sd-seg" role="group" aria-label="Period" id="sv-per"><button type="button" data-v="q">QTR</button><button type="button" data-v="ytd">YTD</button><button type="button" data-v="mat">MAT</button></div>
+        <select id="sv-ch" aria-label="IQVIA channel"><option value="All">All channels</option><option value="Hospital">Hospital (LPO + Tender)</option><option value="Retail">Retail</option></select>
+        <select id="sv-seg" aria-label="Segment"><option value="">All segments</option><option value="CHC">CHC</option><option value="Gx">Gx</option><option value="Sx">Sx</option></select>
+        <select id="sv-measure" aria-label="Measure"><option value="eur">Value (€)</option><option value="units">Units</option></select>
+      </div>
+    </div>
+    <div class="sd-kpis" id="sv-kpis" data-source="iq_all iq_packs iq_stada"></div>
+    <article class="sd-card" id="card-svtot">
+      <h2 id="sv-tot-title">Total market vs STADA</h2>
+      <p class="sd-note">Growth against the same period a year earlier, by channel and by segment (CHC, Gx, Sx), with STADA's share of each and its change in points.</p>
+      <ul class="sv-take" id="sv-take" data-source="iq_all iq_packs iq_stada"></ul>
+      <div class="sd-grid2" style="align-items:start">
+        <div class="sd-chart" id="sv-chart" data-source="iq_all iq_packs iq_stada" style="min-height:240px"></div>
+        <div class="sd-tablebox" style="max-height:none"><table class="sd-table" id="sv-tot" data-source="iq_all iq_packs iq_stada"><thead></thead><tbody></tbody></table></div>
+      </div>
+    </article>
+    <article class="sd-card" id="card-svbr">
+      <h2 id="sv-br-title">STADA brands vs their markets</h2>
+      <p class="sd-note" id="sv-br-note">Click a brand to open its market in the Market explorer, with the full analysis.</p>
+      <div class="sd-tablebox"><table class="sd-table clickable" id="sv-br" data-source="iq_all iq_packs iq_stada"><thead></thead><tbody></tbody></table></div>
+    </article>
+    <article class="sd-card" id="card-svgap">
+      <h2 id="sv-gap-title">Growth vs market by brand</h2>
+      <p class="sd-note">Brand growth minus market growth, in percentage points, for brand lines above €0.2M MAT; above 0 means gaining share. Bars stop at ±100 pp; the number shows the full value.</p>
+      <div id="sv-gap" data-source="iq_all iq_packs iq_stada"></div>
+    </article>
+    <p class="sd-foot">Source: <span data-source="iq_all">IQVIA Saudi Arabia, Q4 2021 to Q3 2026, every pack and channel</span> with <span data-source="iq_packs">its pack details</span>; brand lines, segments and markets from <span data-source="iq_stada">the Overview Brands sheet and its SKU mapping (Q3 2026 IQVIA analysis)</span>.</p>
+  </template>
+  <section class="sd-page" id="explore" aria-labelledby="tab-explore" hidden></section>
+  <template id="tpl-explore">
+    <div class="sd-plannote">
+      <p class="sd-note"><b>Every product in the IQVIA Saudi Arabia data</b>, not only the STADA markets, quarterly to <span class="xp-period">Q3 2026</span>. Search a product, molecule, company or ATC class, or build any market with the filters (each filter takes one or more values and narrows the others), then choose what to focus on. The analysis is the one in the Defined Market (IQVIA) tab: quarter, YTD and MAT, growth, share, growth vs market and 4-year CAGR.</p>
+      <div class="sd-tools xp-top">
+        <input type="search" id="xp-q" list="xp-qdl" placeholder="Search a product, molecule, company or ATC class…" aria-label="Search the IQVIA market" autocomplete="off"><datalist id="xp-qdl"></datalist>
+        <select id="xp-measure" aria-label="Measure"><option value="eur">Value (€)</option><option value="units">Units</option></select>
+        <div class="sd-seg" role="group" aria-label="Period" id="xp-per"><button type="button" data-v="q">Quarter</button><button type="button" data-v="ytd">YTD</button><button type="button" data-v="mat">MAT</button></div>
+        <button type="button" class="sd-reset" id="xp-reset">Clear all filters</button>
+        <button type="button" class="sd-btn" id="xp-back" hidden>← Back to STADA view</button>
+      </div>
+      <div class="xp-filters" id="xp-filters"></div>
+      <p class="sd-note" id="xp-sum" data-source="iq_all iq_packs">Loading the IQVIA market…</p>
+    </div>
+    <div class="sd-tools xp-focus">
+      <label for="xp-fdim"><b>Focus on</b></label><select id="xp-fdim"></select>
+      <input id="xp-fval" list="xp-fdl" placeholder="Type to pick…" aria-label="Focus item" autocomplete="off"><datalist id="xp-fdl"></datalist>
+      <span class="sd-note" id="xp-fnote"></span>
+    </div>
+    <div class="sd-kpis" id="xp-kpis" data-source="iq_all iq_packs"></div>
+    <article class="sd-card" id="card-xpgt">
+      <h2 id="xp-gt-title">Growth and share: quarter, YTD and MAT</h2>
+      <p class="sd-note">Growth is against the same period a year earlier. Share change is in percentage points.</p>
+      <div class="sd-tablebox" style="max-height:none"><table class="sd-table" id="xp-gt" data-source="iq_all iq_packs"><thead></thead><tbody></tbody></table></div>
+    </article>
+    <article class="sd-card" id="card-xpevo">
+      <div class="sd-tools" style="justify-content:space-between"><h2 id="xp-evo-title">Market evolution</h2>
+        <div class="sd-seg" role="group" aria-label="Market evolution view" id="xp-view"><button type="button" data-v="q">Quarterly</button><button type="button" data-v="ytd">YTD</button><button type="button" data-v="mat">MAT</button></div></div>
+      <p class="sd-note" id="xp-evo-note">—</p>
+      <div class="sd-chart" id="xp-evo" data-source="iq_all iq_packs" style="min-height:300px"></div>
+    </article>
+    <div class="sd-grid2">
+      <article class="sd-card" id="card-xpms"><div class="sd-cardhd"><h2 id="xp-ms-title">Market share trend</h2><div class="sd-seg sm" role="group" aria-label="Lines"><button type="button" data-xmsv="brand">Top items</button><button type="button" data-xmsv="mol">Molecules</button></div></div><p class="sd-note" id="xp-ms-note">—</p><div class="sd-chart" id="xp-ms" data-source="iq_all iq_packs"></div></article>
+      <article class="sd-card" id="card-xptop"><h2 id="xp-top-title">Top 10</h2><p class="sd-note">Sales, share and share change in points against the year before.</p><div id="xp-top" data-source="iq_all iq_packs"></div></article>
+    </div>
+    <article class="sd-card" id="card-xpbrk">
+      <div class="sd-cardhd"><h2 id="xp-brk-title">Market split</h2><select id="xp-bdim" aria-label="Split the market by"></select></div>
+      <p class="sd-note" id="xp-brk-note">Each slice's size, growth and share of the market, and the focus item's sales and share inside it.</p>
+      <div class="sd-tablebox"><table class="sd-table" id="xp-brk" data-source="iq_all iq_packs"><thead></thead><tbody></tbody></table></div>
+    </article>
+    <article class="sd-card" id="card-xplist">
+      <div class="sd-cardhd"><h2 id="xp-list-title">Everything in the market</h2><select id="xp-gdim" aria-label="List by"></select></div>
+      <p class="sd-note"><span class="sd-tag">STADA</span> marks STADA products, <span class="sd-tag new">New</span> products launched in the last two years. Click a row to focus on it.</p>
+      <div class="sd-tools"><input type="search" id="xp-search" placeholder="Search in the list…" aria-label="Search the list"><span class="sd-count" id="xp-count"></span></div>
+      <div class="sd-tablebox"><table class="sd-table clickable" id="xp-list" data-source="iq_all iq_packs"><thead></thead><tbody></tbody></table></div>
+    </article>
+    <p class="sd-foot">Source: <span data-source="iq_all">IQVIA Saudi Arabia, Q4 2021 to Q3 2026, every pack and channel (Retail, LPO, Tender), units and euro</span>; each pack's ATC and NFC classes, molecule, company, segment and launch year from <span data-source="iq_packs">the same file</span>.</p>
   </template>
 
   <p class="sd-foot">Customer-level source for Bahrain, Jordan and Lebanon: <span data-source="sales_bh_jo sales_lb_2025 sales_lb_2025_h2 sales_lb_2026">IMS per-account export (BH, JO, LB)</span>. Local value is the invoice value in each country's currency (SAR, BHD, JOD, LBP), so it is shown only for one country at a time.</p>
@@ -1041,25 +1193,37 @@ dash.calc('bud27_sku', {
   },
 });
 
-dash.calc('sellout_branch', {
+dash.calc('sellout_rows', {
   inputs: ['sellout'],
-  title: 'Hospital sell-out, Versatis and Proxen',
-  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per month of 2025 and 2026 (as reported by the hospitals), with full-year 2024 and 2025, YTD to the latest reported month in both years, and the monthly run rate.',
+  title: 'Hospital sell-out per branch, brand and item',
+  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per brand and item: full-year 2024 and each month of 2025 (Versatis and Proxen only, from the 25 vs 26 reports) and each month of 2026 to the latest report (every brand, from the monthly hospital reports).',
   fn: (sellout) => {
+    const acc = new Map(), r2 = (v) => Math.round(v * 1000) / 1000;
     let lm = 0;
-    for (const r of sellout) for (let k = 1; k <= 12; k++) if (r['m26_' + k] !== '' && r['m26_' + k] != null && +r['m26_' + k] > 0 && k > lm) lm = k;
-    const r2 = (v) => Math.round(v * 100) / 100;
-    return sellout.map((r) => {
-      const o = { id: r.account + '|' + r.brand + '|' + r.branch, account: r.account, brand: r.brand, region: r.region, branch: r.branch, owner: r.owner || '', fy24: r.fy24 === '' || r.fy24 == null ? null : +r.fy24, latest_month: lm };
-      let fy = 0, y25 = 0, y26 = 0;
-      for (let k = 1; k <= 12; k++) {
-        const a = +r['m25_' + k] || 0, b = +r['m26_' + k] || 0;
-        o['m25_' + k] = r2(a); o['m26_' + k] = k <= lm ? r2(b) : null;
-        fy += a; if (k <= lm) { y25 += a; y26 += b; }
-      }
-      Object.assign(o, { fy25: r2(fy), ytd25: r2(y25), ytd26: r2(y26), rr25: r2(fy / 12), rr26: lm ? r2(y26 / lm) : null, g: y25 > 0 ? Math.round((y26 / y25 - 1) * 10000) / 10000 : null });
-      return o;
-    });
+    for (const r of sellout) {
+      const id = [r.account, r.branch, r.brand, r.item].join('|');
+      let a = acc.get(id);
+      if (!a) { a = { id, account: r.account, region: r.region, branch: r.branch, brand: r.brand, item: r.item, fy24: 0, has25: false }; acc.set(id, a); }
+      const y = +r.year, m = +r.month, u = +r.units || 0;
+      if (y === 2024) a.fy24 += u;
+      else { a['m' + String(y).slice(2) + '_' + m] = (a['m' + String(y).slice(2) + '_' + m] || 0) + u; if (y === 2025) a.has25 = true; if (y === 2026 && u && m > lm) lm = m; }
+    }
+    return [...acc.values()].map((a) => { for (const k of Object.keys(a)) if (typeof a[k] === 'number') a[k] = r2(a[k]); a.latest_month = lm; return a; });
+  },
+});
+
+dash.calc('yearly', {
+  inputs: ['sales_2024', 'plan', 'bud27'],
+  title: 'Yearly totals per brand: 2024, LO 2026 and BUD 2027',
+  description: 'Per country and brand, in euro and units: full-year 2024 sales (IMS), LO 2026 (ACT 2026 + YTG, budget file) and BUD 2027 (sell-out at CIF 2027). Full-year 2025 comes from the monthly sales trend. Used for the year-on-year trend on the overview.',
+  fn: (sales_2024, plan, bud27) => {
+    const CLS = new Map(plan.map((r) => [r.brand, r.class]));
+    const acc = new Map(), r2 = (v) => Math.round(v * 100) / 100;
+    const get = (co, br, cls) => { const id = co + '|' + br; let a = acc.get(id); if (!a) { a = { id, country: co, brand: br, cls: cls || CLS.get(br) || 'Unclassified', y24_eur: 0, y24_units: 0, lo26_eur: 0, lo26_units: 0, b27_eur: 0, b27_units: 0 }; acc.set(id, a); } return a; };
+    for (const r of sales_2024) { const a = get(r.country, r.brand); a.y24_eur += +r.value_eur || 0; a.y24_units += +r.units || 0; }
+    for (const r of plan) if (+r.year === 2026) { const a = get(r.country, r.brand, r.class); a.lo26_eur += (+r.act_eur || 0) + (+r.ytg_eur || 0); a.lo26_units += (+r.act_units || 0) + (+r.ytg_units || 0); }
+    for (const r of bud27) { const a = get(r.country, r.brand, r.cls); a.b27_eur += +r.eur_cif27 || 0; a.b27_units += +r.units || 0; }
+    return [...acc.values()].map((a) => { for (const k of Object.keys(a)) if (typeof a[k] === 'number') a[k] = r2(a[k]); return a; });
   },
 });
 
@@ -2036,6 +2200,36 @@ dash.calc('iq_adjusted', {
     return out;
   },
 });
+
+dash.calc('iq_coverage', {
+  inputs: ['plan', 'iqvia'],
+  title: 'STADA brands found in IQVIA',
+  description: 'Each STADA brand with Saudi Arabia lines in the budget file against the STADA products in the IQVIA data: ACT YTD 2026, ACT 2025 and BUD 2026 in euro and the number of SKUs, beside IQVIA MAT euro and the number of IQVIA packs, so a brand missing from the IQVIA audit stands out.',
+  fn: (plan, iqvia) => {
+    const L = Object.keys(iqvia[0] || {}).filter((k) => k.startsWith('e_')).sort().slice(-4);
+    const ALIAS = { Rupatadine: 'Pafinur', 'APO-GO': 'APO-go' };
+    const r2 = (v) => Math.round(v * 100) / 100;
+    const iq = new Map();
+    for (const r of iqvia) if (+r.stada === 1) {
+      let a = iq.get(r.label); if (!a) { a = { mat: 0, packs: new Set() }; iq.set(r.label, a); }
+      a.packs.add(r.pack); for (const k of L) a.mat += +r[k] || 0;
+    }
+    const br = new Map();
+    for (const r of plan) if (r.country === 'Saudi Arabia') {
+      let a = br.get(r.brand); if (!a) { a = { cls: r.class, a26: 0, a25: 0, bud: 0, skus: new Set() }; br.set(r.brand, a); }
+      if (+r.year === 2026) { a.a26 += +r.act_eur || 0; a.bud += +r.bud_eur || 0; } else a.a25 += +r.act_eur || 0;
+      a.skus.add(r.sku);
+    }
+    const out = [], seen = new Set();
+    for (const [b, a] of br) {
+      const l = ALIAS[b] || b, q = iq.get(l); if (q) seen.add(l);
+      out.push({ id: b, brand: b, cls: a.cls, act26_eur: r2(a.a26), act25_eur: r2(a.a25), bud26_eur: r2(a.bud), skus: a.skus.size, iq_mat_eur: q ? r2(q.mat) : null, iq_packs: q ? q.packs.size : 0,
+        status: q ? 'In IQVIA' : (a.a26 || a.a25) ? 'Not in IQVIA' : 'No sales yet' });
+    }
+    for (const [l, q] of iq) if (!seen.has(l)) out.push({ id: l, brand: l, cls: '', act26_eur: null, act25_eur: null, bud26_eur: null, skus: 0, iq_mat_eur: r2(q.mat), iq_packs: q.packs.size, status: 'IQVIA only' });
+    return out;
+  },
+});
 </script>
 <script>
 /* ---------- Page ---------- */
@@ -2051,7 +2245,7 @@ dash.calc('iq_adjusted', {
   const arr = (v) => (Array.isArray(v) ? v : (v == null || v === '' ? [] : [v])).map(String).filter((x) => x !== '');
   const cross = (...lists) => lists.reduce((acc, l) => acc.flatMap((a) => l.map((x) => a.concat([x]))), [[]]);
   const isPainSet = (b) => b.length === PAIN.size && b.every((x) => PAIN.has(x));
-  let SKUBRAND = new Map();
+  let SKUBRAND = new Map(), CLSOF = new Map();
 
   /* The filters, normalised. Every list empty = "all". Keys are the slices the calculations hold. */
   const P = () => {
@@ -2220,11 +2414,114 @@ dash.calc('iq_adjusted', {
     };
   };
 
+  /* ---- export: every card gets a ⋯ menu to save its tables / chart data as Excel and its chart as a picture ---- */
+  const crcT = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc32 = (u) => { let c = -1; for (let i = 0; i < u.length; i++) c = crcT[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ -1) >>> 0; };
+  const zip = (files) => {
+    const te = new TextEncoder(), parts = [], cd = []; let off = 0;
+    for (const f of files) {
+      const nm = te.encode(f.name), d = te.encode(f.text), c = crc32(d);
+      const h = new DataView(new ArrayBuffer(30));
+      [[0, 0x04034b50, 4], [4, 20, 2], [12, 0x21, 2], [14, c, 4], [18, d.length, 4], [22, d.length, 4], [26, nm.length, 2]].forEach(([o, v, z]) => z === 4 ? h.setUint32(o, v, true) : h.setUint16(o, v, true));
+      parts.push(new Uint8Array(h.buffer), nm, d);
+      const e = new DataView(new ArrayBuffer(46));
+      [[0, 0x02014b50, 4], [4, 20, 2], [6, 20, 2], [14, 0x21, 2], [16, c, 4], [20, d.length, 4], [24, d.length, 4], [28, nm.length, 2], [42, off, 4]].forEach(([o, v, z]) => z === 4 ? e.setUint32(o, v, true) : e.setUint16(o, v, true));
+      cd.push(new Uint8Array(e.buffer), nm); off += 30 + nm.length + d.length;
+    }
+    const n = cd.reduce((a, b) => a + b.length, 0), z = new DataView(new ArrayBuffer(22));
+    z.setUint32(0, 0x06054b50, true); z.setUint16(8, files.length, true); z.setUint16(10, files.length, true); z.setUint32(12, n, true); z.setUint32(16, off, true);
+    return new Blob([...parts, ...cd, new Uint8Array(z.buffer)]);
+  };
+  const xesc = (v) => String(v).replace(/[<>&"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c])).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '');
+  const xlsx = (sheets) => {
+    const used = new Set();
+    const nm = sheets.map((s0, i) => { let n = (s0.name || 'Sheet').replace(/[\[\]:*?\/\\]/g, ' ').slice(0, 28).trim() || 'Sheet'; let k = n, j = 2; while (used.has(k.toLowerCase())) k = n.slice(0, 25) + ' ' + j++; used.add(k.toLowerCase()); return k; });
+    const X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', NS = 'http://schemas.openxmlformats.org/';
+    const files = [
+      { name: '[Content_Types].xml', text: X + '<Types xmlns="' + NS + 'package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' + sheets.map((_, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') + '</Types>' },
+      { name: '_rels/.rels', text: X + '<Relationships xmlns="' + NS + 'package/2006/relationships"><Relationship Id="rId1" Type="' + NS + 'officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+      { name: 'xl/workbook.xml', text: X + '<workbook xmlns="' + NS + 'spreadsheetml/2006/main" xmlns:r="' + NS + 'officeDocument/2006/relationships"><sheets>' + nm.map((n, i) => '<sheet name="' + xesc(n) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>').join('') + '</sheets></workbook>' },
+      { name: 'xl/_rels/workbook.xml.rels', text: X + '<Relationships xmlns="' + NS + 'package/2006/relationships">' + sheets.map((_, i) => '<Relationship Id="rId' + (i + 1) + '" Type="' + NS + 'officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>').join('') + '</Relationships>' },
+      ...sheets.map((sh, i) => ({ name: 'xl/worksheets/sheet' + (i + 1) + '.xml', text: X + '<worksheet xmlns="' + NS + 'spreadsheetml/2006/main"><sheetData>' + sh.rows.map((r) => '<row>' + r.map((v) => v == null || v === '' ? '<c/>' : typeof v === 'number' && isFinite(v) ? '<c><v>' + v + '</v></c>' : '<c t="inlineStr"><is><t xml:space="preserve">' + xesc(v) + '</t></is></c>').join('') + '</row>').join('') + '</sheetData></worksheet>' })),
+    ];
+    return zip(files);
+  };
+  /* turn shown text ("€1.2M", "+5.3%", "−0.4 pp", "1,234") back into a number when it is one */
+  const tnum = (t) => {
+    t = String(t).trim(); if (!t || t === '—') return '';
+    const m0 = t.replace(/[−–]/g, '-').replace(/[€,\s]|SAR|BHD|JOD|LBP|pp$/g, '').match(/^([+-]?\d+(?:\.\d+)?)([KMB%]?)$/);
+    if (!m0) return t;
+    const v = +m0[1] * ({ K: 1e3, M: 1e6, B: 1e9, '%': 0.01 }[m0[2]] || 1);
+    return Math.round(v * 1e6) / 1e6;
+  };
+  const tableRows = (tb) => [...tb.querySelectorAll('tr')].map((tr, i) => [...tr.children].map((c) => { const t = c.textContent.replace(/\s+/g, ' ').trim(); return i === 0 && tr.parentNode.tagName === 'THEAD' ? t : tnum(t); }));
+  const cardSheets = (el) => {
+    const sh = [], title = (el.querySelector('h2,h3') || {}).textContent || 'Data';
+    el.querySelectorAll('.sd-chart, [data-xl]').forEach((c) => { if (c.__xl && c.offsetParent !== null) sh.push(c.__xl); });
+    el.querySelectorAll('table').forEach((tb) => { if (tb.offsetParent !== null && tb.tBodies[0] && tb.tBodies[0].rows.length) { const h = tb.closest('div') && tb.closest('div').previousElementSibling; sh.push({ name: (h && /^H\d/.test(h.tagName) ? h.textContent : title), rows: tableRows(tb) }); } });
+    if (!sh.length) {
+      const rows = [...el.querySelectorAll('.sd-mv, .sd-bar, .sd-rowbar')].map((r) => [...r.children].map((c) => tnum(c.textContent.replace(/\s+/g, ' ').trim())).filter((v) => v !== ''));
+      if (rows.length) sh.push({ name: title, rows });
+      const kp = [...el.querySelectorAll('.sd-kpi')].map((k) => [k.querySelector('h3') ? k.querySelector('h3').textContent.trim() : '', tnum((k.querySelector('.sd-big') || {}).textContent || ''), ((k.querySelector('.sd-chip, .sd-sub') || {}).textContent || '').trim()]);
+      if (kp.length) sh.push({ name: 'Summary', rows: [['Measure', 'Value', 'Note'], ...kp] });
+    }
+    return sh;
+  };
+  const saveFile = async (name, blob) => {
+    try {
+      const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+      if (dl) { await dl.save({ filename: name, data: blob }); return; }
+    } catch (e) { if (e && (e.code === 'declined' || e.code === 'rate_limited')) return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  };
+  const svgPng = async (svg, title) => {
+    const r = svg.getBoundingClientRect(), W = Math.round(r.width), H = Math.round(r.height);
+    const cl = svg.cloneNode(true), src = [svg, ...svg.querySelectorAll('*')], dst = [cl, ...cl.querySelectorAll('*')];
+    const PR = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'opacity', 'fill-opacity', 'font-size', 'font-family', 'font-weight', 'text-anchor', 'dominant-baseline', 'visibility'];
+    src.forEach((e, i) => { const cs = getComputedStyle(e); dst[i].setAttribute('style', PR.map((k) => k + ':' + cs.getPropertyValue(k)).join(';')); });
+    cl.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); cl.setAttribute('width', W); cl.setAttribute('height', H);
+    const img = new Image();
+    await new Promise((ok, no) => { img.onload = ok; img.onerror = no; img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(cl)); });
+    const k = 2, th = 34, c = document.createElement('canvas'); c.width = W * k; c.height = (H + th) * k;
+    const g = c.getContext('2d'); g.scale(k, k);
+    g.fillStyle = getComputedStyle(svg.closest('.sd-card, .sd-modal-panel') || document.body).backgroundColor || '#fff'; g.fillRect(0, 0, W, H + th);
+    g.fillStyle = getComputedStyle(root).getPropertyValue('--sd-navy') || '#0A2A66'; g.font = '600 15px ' + getComputedStyle(root).fontFamily; g.fillText(title, 6, 22);
+    g.drawImage(img, 0, th, W, H);
+    return new Promise((ok) => c.toBlob(ok, 'image/png'));
+  };
+  const fname = (t) => ('STADA ' + t).replace(/[^\w\s.+-]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
+  let openMenu = null;
+  const closeMenu = () => { if (openMenu) { openMenu.menu.remove(); openMenu.btn.setAttribute('aria-expanded', 'false'); openMenu = null; } };
+  document.addEventListener('click', (e) => { if (openMenu && !openMenu.menu.contains(e.target) && e.target !== openMenu.btn) closeMenu(); });
+  const addDots = () => root.querySelectorAll('.sd-card, .sd-modal-panel').forEach((el) => {
+    if (el.querySelector(':scope > .sd-dots')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sd-dots'; b.textContent = '⋯'; b.title = 'Download'; b.setAttribute('aria-label', 'Download this view'); b.setAttribute('aria-expanded', 'false');
+    b.addEventListener('click', (ev) => {
+      ev.stopPropagation(); if (openMenu && openMenu.btn === b) { closeMenu(); return; } closeMenu();
+      const title = ((el.querySelector('h2,h3') || {}).textContent || 'Dashboard').trim();
+      const menu = document.createElement('div'); menu.className = 'sd-dmenu'; menu.setAttribute('role', 'menu');
+      if (el.classList.contains('sd-modal-panel')) menu.style.right = '96px';
+      const item = (t, fn) => { const x = document.createElement('button'); x.type = 'button'; x.setAttribute('role', 'menuitem'); x.textContent = t; x.addEventListener('click', async () => { closeMenu(); try { await fn(); } catch (e2) { console.error(e2); } }); menu.append(x); };
+      const sh = cardSheets(el);
+      if (sh.length) item('Download as Excel (.xlsx)', () => saveFile(fname(title) + '.xlsx', xlsx(sh)));
+      [...el.querySelectorAll('svg')].filter((sv) => sv.offsetParent !== null && !sv.closest('.sd-dmenu')).forEach((sv, i, all) => {
+        const card = sv.closest('.sd-chart'), h = card && card.previousElementSibling;
+        const t = all.length > 1 ? ((card && card.closest('div') && card.closest('div').querySelector('h3')) || {}).textContent || title + ' ' + (i + 1) : title;
+        item('Save chart as picture (.png)' + (all.length > 1 ? ': ' + t.trim().slice(0, 34) : ''), async () => saveFile(fname(t.trim()) + '.png', await svgPng(sv, t.trim())));
+      });
+      if (!menu.children.length) { const n = document.createElement('p'); n.className = 'sd-note'; n.style.margin = '6px 10px'; n.textContent = 'Nothing to download yet.'; menu.append(n); }
+      el.append(menu); b.setAttribute('aria-expanded', 'true'); openMenu = { menu, btn: b };
+    });
+    el.prepend(b);
+  });
+
   /* ---- tabs ---- */
   let page = 'overview';
   const showPage = (id) => {
     page = id;
     if (id === 'market') mountMarket();
+    if (id === 'explore') mountExplore();
+    if (id === 'stada') mountStada();
     root.querySelectorAll('.sd-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.page === id)));
     root.querySelectorAll('.sd-page').forEach((s) => { s.hidden = s.id !== id; });
     dash.setLink(id);
@@ -2237,13 +2534,7 @@ dash.calc('iq_adjusted', {
   const fMonth = MS($('#f-month'), { labelledBy: 'lab-month', plural: 'months', allText: () => 'YTD Jan–' + MON[LM - 1] + ' 2026', onChange: (v) => set({ month: v }) });
   const fCountry = MS($('#f-country'), { labelledBy: 'lab-country', plural: 'countries', allText: () => 'All countries (KSA+ Cluster)', onChange: (v) => set({ country: v, channel: [], region: [] }) });
   const fCls = MS($('#f-cls'), { labelledBy: 'lab-cls', plural: 'classes', allText: () => 'All classes', onChange: (v) => set({ cls: v, scope: [], sku: [] }) });
-  const fScope = MS($('#f-scope'), { labelledBy: 'lab-scope', plural: 'brands', search: true, allText: () => 'All brands', onChange: (v) => set({ scope: v, sku: [] }),
-    shortcuts: (st) => {
-      const pain = st.options.map((o) => o[0]).filter((b) => PAIN.has(b));
-      if (!pain.length) return [];
-      const on = pain.every((b) => st.value.includes(b));
-      return [{ text: 'Pain portfolio (' + pain.length + ' brands)', on, toggle: () => on ? st.value.filter((b) => !PAIN.has(b)) : [...new Set([...st.value, ...pain])] }];
-    } });
+  const fScope = MS($('#f-scope'), { labelledBy: 'lab-scope', plural: 'brands', search: true, allText: () => 'All brands', onChange: (v) => set({ scope: v, sku: [] }) });
   const fSku = MS($('#f-sku'), { labelledBy: 'lab-sku', plural: 'SKUs', search: true, allText: () => 'All SKUs', onChange: (v) => set({ sku: v }) });
   const fCh = MS($('#f-channel'), { labelledBy: 'lab-channel', plural: 'channels', allText: () => 'All channels', onChange: (v) => set({ channel: v }) });
   const fRg = MS($('#f-region'), { labelledBy: 'lab-region', plural: 'regions', search: true, allText: () => 'All regions', onChange: (v) => set({ region: v }) });
@@ -2269,6 +2560,7 @@ dash.calc('iq_adjusted', {
     fCountry.update(ctry.map((r) => [r.country, r.country]), p.countries, false);
     const bc = dash.data('brands');
     const clsOf = new Map(bc.status === 'ok' ? bc.data.map((r) => [r.brand, r.cls]) : []);
+    if (clsOf.size) CLSOF = clsOf;
     fCls.update([...new Set(clsOf.values())].sort().map((c) => [c, c]), p.classes, false);
     const base = new Map();
     for (const r of k.data) if (r.channel === 'All' && r.region === 'All' && p.CK.includes(r.country) && !r.scope.startsWith('SKU:') && !r.scope.startsWith('CLASS:') && r.scope !== 'All brands' && r.scope !== 'Pain portfolio' && p.clsOk(clsOf.get(r.scope))) base.set(r.scope, (base.get(r.scope) || 0) + r.ytd26_eur);
@@ -2379,6 +2671,12 @@ dash.calc('iq_adjusted', {
     put('k-budfy', 'bud_fy_' + m, (v) => big(m, v));
     put('k-lo', 'lo_' + m, (v) => big(m, v));
     put('k-lo-ach', 'ach_lo_' + m, (v) => ach(v) + ' of BUD FY', true);
+    const b7 = dash.data('bud27_brand'), kb = $('#k-b27'), kg = $('#k-b27-g');
+    kb.classList.toggle('dash-skeleton', b7.status === 'loading');
+    if (b7.status === 'ok') {
+      const rr = b7.data.filter((x) => b27In(p, x)), bv = d3.sum(rr, (x) => +x['b27_' + m] || 0), lv = d3.sum(rr, (x) => +x['lo26_' + m] || 0);
+      kb.textContent = big(m, bv); kg.textContent = (lv > 0 ? pct(bv / lv - 1) : '—') + ' vs LO 2026'; kg.classList.remove('up', 'down'); if (lv > 0) tone(kg, bv / lv - 1);
+    }
     $('#k-bud-sub').textContent = p.channels.length || p.regions.length ? 'Country level: the budget has no channel or region split' : (p.metric === 'loc' ? 'In euro: the budget has no local currency' : 'ACT as a share of BUD');
   };
 
@@ -2390,7 +2688,7 @@ dash.calc('iq_adjusted', {
     const all = [...s25.values(), ...s26.values(), ...ytg.values()].filter((v) => v != null && !isNaN(v));
     if (!all.length) return;
     const W = Math.max(280, box.clientWidth), H = 280, mb = 26, mt = 22;
-    const y = d3.scaleLinear([Math.min(0, d3.min(all)), d3.max(all) || 1], [H - mb, mt]).nice();
+    const y = d3.scaleLinear([Math.min(0, d3.min(all)), d3.max(all) * 1.08 || 1], [H - mb, mt + 24]).nice();
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', label);
     const ticks = y.ticks(W < 420 ? 4 : 5);
     const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => unitFmt(t));
@@ -2419,12 +2717,16 @@ dash.calc('iq_adjusted', {
       .style('stroke', (b) => b.ytg ? 'var(--sd-c26)' : 'none').style('stroke-dasharray', '4 3').style('stroke-width', 1.2);
     /* value labels on top of every bar (2025, 2026 and YTG); rotated when the bars are narrow */
     const lab = bars;
-    const narrow = bw < 30;
-    svg.append('g').selectAll('text').data(lab).join('text').attr('class', 'sd-barval').style('opacity', op)
-      .attr('text-anchor', narrow ? 'start' : 'middle')
-      .attr('transform', (b) => { const cx = bx(b) + bw / 2, cy = y(Math.max(0, b.v)) - 4; return narrow ? `translate(${cx + 3},${cy}) rotate(-90)` : `translate(${cx},${cy})`; })
+    const vt = svg.append('g').selectAll('text').data(lab).join('text').attr('class', 'sd-barval').style('opacity', op)
       .style('fill', (b) => b.ytg || b.yr === 2025 ? 'var(--color-fg-muted)' : 'var(--sd-navy)')
       .text((b) => unitFmt(b.v));
+    const lw = d3.max(vt.nodes(), (n) => n.getComputedTextLength()) || 0, room = xi.step() - 2;
+    const narrow = lw > room;
+    if (narrow && lw * 0.85 <= room) vt.style('font-size', '8.5px');
+    const vert = narrow && lw * 0.85 > room;
+    vt.attr('text-anchor', vert ? 'start' : 'middle')
+      .attr('transform', (b) => { const cx = bx(b) + bw / 2, cy = y(Math.max(0, b.v)) - 4; return vert ? `translate(${cx + 3},${cy}) rotate(-90)` : `translate(${cx},${cy})`; });
+    box.__xl = { name: label.slice(0, 28), rows: [['Month', NA, NB, ...(ytg.size ? [NC] : []), 'Growth'], ...d3.range(1, 13).map((mo) => { const a = s25.get(mo), b = s26.get(mo), g = ytg.get(mo); return [MON[mo - 1], a ?? '', b ?? '', ...(ytg.size ? [g ?? ''] : []), a > 0 && b != null ? Math.round((b / a - 1) * 10000) / 10000 : '']; })] };
     const t = tipBox(box);
     svg.append('g').selectAll('rect').data(d3.range(1, 13)).join('rect')
       .attr('x', (mo) => x(mo) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb - mt).style('fill', 'transparent')
@@ -2442,6 +2744,63 @@ dash.calc('iq_adjusted', {
       })
       .on('mouseleave', () => { t.hidden = true; svg.selectAll('.sd-mbar').style('opacity', op); });
   };
+  /* groups of bars; arrows show growth from one bar to the next, dashed lines the gap to budget */
+  const pairChart = (box, groups, m, o = {}) => {
+    box.replaceChildren();
+    const vals = groups.flatMap((g) => g.bars.map((b) => b.v)).filter((v) => v != null && isFinite(v));
+    if (!vals.length) { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = 'No data for this selection.'; box.append(n); return; }
+    const arrows = o.arrows || [[0, 1, 'g']], lv = (arrows.length ? d3.max(arrows, (a) => a[3] || 0) + 1 : 0) + (o.seq ? 1 : 0);
+    const W = Math.max(300, box.clientWidth), mb = o.sub ? 52 : 32, H = o.h || 300;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', o.label || 'Bar chart');
+    const x = d3.scaleBand(groups.map((g, i) => i), [4, W - 4]).paddingInner(o.gap ?? 0.28).paddingOuter(0.06);
+    const nb = d3.max(groups, (g) => g.bars.length), bw = Math.min(64, x.bandwidth() / nb * 0.9), bp = Math.max(4, bw * (o.inner ?? 0.12)), bx = (gi, bi, n) => x(gi) + (x.bandwidth() - n * bw) / 2 + bi * bw;
+    const fmt = o.fmt || ((v) => big(m, v));
+    /* measure value labels first: small font or vertical when wider than the bar, and lift the arrows above them */
+    const mt0 = svg.append('text').attr('class', 'sd-pc-lbl');
+    const lw = d3.max(vals, (v) => { mt0.text(fmt(v)); return mt0.node().getComputedTextLength ? mt0.node().getComputedTextLength() : String(fmt(v)).length * 6.5; }) || 0; mt0.remove();
+    const lmode = lw <= bw - bp / 2 ? 0 : lw * 0.85 <= bw - bp / 2 ? 1 : 2, lift = lmode === 2 ? lw * 0.85 + 8 : 16;
+    const mt = 20 + lv * 26 + (lmode === 2 ? lift - 16 : 0);
+    const y = d3.scaleLinear([0, d3.max(vals) || 1], [H - mb, mt + 16]);
+    const fitTxt = (t, w) => { const n = t.node(); if (!n.getComputedTextLength) return; let s0 = t.text(); while (s0.length > 3 && n.getComputedTextLength() > w) { s0 = s0.slice(0, -1); t.text(s0.trimEnd() + '…'); } };
+    const lbls = [];
+    groups.forEach((g, gi) => {
+      const n = g.bars.length, top = (bi) => y(Math.max(0, g.bars[bi].v || 0));
+      g.bars.forEach((b, bi) => {
+        if (b.v == null) return;
+        svg.append('rect').attr('x', bx(gi, bi, n) + bp / 2).attr('width', bw - bp).attr('y', top(bi)).attr('height', Math.max(1, y(0) - top(bi))).attr('rx', 3).style('fill', b.c || (bi ? 'var(--sd-c26)' : 'var(--sd-c25)'));
+        { const xx = bx(gi, bi, n) + bw / 2, yy = top(bi) - 5, t = svg.append('text').attr('class', 'sd-pc-lbl').attr('text-anchor', 'middle').attr('x', xx).attr('y', yy).text(fmt(b.v)); if (lmode === 1) t.style('font-size', '9.5px'); else if (lmode === 2) t.style('font-size', '9.5px').attr('text-anchor', 'start').attr('x', xx + 3).attr('transform', `rotate(-90 ${xx + 3} ${yy})`); lbls.push(t); }
+        if (b.lab) svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle').attr('x', bx(gi, bi, n) + bw / 2).attr('y', H - mb + 13).text(b.lab);
+      });
+      { const t = svg.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').style('font-weight', 600).attr('x', x(gi) + x.bandwidth() / 2).attr('y', H - mb + (g.bars.some((b) => b.lab) ? 27 : 14)).text(g.name); fitTxt(t, x.step() - 4); if (t.text() !== g.name) t.append('title').text(g.name); }
+      if (g.sub) { const sy = H - mb + (g.bars.some((b) => b.lab) ? 40 : 28), st = svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle'), parts = Array.isArray(g.sub) ? g.sub : [g.sub]; parts.forEach((ln, k) => st.append('tspan').attr('x', x(gi) + x.bandwidth() / 2).attr('y', sy + k * 12).text(ln)); }
+      arrows.forEach(([i, j, kind, l = 0]) => {
+        const a = g.bars[i], b = g.bars[j]; if (!a || !b || a.v == null || b.v == null) return;
+        const x0 = bx(gi, i, n) + bw / 2, x1 = bx(gi, j, n) + bw / 2;
+        if (kind === 'g') {
+          const ya = Math.min(top(i), top(j)) - lift - 8 - l * 24, gv = a.v > 0 ? b.v / a.v - 1 : null;
+          svg.append('path').attr('class', 'sd-evo-arrow').attr('d', `M${x0},${top(i) - lift - 2} L${x0},${ya} L${x1},${ya} L${x1},${top(j) - lift}`).attr('marker-end', 'url(#sd-ah2)');
+          const t = gv == null ? '—' : d3.format('+.0%')(gv), pw = t.length * 6.5 + 12;
+          svg.append('rect').attr('class', 'sd-evo-pill').attr('x', (x0 + x1) / 2 - pw / 2).attr('y', ya - 9).attr('width', pw).attr('height', 18).attr('rx', 9);
+          svg.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('x', (x0 + x1) / 2).attr('y', ya + 4).style('fill', gv == null ? null : gv >= 0 ? 'var(--sd-up)' : 'var(--sd-down)').text(t);
+        } else {
+          const gv = b.v > 0 ? a.v / b.v - 1 : null, yl = top(i) - 2;
+          svg.append('line').attr('x1', x0).attr('x2', x1 + bw / 2 + 4).attr('y1', yl).attr('y2', yl).style('stroke', 'var(--color-fg-muted)').style('stroke-dasharray', '3 3');
+          const t = gv == null ? '—' : d3.format('+.0%')(gv), pw = t.length * 6.5 + 12, px = Math.min(W - pw / 2 - 2, x1 + bw / 2 + 6 + pw / 2);
+          svg.append('rect').attr('class', 'sd-evo-pill').attr('x', px - pw / 2).attr('y', yl - 9).attr('width', pw).attr('height', 18).attr('rx', 9);
+          svg.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('x', px).attr('y', yl + 4).style('fill', gv == null ? null : gv >= 0 ? 'var(--sd-up)' : 'var(--sd-down)').text(t);
+        }
+      });
+    });
+    if (o.seq) groups.forEach((g, gi) => {
+      if (!gi) return; const a = groups[gi - 1].bars[0].v, b = g.bars[0].v; if (!a || !b) return;
+      const x0 = bx(gi - 1, 0, 1) + bw / 2, x1 = bx(gi, 0, 1) + bw / 2, ya = Math.min(y(a), y(b)) - lift - 10, gv = b / a - 1, t = d3.format('+.0%')(gv), pw = t.length * 6.5 + 12;
+      svg.append('path').attr('class', 'sd-evo-arrow').attr('d', `M${x0},${y(a) - lift - 2} L${x0},${ya} L${x1},${ya} L${x1},${y(b) - lift}`).attr('marker-end', 'url(#sd-ah2)');
+      svg.append('rect').attr('class', 'sd-evo-pill').attr('x', (x0 + x1) / 2 - pw / 2).attr('y', ya - 9).attr('width', pw).attr('height', 18).attr('rx', 9);
+      svg.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('x', (x0 + x1) / 2).attr('y', ya + 4).style('fill', gv >= 0 ? 'var(--sd-up)' : 'var(--sd-down)').text(t);
+    });
+    box.__xl = { name: (o.label || 'Chart').slice(0, 28), rows: [['Group', ...groups[0].bars.map((b, i) => b.lab || o.names?.[i] || 'Bar ' + (i + 1)), 'Note'], ...groups.map((g) => [g.name, ...g.bars.map((b) => b.v ?? ''), [].concat(g.sub || '').join(' ')])] };
+  };
+
   const drawTrend = (p) => {
     const box = $('#trend-chart'), d = dash.data('trend');
     if (!ready(box, d)) return;
@@ -2629,8 +2988,9 @@ dash.calc('iq_adjusted', {
   };
 
   /* ---- customers ---- */
-  const custSearch = $('#cust-search'), custStatus = $('#cust-status'), custLevel = $('#cust-level');
-  [custSearch, custStatus, custLevel].forEach((el) => el.addEventListener(el === custSearch ? 'input' : 'change', () => render()));
+  const custSearch = $('#cust-search'), custStatus = $('#cust-status'), custLevel = $('#cust-level'), custReg = $('#cust-region'), custCh = $('#cust-channel'), custSec = $('#cust-sector');
+  [custSearch, custStatus, custLevel, custReg, custCh, custSec].forEach((el) => el.addEventListener(el === custSearch ? 'input' : 'change', () => render()));
+  const fillOpts = (sel, allT, vals) => { const cur = sel.value, k = vals.join('\u0001'); if (sel.dataset.k !== k) { sel.replaceChildren(new Option(allT, ''), ...vals.map((v) => new Option(v, v))); sel.dataset.k = k; } sel.value = vals.includes(cur) ? cur : ''; };
   const custRows = (p) => {
     const ds = p.ds('customers'), d = dash.data(ds);
     if (d.status !== 'ok') return { d, rows: null };
@@ -2653,8 +3013,8 @@ dash.calc('iq_adjusted', {
     box.dataset.source = cr.ds || p.ds('customers');
     if (!ready(box, cr.d) || !cr.rows) return;
     const m = p.metric, all = cr.rows;
-    const ups = all.filter((r) => r['d_' + m] > 0).sort((a, b) => b['d_' + m] - a['d_' + m]).slice(0, 8);
-    const dns = all.filter((r) => r['d_' + m] < 0).sort((a, b) => a['d_' + m] - b['d_' + m]).slice(0, 8);
+    const ups = all.filter((r) => r['d_' + m] > 0).sort((a, b) => b['d_' + m] - a['d_' + m]).slice(0, 10);
+    const dns = all.filter((r) => r['d_' + m] < 0).sort((a, b) => a['d_' + m] - b['d_' + m]).slice(0, 10);
     const mx = d3.max([...ups, ...dns], (r) => Math.abs(r['d_' + m])) || 1;
     const col = (title, list, cls) => {
       const wrap = document.createElement('div');
@@ -2759,14 +3119,44 @@ dash.calc('iq_adjusted', {
     $('#cm-foot').textContent = (p.skus.length ? 'SKU filter: this page shows the whole brand. ' : '') + 'The channel and region filters do not apply here: the page shows all of this account\'s sales for the brands chosen.';
   };
 
+  /* sectors: YTD vs PY with growth, contribution to growth, and the channel split */
+  const drawSectors = (p, cr) => {
+    const m = p.metric, box = $('#sec-chart'), tb = $('#sec-table');
+    const t25 = d3.sum(cr.rows, (r) => +r['ytd25_' + m] || 0);
+    const agg = (list) => { const a = d3.sum(list, (r) => +r['ytd25_' + m] || 0), b = d3.sum(list, (r) => +r['ytd26_' + m] || 0); return { a, b, g: a > 0 ? b / a - 1 : null, c: t25 ? (b - a) / t25 * 100 : null }; };
+    const secs = [...d3.group(cr.rows, (r) => r.sector || 'Unassigned')].map(([k, l]) => ({ k, l, ...agg(l) })).sort((x, y) => y.b - x.b);
+    pairChart(box, secs.slice(0, 8).map((s0) => ({ name: s0.k, sub: ['Contribution', s0.c == null ? '—' : d3.format('+.1f')(s0.c) + ' pp'], bars: [{ v: s0.a }, { v: s0.b }] })), m, { h: 250, label: 'Sales by sector', names: [PLAB + ' 2025', PLAB + ' 2026'], sub: true });
+    const hr = document.createElement('tr');
+    for (const h of ['Sector / channel', PLAB + ' 2025', PLAB + ' 2026', 'Growth', 'Contribution']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Sector / channel') th.className = 'n'; hr.append(th); }
+    tb.tHead.replaceChildren(hr);
+    const out = [];
+    const line = (lab, o, tot) => { const tr = document.createElement('tr'); if (tot) tr.className = 'sd-total'; for (const [v, c, tn] of [[lab, 'lab'], [tab(m)(o.a), 'n'], [tab(m)(o.b), 'n'], [pct(o.g), 'n', o.g], [pp(o.c), 'n', o.c]]) { const td = document.createElement('td'); td.textContent = v; td.className = c; if (tn != null) tone(td, tn); tr.append(td); } out.push(tr); };
+    for (const s0 of secs) { line(s0.k, s0, true); for (const [ch, l] of [...d3.group(s0.l, (r) => r.channel || 'Unassigned')].sort((x, y) => agg(y[1]).b - agg(x[1]).b)) line('  ' + ch, agg(l)); }
+    tb.tBodies[0].replaceChildren(...out);
+  };
+  /* regions: YTD 2026 vs 2025 from the mix figures, with growth arrows */
+  const drawRegions = (p) => {
+    const box = $('#reg-chart'), ds = p.ds('mix'), d = dash.data(ds); box.dataset.source = ds;
+    if (!ready(box, d)) return;
+    const sc = p.monthMode && p.skus.length ? p.SCB : p.SC, m = p.metric;
+    const combos = new Set(cross(p.PK, p.CK, sc, p.CH, ['All']).map(([a, b, c, e, f]) => a + b + '|' + c + '|' + e + '|' + f));
+    const inSet = d.data.filter((r) => combos.has(r.combo) && r.dim === 'region');
+    const rows = groupSum(inSet, (r) => r.name, null, (r) => ({ name: r.name })).filter((r) => r['ytd26_' + m] || r['ytd25_' + m]).sort((a, b) => b['ytd26_' + m] - a['ytd26_' + m]).slice(0, 8);
+    pairChart(box, rows.map((r) => ({ name: r.name, bars: [{ v: r['ytd25_' + m] }, { v: r['ytd26_' + m] }] })), m, { h: 280, label: 'Sales by region', names: [PLAB + ' 2025', PLAB + ' 2026'] });
+  };
+
   const drawCustomers = (p) => {
     const cr = custRows(p);
+    drawRegions(p);
     drawMovers(p, cr);
     const table = $('#cust-table');
     if (cr.d.status !== 'ok') { table.tBodies[0].replaceChildren(); $('#cust-count').textContent = ''; return; }
     const m = p.metric, q = custSearch.value.trim().toLowerCase(), stv = custStatus.value, lvl = p.oneCountry === 'Saudi Arabia' ? custLevel.value : 'customer';
     custLevel.hidden = p.oneCountry !== 'Saudi Arabia';
-    const rows = cr.rows.filter((r) => (!stv || r['status_' + m] === stv) && (!q || [r.customer, r.country, r.region, r.channel, r.sector].join(' ').toLowerCase().includes(q)));
+    const uq = (f) => [...new Set(cr.rows.map((r) => r[f]).filter(Boolean))].sort();
+    fillOpts(custReg, 'All regions', uq('region')); fillOpts(custCh, 'All channels', uq('channel')); fillOpts(custSec, 'All sectors', uq('sector'));
+    drawSectors(p, cr);
+    const rows = cr.rows.filter((r) => (!stv || r['status_' + m] === stv) && (!custReg.value || r.region === custReg.value) && (!custCh.value || r.channel === custCh.value) && (!custSec.value || r.sector === custSec.value) && (!q || [r.customer, r.country, r.region, r.channel, r.sector].join(' ').toLowerCase().includes(q)));
     const cols = [
       { k: 'name', f: 'customer', label: lvl === 'parent' ? 'Parent group' : 'STADA customer', cls: 'nm', text: true },
       ...(p.countries.length !== 1 ? [{ k: 'country', f: 'country', label: 'Country', text: true }] : []),
@@ -2812,15 +3202,15 @@ dash.calc('iq_adjusted', {
     const br = brandRows(p, false);
     if (br.d.status === 'ok') {
       const rows = br.rows.filter((r) => r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]);
-      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, ...numCols(m, 'Share')], sortState.brand, render, br.exact, p.ds('brands'));
+      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-sm' }, ...numCols(m, 'Share')], sortState.brand, render, br.exact, p.ds('brands'));
       bt.querySelectorAll('tbody tr').forEach((tr) => tr.classList.toggle('sel', p.brands.includes(tr.dataset.k.split('|').pop())));
     } else bt.tBodies[0].replaceChildren();
     const st = $('#sku-table'), sr = skuRows(p);
     $('#sku-title').textContent = 'SKUs · ' + (p.brands.length ? (isPainSet(p.brands) ? 'Pain portfolio' : p.brands.length <= 2 ? p.brands.join(' + ') : p.brands.length + ' brands') : p.classes.length ? p.classes.join(' + ') : 'All brands');
     if (sr.d.status === 'ok') {
       const q = skuSearch.value.trim().toLowerCase();
-      lastSku = sr.rows.filter((r) => (r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q)));
-      drawTable(st, lastSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, ...numCols(m, 'Share')], sortState.sku, render, sr.exact, p.ds('skus'));
+      lastSku = sr.rows.filter((r) => (r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q))).map((r) => ({ ...r, cls: CLSOF.get(r.brand) || '' }));
+      drawTable(st, lastSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-md' }, ...numCols(m, 'Share')], sortState.sku, render, sr.exact, p.ds('skus'));
       st.querySelectorAll('tbody tr').forEach((tr) => { const r = lastSku.find((x) => x.id === tr.dataset.k); tr.classList.toggle('sel', !!r && p.skus.includes(r.sku)); });
     } else st.tBodies[0].replaceChildren();
   };
@@ -2982,6 +3372,7 @@ dash.calc('iq_adjusted', {
   const drawPlan = (p) => {
     const m = p.metric === 'units' ? 'units' : 'eur';
     $('#plan-sarnote').hidden = p.metric !== 'loc';
+    drawPlanOverview(p);
     drawPlanKpis(p, m);
     drawPlanTrend(p, m, LM);
     drawPlanGap(p, m);
@@ -3035,13 +3426,14 @@ dash.calc('iq_adjusted', {
       if (r) dash.setParams({ mbrand: r.label, matc: r.market, n1: '', n2: '', n3: '' });
     });
   };
-  const sortIq = { over: { k: 'mat26', dir: -1 }, comp: { k: 'v', dir: -1 }, adjm: { k: 'mat26', dir: -1 }, adjp: { k: 'mat26', dir: -1 } };
+  const sortIq = { cov: { k: 'a26', dir: -1 }, over: { k: 'mat26', dir: -1 }, comp: { k: 'v', dir: -1 }, adjm: { k: 'mat26', dir: -1 }, adjp: { k: 'mat26', dir: -1 } };
   /* Quarter / YTD / MAT switch per card */
-  const PV = { ms: 'mat', top: 'mat', mol: 'mat', ch: 'mat', comp: 'mat', adjevo: 'mat', adjch: 'mat' };
+  const PV = { msv: 'brand', ms: 'mat', top: 'mat', mol: 'mat', ch: 'mat', comp: 'mat', adjevo: 'mat', adjch: 'mat' };
   const PVL = { q: 'Quarter', ytd: 'YTD', mat: 'MAT' };
   const pvLab = (k, short) => k === 'q' ? short : (k === 'ytd' ? 'YTD ' : 'MAT ') + short;
   const pvPress = () => root.querySelectorAll('[data-pvk]').forEach((b) => b.setAttribute('aria-pressed', String(PV[b.dataset.pvk] === b.dataset.v)));
   root.addEventListener('click', (ev) => {
+    const mv = ev.target.closest('[data-msv]'); if (mv) { PV.msv = mv.dataset.msv; render(); return; }
     const b = ev.target.closest('[data-pvk]'); if (!b) return;
     PV[b.dataset.pvk] = b.dataset.v; pvPress(); render();
   });
@@ -3131,6 +3523,24 @@ dash.calc('iq_adjusted', {
       { k: 'rank', f: 'rank_' + m, label: 'Rank', fmt: (v) => v == null ? '—' : '#' + v, cls: 'n hide-md' },
       { k: 'cagr', f: 'cagr4_' + m, label: 'Brand CAGR 4Y', fmt: pct, cls: 'n hide-md', tone: true },
     ], sortIq.over, render);
+    drawIqCov();
+  };
+  const drawIqCov = () => {
+    const d = dash.data('iq_coverage'), t = $('#iq-cov');
+    if (d.status !== 'ok') { t.tBodies[0].replaceChildren(); return; }
+    const rows = d.data, miss = rows.filter((r) => r.status === 'Not in IQVIA'), inn = rows.filter((r) => r.status === 'In IQVIA');
+    $('#iq-cov-note').textContent = inn.length + ' of ' + (inn.length + miss.length) + ' STADA brands with Saudi sales are in the IQVIA data' + (miss.length ? '. Not in IQVIA: ' + miss.sort((a, b) => b.act26_eur - a.act26_eur).map((r) => r.brand).join(', ') + ' (IQVIA does not audit them, so they have no market view).' : '.') + ' Sorted by sales; brands with no sales yet come last.';
+    drawTable(t, rows, [
+      { k: 'brand', f: 'brand', label: 'Brand', cls: 'nm', text: true },
+      { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-sm' },
+      { k: 'st', f: 'status', label: 'In IQVIA?', text: true, render: (td, r) => { const sp = document.createElement('span'); sp.className = 'sd-tag' + (r.status === 'Not in IQVIA' ? ' new' : ''); sp.textContent = r.status; td.append(sp); } },
+      { k: 'a26', f: 'act26_eur', label: 'ACT YTD 2026', fmt: tab('eur'), cls: 'n' },
+      { k: 'a25', f: 'act25_eur', label: 'ACT 2025', fmt: tab('eur'), cls: 'n hide-sm' },
+      { k: 'bud', f: 'bud26_eur', label: 'BUD 2026', fmt: tab('eur'), cls: 'n hide-md' },
+      { k: 'sk', f: 'skus', label: 'SKUs', fmt: int, cls: 'n hide-md' },
+      { k: 'iq', f: 'iq_mat_eur', label: 'IQVIA MAT', fmt: tab('eur'), cls: 'n' },
+      { k: 'pk', f: 'iq_packs', label: 'IQVIA packs', fmt: int, cls: 'n hide-md' },
+    ], sortIq.cov, render);
   };
 
   const drawEvolution = (box, T, B, view, m, bname) => {
@@ -3225,7 +3635,7 @@ dash.calc('iq_adjusted', {
     tb.tHead.replaceChildren(hr);
     if (!r) { tb.tBodies[0].replaceChildren(); return; }
     const per = (T0) => T0;
-    const P0 = [['q', 'Q2 26'], ['ytd', 'YTD Q2 26'], ['mat', 'MAT Q2 26']];
+    const it = dash.data('iq_items'), sh = ((it.data[0] && it.data[0].period) || 'Q3 2026').replace(' 20', ' '), P0 = [['q', sh], ['ytd', 'YTD ' + sh], ['mat', 'MAT ' + sh]];
     const w = multi ? null : 'id=' + enc(r.id);
     tb.tBodies[0].replaceChildren(...P0.map(([k, lab]) => {
       const tr = document.createElement('tr');
@@ -3276,7 +3686,7 @@ dash.calc('iq_adjusted', {
       tile('Growth vs adjusted market', B, 'gap_mat_' + m, gapf, 'Brand growth minus market growth', 0));
     /* market by year, with the Quarter / YTD / MAT switch */
     pvPress();
-    const short = (T && T.period ? T.period : 'Q2 2026').replace(' 20', ' ');
+    const short = (T && T.period ? T.period : 'Q3 2026').replace(' 20', ' ');
     const ev = PV.adjevo, eb = $('#iq-adj-evo');
     $('#iq-adj-evo-title').textContent = 'Adjusted market by ' + (ev === 'q' ? short.slice(0, 2) + ' of each year' : ev === 'ytd' ? 'YTD year' : 'MAT year');
     eb.replaceChildren();
@@ -3320,6 +3730,143 @@ dash.calc('iq_adjusted', {
     $('#iq-adj-prod').querySelectorAll('tbody tr').forEach((tr) => { const r = prods.find((x) => x.id === tr.dataset.key); tr.classList.toggle('stada', !!(r && r.name === q.mbrand)); });
   };
 
+  /* quarterly bars split into the chosen item and the rest of the market */
+  const qBars = (qb, rows, m, name) => {
+    qb.replaceChildren();
+    if (!rows.length) return;
+    const qlab = (s) => 'Q' + s.slice(-1) + ' ' + s.slice(2, 4);
+        const W = Math.max(280, qb.clientWidth), H = 260, mb2 = 26, mt = 8;
+        const y = d3.scaleLinear([0, d3.max(rows, (r) => r.tot) || 1], [H - mb2, mt]).nice();
+        const svg = d3.select(qb).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Quarterly market sales split into brand and rest of market');
+        const ticks = y.ticks(4);
+        const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => big(m, t));
+        const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
+        tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
+        svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+        const x = d3.scaleBand(rows.map((r) => r.i), [ml, W - 4]).padding(0.2);
+        const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - ml) / 52)));
+        svg.append('g').selectAll('text').data(rows.filter((r, k) => (rows.length - 1 - k) % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle')
+          .attr('x', (r) => x(r.i) + x.bandwidth() / 2).attr('y', H - 6).text((r) => qlab(r.quarter));
+        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.bandwidth()).attr('rx', 2)
+          .attr('y', (r) => y(Math.max(0, r.tot))).attr('height', (r) => Math.max(0, y(0) - y(Math.max(0, r.tot - r.br)))).style('fill', 'var(--sd-c25)');
+        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.bandwidth()).attr('rx', 2)
+          .attr('y', (r) => y(Math.max(0, r.br))).attr('height', (r) => Math.max(0, y(0) - y(Math.max(0, r.br)))).style('fill', 'var(--sd-c26)');
+        const t = tipBox(qb);
+        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
+          .on('mousemove', (ev, r) => {
+            t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = qlab(r.quarter); t.append(hd);
+            t.append(tipRow('var(--sd-c26)', name, big(m, r.br)), tipRow('var(--sd-c25)', 'Rest of market', big(m, r.tot - r.br)), tipRow(null, 'Quarter share', r.tot > 0 ? shr(r.br / r.tot) : '—'));
+            t.hidden = false; const [px, py] = d3.pointer(ev, qb); placeTip(qb, t, px, py);
+          }).on('mouseleave', () => { t.hidden = true; });
+      
+    qb.__xl = { name: 'Quarterly sales', rows: [['Quarter', name, 'Rest of market', 'Market'], ...rows.map((r) => [qlab(r.quarter), r.br, r.tot - r.br, r.tot])] };
+  };
+  /* share line: each quarter, YTD within each year, or rolling MAT */
+  const shareLine = (sb, rows, kS) => {
+    sb.replaceChildren();
+    const qlab = (s) => 'Q' + s.slice(-1) + ' ' + s.slice(2, 4);
+    const pts = rows.map((r) => ({ ...r, ms: kS === 'q' ? r.sq : kS === 'ytd' ? r.sy : r.ms })).filter((r) => r.ms != null);
+    if (!pts.length) return;
+        const W = Math.max(280, sb.clientWidth), H = 260, mb2 = 26, mt = 14;
+        const y = d3.scaleLinear([0, Math.max(0.05, d3.max(pts, (r) => r.ms) * 1.15)], [H - mb2, mt]).nice();
+        const svg = d3.select(sb).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Market share trend');
+        const ticks = y.ticks(4);
+        const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => d3.format('.0%')(t));
+        const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
+        tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
+        svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 40).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+        const x = d3.scalePoint(pts.map((r) => r.i), [ml + 6, W - 46]);
+        const every = Math.ceil(pts.length / Math.max(2, Math.floor((W - ml) / 56)));
+        svg.append('g').selectAll('text').data(pts.filter((r, k) => (pts.length - 1 - k) % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle')
+          .attr('x', (r) => x(r.i)).attr('y', H - 6).text((r) => qlab(r.quarter));
+        const segs = kS === 'ytd' ? [...d3.group(pts, (r) => r.quarter.slice(0, 4)).values()] : [pts];
+        for (const sg of segs) svg.append('path').datum(sg).attr('d', d3.line().x((r) => x(r.i)).y((r) => y(r.ms))).style('fill', 'none').style('stroke', 'var(--sd-c26)').style('stroke-width', 2).style('stroke-linejoin', 'round').style('stroke-linecap', 'round');
+        svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (r) => x(r.i)).attr('cy', (r) => y(r.ms)).attr('r', (r, k) => k === pts.length - 1 ? 4.5 : 2.5).style('fill', 'var(--sd-c26)');
+        const last = pts[pts.length - 1];
+        svg.append('text').attr('class', 'sd-lbl').attr('x', x(last.i) + 8).attr('y', y(last.ms)).attr('dominant-baseline', 'middle').text(d3.format('.1%')(last.ms));
+        const t = tipBox(sb);
+        svg.append('g').selectAll('rect').data(pts).join('rect').attr('x', (r) => x(r.i) - x.step() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
+          .on('mousemove', (ev, r) => {
+            t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = (kS === 'q' ? '' : kS === 'ytd' ? 'YTD ' : 'MAT ') + qlab(r.quarter); t.append(hd);
+            t.append(tipRow('var(--sd-c26)', 'Share', shr(r.ms))); t.hidden = false; const [px, py] = d3.pointer(ev, sb); placeTip(sb, t, px, py);
+          }).on('mouseleave', () => { t.hidden = true; });
+      
+    sb.__xl = { name: 'Share trend', rows: [['Quarter', 'Share'], ...pts.map((r) => [qlab(r.quarter), r.ms])] };
+  };
+  /* rows for the two charts above from quarterly market and item values */
+  const shareRows = (Q, tot, br) => {
+    const rows = Q.map((q, i) => ({ i, quarter: q, tot: tot[i], br: br ? br[i] : 0 }));
+    for (const r of rows) {
+      r.sq = r.tot > 0 ? r.br / r.tot : null;
+      if (r.i >= 3) { let s2 = 0, t2 = 0; for (let j = r.i - 3; j <= r.i; j++) { s2 += rows[j].br; t2 += rows[j].tot; } r.ms = t2 > 0 ? s2 / t2 : null; } else r.ms = null;
+      const yr = r.quarter.slice(0, 4), qn = +r.quarter.slice(-1);
+      const ys = rows.filter((o) => o.quarter.slice(0, 4) === yr && +o.quarter.slice(-1) <= qn);
+      const tt = d3.sum(ys, (o) => o.tot), bb = d3.sum(ys, (o) => o.br);
+      r.sy = ys.length === qn && tt > 0 ? bb / tt : null;
+    }
+    return rows;
+  };
+
+
+  /* market share lines: the chosen item and the biggest others (brands or molecules), each quarter, YTD or rolling MAT */
+  const PAL = ['#ED1651', '#5B8DD6', '#2A9D8F', '#8E5BB5', '#F28C28', '#6B7280', '#C2185B', '#14B8A6'];
+  const pickSeries = (G, mains, nTop) => {
+    const L = [...G].map(([name, vals]) => ({ name, vals, w: d3.sum(vals.slice(-4)), main: mains.has(name) })).filter((x) => x.w > 0 || x.main).sort((a, b) => b.w - a.w);
+    const mn = L.filter((x) => x.main).slice(0, 2);
+    return [...L.filter((x) => !x.main).slice(0, nTop - mn.length), ...mn];
+  };
+  const multiShare = (box, Q, tot, series, kS) => {
+    box.replaceChildren();
+    const qlab = (q) => 'Q' + q.slice(-1) + ' ' + q.slice(2, 4);
+    let ci = 0;
+    const S = series.map((x) => ({ ...x, c: x.main ? 'var(--sd-blue)' : PAL[ci++ % PAL.length], pts: shareRows(Q, tot, x.vals).map((r) => ({ i: r.i, quarter: r.quarter, v: kS === 'q' ? r.sq : kS === 'ytd' ? r.sy : r.ms })) }));
+    const idx = [...new Set(S.flatMap((x) => x.pts.filter((p) => p.v != null).map((p) => p.i)))].sort((a, b) => a - b);
+    if (!idx.length) return;
+    const W = Math.max(280, box.clientWidth), H = 280, mb2 = 26, mt = 14;
+    const y = d3.scaleLinear([0, Math.min(1, (d3.max(S, (x) => d3.max(x.pts, (p) => p.v)) || 0.05) * 1.1)], [H - mb2, mt]).nice();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Market share trend');
+    const ticks = y.ticks(5);
+    const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => d3.format('.0%')(t));
+    const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
+    tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
+    svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 44).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+    const x = d3.scalePoint(idx, [ml + 6, W - 48]);
+    const every = Math.ceil(idx.length / Math.max(2, Math.floor((W - ml) / 56)));
+    svg.append('g').selectAll('text').data(idx.filter((i, k) => (idx.length - 1 - k) % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('x', (i) => x(i)).attr('y', H - 6).text((i) => qlab(Q[i]));
+    for (const sr of [...S.filter((z) => !z.main), ...S.filter((z) => z.main)]) {
+      const pts = sr.pts.filter((p) => p.v != null && x(p.i) != null);
+      const segs = kS === 'ytd' ? [...d3.group(pts, (p) => p.quarter.slice(0, 4)).values()] : [pts];
+      for (const sg of segs) svg.append('path').datum(sg).attr('d', d3.line().x((p) => x(p.i)).y((p) => y(p.v))).style('fill', 'none').style('stroke', sr.c).style('stroke-width', sr.main ? 3 : 1.6).style('opacity', sr.main ? 1 : 0.9).style('stroke-linejoin', 'round');
+      const last = pts[pts.length - 1];
+      if (sr.main && last) svg.append('text').attr('class', 'sd-lbl').attr('x', x(last.i) + 7).attr('y', y(last.v)).attr('dominant-baseline', 'middle').text(d3.format('.1%')(last.v));
+    }
+    const t = tipBox(box);
+    svg.append('g').selectAll('rect').data(idx).join('rect').attr('x', (i) => x(i) - x.step() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
+      .on('mousemove', (ev, i) => {
+        t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = (kS === 'q' ? '' : kS === 'ytd' ? 'YTD ' : 'MAT ') + qlab(Q[i]); t.append(hd);
+        S.map((sr) => ({ sr, v: (sr.pts.find((p) => p.i === i) || {}).v })).filter((o) => o.v != null).sort((a, b) => b.v - a.v).forEach((o) => t.append(tipRow(o.sr.c, o.sr.name, shr(o.v))));
+        t.hidden = false; const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
+      }).on('mouseleave', () => { t.hidden = true; });
+    const lg = document.createElement('div'); lg.className = 'sd-legend ms-lg';
+    for (const sr of S) { const sp = document.createElement('span'); if (sr.main) sp.className = 'main'; const i = document.createElement('i'); i.style.background = sr.c; sp.append(i, sr.name); lg.append(sp); }
+    box.append(lg);
+    box.__xl = { name: 'Share trend', rows: [['Quarter', ...S.map((sr) => sr.name)], ...idx.map((i) => [qlab(Q[i]), ...S.map((sr) => (sr.pts.find((p) => p.i === i) || {}).v ?? '')])] };
+  };
+  /* brands or molecules of a defined market, from the IQVIA rows, for the form and channel chosen */
+  const iqSeries = (atc, q, m, by) => {
+    const d = dash.data('iqvia'); if (d.status !== 'ok' || !d.data.length) return null;
+    const QS = Object.keys(d.data[0]).filter((k) => k.startsWith('u_')).map((k) => k.slice(2)).sort(), n = QS.length, pf = m === 'units' ? 'u_' : 'e_';
+    const nf = q.n3 ? ['nfc3', q.n3] : q.n2 ? ['nfc2', q.n2] : q.n1 ? ['nfc1', q.n1] : null;
+    const tot = new Array(n).fill(0), G = new Map(), mains = new Set();
+    for (const r of d.data) {
+      if (!String(r.markets).split(';').includes(atc) || (nf && r[nf[0]] !== nf[1]) || (q.mch !== 'All' && r.channel !== q.mch)) continue;
+      const k = by === 'mol' ? r.molecule : r.label;
+      if (r.label === q.mbrand) mains.add(k);
+      let a = G.get(k); if (!a) { a = new Array(n).fill(0); G.set(k, a); }
+      for (let i = 0; i < n; i++) { const v = +r[pf + QS[i]] || 0; a[i] += v; tot[i] += v; }
+    }
+    return { QS, tot, series: pickSeries(G, mains, 8) };
+  };
   const drawIqDetail = (q, all, atc, m) => {
     const mk = atc + '|' + nfcKey(q) + '|' + q.mch;
     const T = all.find((r) => r.id === mk + '|Total market'), B = all.find((r) => r.id === mk + '|' + q.mbrand);
@@ -3363,7 +3910,7 @@ dash.calc('iq_adjusted', {
     hr2.append(th('Period'));
     for (const mm of [m]) for (const h of ['Market', 'Mkt growth', 'Brand', 'Brand growth', 'Share', 'Share change', 'Growth vs market']) hr2.append(th(h, 'n'));
     gt.tHead.replaceChildren(hr1, hr2);
-    const per = (T && T.period) || 'Q2 2026', short = per.replace(' 20', ' ');
+    const per = (T && T.period) || 'Q3 2026', short = per.replace(' 20', ' ');
     const body = [];
     for (const [k, lab] of [['q', short], ['ytd', 'YTD ' + short], ['mat', 'MAT ' + short]]) {
       const tr = document.createElement('tr');
@@ -3455,8 +4002,6 @@ dash.calc('iq_adjusted', {
         const tt = d3.sum(ys, (o) => o.tot), bb = d3.sum(ys, (o) => o.br);
         r.sy = ys.length === qn && tt > 0 ? bb / tt : null;
       }
-      const shareOf = (r) => kS === 'q' ? r.sq : kS === 'ytd' ? r.sy : r.ms;
-      $('#iq-ms-title').textContent = kS === 'q' ? 'Market share trend (each quarter)' : kS === 'ytd' ? 'Market share trend (YTD)' : 'Market share trend (rolling MAT)';
       $('#iq-ms-note').textContent = kS === 'q' ? 'Each point is the share in that quarter alone.' : kS === 'ytd' ? 'Each point is the share from January to the end of that quarter, so it restarts each year.' : 'Each point is the share over the 12 months ending that quarter.';
       const qlab = (s) => 'Q' + s.slice(-1) + ' ' + s.slice(2, 4);
       /* market evolution: quarterly stacked bars, or YTD / MAT years */
@@ -3465,61 +4010,13 @@ dash.calc('iq_adjusted', {
       $('#iq-evo-legend').hidden = view !== 'q';
       $('#iq-evo-title').textContent = view === 'q' ? 'Quarterly sales: brand vs rest of market' : (view === 'ytd' ? 'Market by YTD year' : 'Market by MAT year');
       $('#iq-evo-note').textContent = view === 'q' ? 'Each bar is one quarter; the blue part is ' + q.mbrand + '.' : 'Bars show the market, with ' + q.mbrand + "'s share at the foot of each bar. Arrows show market growth year on year, the top arrow the 4-year CAGR; the rows below compare market and brand growth.";
-      qb.replaceChildren();
-      if (view !== 'q') drawEvolution(qb, T, B, view, m, q.mbrand);
-      else if (rows.length) {
-        const W = Math.max(280, qb.clientWidth), H = 260, mb2 = 26, mt = 8;
-        const y = d3.scaleLinear([0, d3.max(rows, (r) => r.tot) || 1], [H - mb2, mt]).nice();
-        const svg = d3.select(qb).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Quarterly market sales split into brand and rest of market');
-        const ticks = y.ticks(4);
-        const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => big(m, t));
-        const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
-        tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
-        svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
-        const x = d3.scaleBand(rows.map((r) => r.i), [ml, W - 4]).padding(0.2);
-        const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - ml) / 52)));
-        svg.append('g').selectAll('text').data(rows.filter((r, k) => (rows.length - 1 - k) % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle')
-          .attr('x', (r) => x(r.i) + x.bandwidth() / 2).attr('y', H - 6).text((r) => qlab(r.quarter));
-        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.bandwidth()).attr('rx', 2)
-          .attr('y', (r) => y(Math.max(0, r.tot))).attr('height', (r) => Math.max(0, y(0) - y(Math.max(0, r.tot - r.br)))).style('fill', 'var(--sd-c25)');
-        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.bandwidth()).attr('rx', 2)
-          .attr('y', (r) => y(Math.max(0, r.br))).attr('height', (r) => Math.max(0, y(0) - y(Math.max(0, r.br)))).style('fill', 'var(--sd-c26)');
-        const t = tipBox(qb);
-        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.i)).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
-          .on('mousemove', (ev, r) => {
-            t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = qlab(r.quarter); t.append(hd);
-            t.append(tipRow('var(--sd-c26)', q.mbrand, big(m, r.br)), tipRow('var(--sd-c25)', 'Rest of market', big(m, r.tot - r.br)), tipRow(null, 'Quarter share', r.tot > 0 ? shr(r.br / r.tot) : '—'));
-            t.hidden = false; const [px, py] = d3.pointer(ev, qb); placeTip(qb, t, px, py);
-          }).on('mouseleave', () => { t.hidden = true; });
-      }
-      /* MAT share line */
-      sb.replaceChildren();
-      const pts = rows.filter((r) => shareOf(r) != null).map((r) => ({ ...r, ms: shareOf(r) }));
-      if (pts.length) {
-        const W = Math.max(280, sb.clientWidth), H = 260, mb2 = 26, mt = 14;
-        const y = d3.scaleLinear([0, Math.max(0.05, d3.max(pts, (r) => r.ms) * 1.15)], [H - mb2, mt]).nice();
-        const svg = d3.select(sb).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', $('#iq-ms-title').textContent);
-        const ticks = y.ticks(4);
-        const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => d3.format('.0%')(t));
-        const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
-        tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
-        svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 40).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
-        const x = d3.scalePoint(pts.map((r) => r.i), [ml + 6, W - 46]);
-        const every = Math.ceil(pts.length / Math.max(2, Math.floor((W - ml) / 56)));
-        svg.append('g').selectAll('text').data(pts.filter((r, k) => (pts.length - 1 - k) % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle')
-          .attr('x', (r) => x(r.i)).attr('y', H - 6).text((r) => qlab(r.quarter));
-        const segs = kS === 'ytd' ? [...d3.group(pts, (r) => r.quarter.slice(0, 4)).values()] : [pts];
-        for (const sg of segs) svg.append('path').datum(sg).attr('d', d3.line().x((r) => x(r.i)).y((r) => y(r.ms))).style('fill', 'none').style('stroke', 'var(--sd-c26)').style('stroke-width', 2).style('stroke-linejoin', 'round').style('stroke-linecap', 'round');
-        svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (r) => x(r.i)).attr('cy', (r) => y(r.ms)).attr('r', (r, k) => k === pts.length - 1 ? 4.5 : 2.5).style('fill', 'var(--sd-c26)');
-        const last = pts[pts.length - 1];
-        svg.append('text').attr('class', 'sd-lbl').attr('x', x(last.i) + 8).attr('y', y(last.ms)).attr('dominant-baseline', 'middle').text(d3.format('.1%')(last.ms));
-        const t = tipBox(sb);
-        svg.append('g').selectAll('rect').data(pts).join('rect').attr('x', (r) => x(r.i) - x.step() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
-          .on('mousemove', (ev, r) => {
-            t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = (kS === 'q' ? '' : kS === 'ytd' ? 'YTD ' : 'MAT ') + qlab(r.quarter); t.append(hd);
-            t.append(tipRow('var(--sd-c26)', 'Share', shr(r.ms))); t.hidden = false; const [px, py] = d3.pointer(ev, sb); placeTip(sb, t, px, py);
-          }).on('mouseleave', () => { t.hidden = true; });
-      }
+      if (view !== 'q') { qb.replaceChildren(); drawEvolution(qb, T, B, view, m, q.mbrand); }
+      else qBars(qb, rows, m, q.mbrand);
+      const sv = PV.msv;
+      root.querySelectorAll('[data-msv]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.msv === sv)));
+      $('#iq-ms-title').textContent = 'Market share trend: ' + (sv === 'mol' ? 'molecules' : q.mbrand + ' and the top 7 brands') + (kS === 'q' ? ' (each quarter)' : kS === 'ytd' ? ' (YTD)' : ' (rolling MAT)');
+      const ss = iqSeries(atc, q, m, sv);
+      if (ss) multiShare(sb, ss.QS, ss.tot, ss.series, kS); else shareLine(sb, rows, kS);
     }
 
     /* competitors */
@@ -3563,13 +4060,485 @@ dash.calc('iq_adjusted', {
       return;
     }
     const all = d.data;
-    const per = (all[0] && all[0].period) || 'Q2 2026';
+    const per = (all[0] && all[0].period) || 'Q3 2026';
     root.querySelectorAll('.iq-period').forEach((el) => { el.textContent = per; });
     const atc = drawMarketControls(q, all, p);
     const detail = !!q.mbrand && !!atc;
     $('#iq-overview').hidden = detail; $('#iq-detail').hidden = !detail;
     drawIqPortfolio(q, p, m, detail);
     if (detail) drawIqDetail(q, all, atc, m); else drawIqOverview(q, all, m);
+  };
+
+  /* ---- Market explorer: the whole IQVIA market, any market definition ---- */
+  const XD = ['atc1', 'atc2', 'atc3', 'atc4', 'nfc1', 'nfc2', 'nfc3', 'molecule', 'corporation', 'product', 'pack', 'segment', 'channel'];
+  const XL = { atc1: 'ATC1', atc2: 'ATC2', atc3: 'ATC3', atc4: 'ATC4', nfc1: 'NFC1 form', nfc2: 'NFC2', nfc3: 'NFC3', molecule: 'Molecule', corporation: 'Corporation', product: 'Product', pack: 'Pack', segment: 'Segment', channel: 'IQVIA channel' };
+  const XP = { atc1: 'ATC1 classes', atc2: 'ATC2 classes', atc3: 'ATC3 classes', atc4: 'ATC4 classes', nfc1: 'forms', nfc2: 'NFC2 forms', nfc3: 'NFC3 forms', molecule: 'molecules', corporation: 'corporations', product: 'products', pack: 'packs', segment: 'segments', channel: 'channels' };
+  const XS = { f: {}, fd: 'product', fv: '', per: 'mat', view: 'mat', bd: 'molecule', gd: 'product', msv: 'brand', cm: null };
+  const sortXp = { list: { k: 'v', dir: -1 }, brk: { k: 'v', dir: -1 } };
+  let xpMounted = false, XR = null, XO = {};
+  const xv = (r, d) => { const cm = XS.cm && XS.cm.bp.has(r.pidn); return d === 'pack' ? (cm ? XS.cm.item : r.product) + ' · ' + r.pack : d === 'product' && cm ? XS.cm.item : r[d]; };
+  const xpRows = () => {
+    const a = dash.data('iq_all'), k = dash.data('iq_packs');
+    if (a.status !== 'ok' || k.status !== 'ok') return { a, k };
+    if (XR && XR.a === a.data && XR.k === k.data) return XR;
+    const pk = new Map(k.data.map((r) => [String(r.pid), r]));
+    const Q = Object.keys(a.data[0] || {}).filter((c) => c.startsWith('u_')).map((c) => c.slice(2)).sort();
+    const rows = [];
+    for (const r of a.data) {
+      const p = pk.get(String(r.pid)); if (!p) continue;
+      rows.push({ ...p, pidn: +p.pid, channel: r.channel, stada: +p.stada === 1, launch_year: +p.launch_year > 1900 ? +p.launch_year : null, units: Q.map((q) => +r['u_' + q] || 0), eur: Q.map((q) => +r['e_' + q] || 0) });
+    }
+    XR = { a: a.data, k: k.data, rows, Q, n: Q.length, qn: +Q[Q.length - 1].slice(-1) };
+    XR.period = 'Q' + XR.qn + ' ' + Q[Q.length - 1].slice(0, 4);
+    return XR;
+  };
+  const xsum = (a, f, t) => { let s = 0; for (let i = Math.max(0, f); i <= t; i++) s += a[i]; return s; };
+  const xper = (a, n, qn) => { const o = {}; for (const yy of [22, 23, 24, 25, 26]) { const e = n - 1 - 4 * (26 - yy); o['q' + yy] = e >= 0 ? a[e] : 0; o['ytd' + yy] = xsum(a, e - qn + 1, e); o['mat' + yy] = xsum(a, e - 3, e); } return o; };
+  /* the same measures as the Market (IQVIA) tab, for any item against its market */
+  const xmet = (a, t, R) => {
+    const o = { period: R.period };
+    for (const m of ['units', 'eur']) {
+      const p = xper(a[m], R.n, R.qn), tp = xper(t[m], R.n, R.qn);
+      for (const k of Object.keys(p)) o[k + '_' + m] = p[k];
+      for (const k of ['q', 'ytd', 'mat']) {
+        const c = p[k + '26'], b = p[k + '25'], tc = tp[k + '26'], tb = tp[k + '25'];
+        const g = b > 0 ? c / b - 1 : null, tg = tb > 0 ? tc / tb - 1 : null, ms = tc > 0 ? c / tc : null, ms25 = tb > 0 ? b / tb : null;
+        Object.assign(o, { ['g_' + k + '_' + m]: g, ['ms_' + k + '_' + m]: ms, ['ms25_' + k + '_' + m]: ms25, ['dms_' + k + '_' + m]: ms != null && ms25 != null ? (ms - ms25) * 100 : null, ['gap_' + k + '_' + m]: g != null && tg != null ? (g - tg) * 100 : null });
+        for (const yy of [22, 23, 24, 25, 26]) { o['ms_' + k + yy + '_' + m] = tp[k + yy] > 0 ? p[k + yy] / tp[k + yy] : null; if (yy > 22) o['g_' + k + yy + '_' + m] = p[k + (yy - 1)] > 0 ? p[k + yy] / p[k + (yy - 1)] - 1 : null; }
+        o['cagr4_' + k + '_' + m] = p[k + '22'] > 0 && p[k + '26'] > 0 ? Math.pow(p[k + '26'] / p[k + '22'], 1 / 4) - 1 : null;
+      }
+      o['cagr4_' + m] = o['cagr4_mat_' + m];
+    }
+    o.price = o.mat26_units > 0 ? o.mat26_eur / o.mat26_units : null;
+    const tpz = t.mat26u > 0 ? t.mat26e / t.mat26u : null;
+    o.price_idx = o.price != null && tpz ? Math.round(o.price / tpz * 100) : null;
+    return o;
+  };
+  const xacc = (R) => ({ units: new Array(R.n).fill(0), eur: new Array(R.n).fill(0) });
+  const xadd = (a, r, R) => { for (let i = 0; i < R.n; i++) { a.units[i] += r.units[i]; a.eur[i] += r.eur[i]; } };
+  const xpass = (r, skip) => { if (XS.cm && !XS.cm.pids.has(r.pidn)) return false; for (const d of XD) { const f = XS.f[d]; if (d !== skip && f && f.length && !f.includes(xv(r, d))) return false; } return true; };
+  const xgroup = (rows, d, R) => {
+    const G = new Map();
+    for (const r of rows) {
+      const k = xv(r, d); let g = G.get(k);
+      if (!g) { g = { name: k, ...xacc(R), stada: false, corp: new Map(), mol: new Set(), atc: new Set(), launch: 9999 }; G.set(k, g); }
+      xadd(g, r, R);
+      if (r.stada) g.stada = true;
+      const w = xsum(r.eur, R.n - 4, R.n - 1) + 1e-9;
+      g.corp.set(r.corporation, (g.corp.get(r.corporation) || 0) + w); g.mol.add(r.molecule); g.atc.add(r.atc4);
+      if (r.launch_year) g.launch = Math.min(g.launch, r.launch_year);
+    }
+    return G;
+  };
+  const xtop = (mp) => { let b = '', w = -1; for (const [k, v] of mp) if (v > w) { b = k; w = v; } return b; };
+  const xdl = (dl, opts, text, fmt) => {
+    const t = text.trim().toLowerCase();
+    const list = (t ? opts.filter((o) => o[0].toLowerCase().includes(t)) : opts).slice(0, 80);
+    dl.replaceChildren(...list.map((o) => { const op = document.createElement('option'); op.value = fmt ? fmt(o) : o[0]; return op; }));
+  };
+  const mountExplore = () => {
+    if (xpMounted) return;
+    $('#explore').append($('#tpl-explore').content.cloneNode(true));
+    xpMounted = true;
+    const box = $('#xp-filters');
+    for (const d of XD) {
+      const f = document.createElement('div'); f.className = 'xp-f'; f.dataset.dim = d;
+      const id = 'xp-in-' + d, lb = document.createElement('label'); lb.htmlFor = id; lb.textContent = XL[d];
+      const inp = document.createElement('input'); inp.id = id; inp.type = 'search'; inp.autocomplete = 'off'; inp.placeholder = 'All · type to add'; inp.setAttribute('list', 'xp-dl-' + d);
+      const dl = document.createElement('datalist'); dl.id = 'xp-dl-' + d;
+      const ch = document.createElement('div'); ch.className = 'xp-chips';
+      inp.addEventListener('input', () => xdl(dl, XO[d] || [], inp.value));
+      inp.addEventListener('focus', () => xdl(dl, XO[d] || [], inp.value));
+      inp.addEventListener('change', () => {
+        const v = inp.value.trim(); if (!v) return;
+        const o = XO[d] || [], hit = o.find((x) => x[0].toLowerCase() === v.toLowerCase()) || (o.filter((x) => x[0].toLowerCase().includes(v.toLowerCase())).length === 1 ? o.find((x) => x[0].toLowerCase().includes(v.toLowerCase())) : null);
+        if (!hit) return;
+        XS.f[d] = [...new Set([...(XS.f[d] || []), hit[0]])]; inp.value = ''; render();
+      });
+      ch.addEventListener('click', (ev) => { const b = ev.target.closest('.xp-chip'); if (!b) return; XS.f[d] = (XS.f[d] || []).filter((x) => x !== b.dataset.v); render(); });
+      f.append(lb, inp, dl, ch); box.append(f);
+    }
+    const dims = (sel, list) => { sel.replaceChildren(...list.map((d) => new Option(XL[d], d))); };
+    dims($('#xp-fdim'), ['product', 'corporation', 'molecule', 'pack', 'atc4', 'atc3', 'nfc3', 'segment']);
+    dims($('#xp-bdim'), ['molecule', 'corporation', 'atc4', 'atc3', 'nfc1', 'nfc2', 'nfc3', 'channel', 'segment', 'product']);
+    dims($('#xp-gdim'), ['product', 'pack', 'corporation', 'molecule', 'atc4', 'nfc3']);
+    $('#xp-fdim').addEventListener('change', (e) => { XS.fd = e.target.value; XS.fv = ''; if (['product', 'corporation', 'molecule', 'pack'].includes(XS.fd)) XS.gd = XS.fd; render(); });
+    $('#xp-bdim').addEventListener('change', (e) => { XS.bd = e.target.value; render(); });
+    $('#xp-gdim').addEventListener('change', (e) => { XS.gd = e.target.value; render(); });
+    $('#xp-measure').addEventListener('change', (e) => dash.setParams({ metric: e.target.value }));
+    const fv = $('#xp-fval');
+    fv.addEventListener('input', () => xdl($('#xp-fdl'), XO._focus || [], fv.value));
+    fv.addEventListener('focus', () => { fv.select(); xdl($('#xp-fdl'), XO._focus || [], ''); });
+    fv.addEventListener('change', () => { const v = fv.value.trim(), o = XO._focus || [], hit = o.find((x) => x[0].toLowerCase() === v.toLowerCase()); if (hit) { XS.fv = hit[0]; render(); } });
+    $('#xp-search').addEventListener('input', () => render());
+    $('#xp-reset').addEventListener('click', () => { XS.f = {}; XS.fv = ''; XS.cm = null; render(); });
+    $('#xp-back').addEventListener('click', () => showPage('stada'));
+    root.querySelectorAll('#xp-per button').forEach((b) => b.addEventListener('click', () => { XS.per = b.dataset.v; render(); }));
+    root.querySelectorAll('#xp-view button').forEach((b) => b.addEventListener('click', () => { XS.view = b.dataset.v; render(); }));
+    root.querySelectorAll('[data-xmsv]').forEach((b) => b.addEventListener('click', () => { XS.msv = b.dataset.xmsv; render(); }));
+    $('#xp-list').addEventListener('click', (ev) => { const tr = ev.target.closest('tbody tr[data-k]'); if (!tr) return; XS.fd = XS.gd; XS.fv = tr.dataset.k; render(); });
+    /* one search box for the whole market: a product opens its ATC4 class with the product in focus, a molecule or class opens that market, a company is seen in the whole market */
+    const q = $('#xp-q'), qdl = $('#xp-qdl');
+    q.addEventListener('input', () => {
+      const t = q.value.trim().toLowerCase(); if (t.length < 2 || !XO._all) { qdl.replaceChildren(); return; }
+      const hits = XO._all.filter((o) => o[0].toLowerCase().includes(t)).sort((a, b) => (b[0].toLowerCase().startsWith(t) - a[0].toLowerCase().startsWith(t)) || b[2] - a[2]).slice(0, 60);
+      qdl.replaceChildren(...hits.map((o) => { const op = document.createElement('option'); op.value = o[0] + ' — ' + XL[o[1]]; return op; }));
+    });
+    q.addEventListener('change', () => {
+      const i = q.value.lastIndexOf(' — '); if (i < 0 || !XO._all) return;
+      const name = q.value.slice(0, i), lab = q.value.slice(i + 3), d = XD.find((x) => XL[x] === lab), R = xpRows();
+      if (!d || !R.rows) return;
+      if (d === 'product') {
+        const by = new Map(); for (const r of R.rows) if (r.product === name) by.set(r.atc4, (by.get(r.atc4) || 0) + xsum(r.eur, R.n - 4, R.n - 1));
+        XS.f = { atc4: [xtop(by)] }; XS.fd = 'product'; XS.fv = name;
+      } else if (d === 'corporation') { XS.f = {}; XS.fd = 'corporation'; XS.fv = name; }
+      else { XS.f = { [d]: [name] }; XS.fd = 'product'; XS.fv = ''; }
+      XS.gd = ['product', 'corporation'].includes(XS.fd) ? XS.fd : 'product';
+      XS.cm = null; q.value = ''; qdl.replaceChildren(); render();
+    });
+  };
+
+  const drawExplore = (p) => {
+    if (!xpMounted) return;
+    const m = p.metric === 'units' ? 'units' : 'eur', k = XS.per;
+    $('#xp-measure').value = m;
+    root.querySelectorAll('#xp-per button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === k)));
+    root.querySelectorAll('#xp-view button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === XS.view)));
+    const R = xpRows(), sum = $('#xp-sum');
+    if (!R.rows) {
+      const bad = [R.a, R.k].find((d) => d.status !== 'ok' && d.status !== 'loading');
+      sum.textContent = bad ? 'The IQVIA market data didn\'t load.' : 'Loading the IQVIA market…';
+      return;
+    }
+    root.querySelectorAll('.xp-period').forEach((el) => { el.textContent = R.period; });
+    const short = R.period.replace(' 20', ' '), PL = PVL[k], perLab = pvLab(k, short);
+    const mw = (r) => xsum(r.eur, R.n - 4, R.n - 1);
+    /* filter options: each filter lists what the other filters leave, biggest first */
+    if (!XO._all) {
+      const all = new Map();
+      for (const d of ['product', 'molecule', 'corporation', 'atc4', 'atc3', 'atc2', 'atc1', 'nfc3']) for (const r of R.rows) { const key = d + '\u0001' + r[d]; all.set(key, (all.get(key) || 0) + mw(r)); }
+      XO._all = [...all].map(([kk, v]) => { const [d, nm] = kk.split('\u0001'); return [nm, d, v]; });
+    }
+    for (const d of XD) {
+      const agg = new Map();
+      for (const r of R.rows) if (xpass(r, d)) { const v = xv(r, d); agg.set(v, (agg.get(v) || 0) + mw(r)); }
+      XO[d] = [...agg].sort((a, b) => b[1] - a[1]);
+      const f = root.querySelector('.xp-f[data-dim="' + d + '"] .xp-chips');
+      f.replaceChildren(...(XS.f[d] || []).map((v) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'xp-chip'; b.dataset.v = v; b.textContent = v; b.title = 'Remove ' + v; return b; }));
+    }
+    const rows = R.rows.filter((r) => xpass(r));
+    const fl = XD.filter((d) => (XS.f[d] || []).length).map((d) => XL[d] + ': ' + XS.f[d].join(', '));
+    const T0 = xacc(R); for (const r of rows) xadd(T0, r, R);
+    T0.mat26u = xsum(T0.units, R.n - 4, R.n - 1); T0.mat26e = xsum(T0.eur, R.n - 4, R.n - 1);
+    const T = xmet(T0, T0, R);
+    const cnt = (d) => new Set(rows.map((r) => xv(r, d))).size;
+    $('#xp-back').hidden = !XS.cm;
+    sum.textContent = (XS.cm ? 'Market: ' + XS.cm.name + ' as in the STADA view (' + XS.cm.def + ')' + (fl.length ? ' · ' + fl.join(' · ') : '') : fl.length ? 'Market: ' + fl.join(' · ') : 'Market: the whole IQVIA Saudi market (no filter)') + '. ' + int(cnt('product')) + ' products, ' + int(cnt('pack')) + ' packs, ' + int(cnt('corporation')) + (cnt('corporation') === 1 ? ' corporation' : ' corporations') + '; MAT ' + short + ' ' + big(m, T['mat26_' + m]) + ' (' + pct(T['g_mat_' + m]) + ').';
+    /* focus */
+    const G = xgroup(rows, XS.fd, R);
+    const gl = [...G.values()].map((g) => ({ g, w: xsum(g.eur, R.n - 4, R.n - 1) })).sort((a, b) => b.w - a.w);
+    XO._focus = gl.map((o) => [o.g.name, o.w]);
+    if (!G.has(XS.fv)) { const st = gl.find((o) => o.g.stada); XS.fv = st ? st.g.name : gl.length ? gl[0].g.name : ''; }
+    $('#xp-fdim').value = XS.fd; $('#xp-bdim').value = XS.bd; $('#xp-gdim').value = XS.gd;
+    const fvIn = $('#xp-fval'); if (document.activeElement !== fvIn) fvIn.value = XS.fv;
+    const Bg = G.get(XS.fv), name = XS.fv || '—';
+    const B = Bg ? xmet(Bg, T0, R) : null;
+    $('#xp-fnote').textContent = Bg ? (Bg.stada ? 'STADA · ' : '') + (XS.fd === 'product' || XS.fd === 'pack' ? xtop(Bg.corp) + ' · ' + [...Bg.mol].slice(0, 2).join(', ') : '') : 'Nothing in this market.';
+    /* rank among the items of the focus kind */
+    const vf = k + '26_' + m;
+    const ranked = gl.map((o) => ({ name: o.g.name, v: xper(o.g[m], R.n, R.qn)[k + '26'] })).filter((o) => o.v > 0).sort((a, b) => b.v - a.v);
+    const rk = ranked.findIndex((o) => o.name === XS.fv);
+    /* KPI tiles */
+    const tile = (h, val, chip, sub, tn) => {
+      const a = document.createElement('article'); a.className = 'sd-kpi';
+      const h3 = document.createElement('h3'); h3.textContent = h; a.append(h3);
+      const v = document.createElement('div'); v.className = 'sd-big'; v.textContent = val; a.append(v);
+      if (chip != null) { const c = document.createElement('div'); c.className = 'sd-chip'; c.textContent = chip[0]; tone(c, chip[1]); a.append(c); }
+      if (sub) { const sb = document.createElement('div'); sb.className = 'sd-sub'; sb.textContent = sub; a.append(sb); }
+      return a;
+    };
+    const g = (o, f) => o ? o[f] : null;
+    $('#xp-kpis').replaceChildren(
+      tile('Market · ' + perLab, big(m, T[vf]), [pct(T['g_' + k + '_' + m]) + ' vs PY', T['g_' + k + '_' + m]], 'CAGR 4Y: ' + pct(T['cagr4_' + k + '_' + m])),
+      tile(name + ' · ' + perLab, big(m, g(B, vf)), [pct(g(B, 'g_' + k + '_' + m)) + ' vs PY', g(B, 'g_' + k + '_' + m)], 'CAGR 4Y: ' + pct(g(B, 'cagr4_' + k + '_' + m))),
+      tile('Market share · ' + PL, shr(g(B, 'ms_' + k + '_' + m)), [ppf(g(B, 'dms_' + k + '_' + m)) + ' vs PY', g(B, 'dms_' + k + '_' + m)], 'A year earlier: ' + shr(g(B, 'ms25_' + k + '_' + m))),
+      tile('Growth vs market · ' + PL, gapf(g(B, 'gap_' + k + '_' + m)), null, 'Growth minus market growth; above 0 = gaining share'),
+      tile('Rank · ' + PL, rk >= 0 ? '#' + (rk + 1) : '—', null, 'of ' + int(ranked.length) + ' ' + (ranked.length === 1 ? XL[XS.fd].toLowerCase() : XP[XS.fd])),
+      tile('€ per unit · MAT', B && B.price != null ? '€' + d3.format(',.2f')(B.price) : '—', B && B.price_idx != null ? ['Index ' + B.price_idx, 0] : null, 'Price index: market average = 100'));
+    $('#xp-kpis').querySelectorAll('.sd-big').forEach((el, i) => { if (i === 3) tone(el, g(B, 'gap_' + k + '_' + m)); });
+    /* growth table */
+    const gt = $('#xp-gt'), th = (t, c) => { const e = document.createElement('th'); e.textContent = t; if (c) e.className = c; return e; };
+    const hr = document.createElement('tr'); hr.append(th('Period'), ...['Market', 'Mkt growth', name, 'Growth', 'Share', 'Share change', 'Growth vs market'].map((h) => th(h, 'n')));
+    gt.tHead.replaceChildren(hr);
+    gt.tBodies[0].replaceChildren(...[['q', short], ['ytd', 'YTD ' + short], ['mat', 'MAT ' + short]].map(([kk, lab]) => {
+      const tr = document.createElement('tr'), l = document.createElement('td'); l.className = 'lab'; l.textContent = lab; tr.append(l);
+      for (const [o, f, fmt, tn] of [[T, kk + '26_' + m, tab(m)], [T, 'g_' + kk + '_' + m, pct, 1], [B, kk + '26_' + m, tab(m)], [B, 'g_' + kk + '_' + m, pct, 1], [B, 'ms_' + kk + '_' + m, shr], [B, 'dms_' + kk + '_' + m, ppf, 1], [B, 'gap_' + kk + '_' + m, gapf, 1]]) {
+        const td = document.createElement('td'); td.className = 'n'; td.textContent = o ? fmt(o[f]) : '—'; if (o && tn) tone(td, o[f]); tr.append(td);
+      }
+      return tr;
+    }));
+    /* evolution and share trend */
+    const view = XS.view, eb = $('#xp-evo');
+    $('#xp-evo-title').textContent = view === 'q' ? 'Quarterly sales: ' + name + ' vs rest of market' : (view === 'ytd' ? 'Market by YTD year' : 'Market by MAT year');
+    $('#xp-evo-note').textContent = view === 'q' ? 'Each bar is one quarter; the blue part is ' + name + '.' : 'Bars show the market, with ' + name + "'s share at the foot of each bar. Arrows show market growth year on year, the top arrow the 4-year CAGR; the rows below compare market and " + name + ' growth.';
+    const sr = shareRows(R.Q, T0[m], Bg ? Bg[m] : null);
+    if (view === 'q') qBars(eb, sr, m, name); else { eb.replaceChildren(); drawEvolution(eb, T, B, view, m, name); }
+    const xv2 = XS.msv;
+    root.querySelectorAll('[data-xmsv]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.xmsv === xv2)));
+    $('#xp-ms-title').textContent = 'Market share trend: ' + (xv2 === 'mol' ? 'molecules' : name + ' and the top 7 ' + XP[XS.fd]) + ' ' + (k === 'q' ? '(each quarter)' : k === 'ytd' ? '(YTD)' : '(rolling MAT)');
+    $('#xp-ms-note').textContent = k === 'q' ? 'Each point is the share in that quarter alone.' : k === 'ytd' ? 'Each point is the share from January to the end of that quarter, so it restarts each year.' : 'Each point is the share over the 12 months ending that quarter.';
+    {
+      const GM = new Map(), mains = new Set();
+      for (const r of rows) {
+        const key = xv2 === 'mol' ? r.molecule : xv(r, XS.fd);
+        if (xv(r, XS.fd) === XS.fv) mains.add(key);
+        let a = GM.get(key); if (!a) { a = new Array(R.n).fill(0); GM.set(key, a); }
+        const src = r[m]; for (let i = 0; i < R.n; i++) a[i] += src[i];
+      }
+      multiShare($('#xp-ms'), R.Q, T0[m], pickSeries(GM, mains, 8), k);
+    }
+    /* top 10 of the focus kind */
+    $('#xp-top-title').textContent = 'Top 10 ' + XP[XS.fd] + ' · ' + perLab;
+    const mets = new Map(gl.map((o) => [o.g.name, xmet(o.g, T0, R)]));
+    const top = gl.map((o) => ({ g: o.g, r: mets.get(o.g.name) })).filter((o) => o.r[vf] > 0).sort((a, b) => b.r[vf] - a.r[vf]).slice(0, 10);
+    const tmx = d3.max(top, (o) => o.r[vf]) || 1;
+    $('#xp-top').replaceChildren(...top.map((o, i) => {
+      const row = document.createElement('div'); row.className = 'sd-rowbar';
+      const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = (i + 1) + '. ' + o.g.name; nm.title = o.g.name; if (o.g.name === XS.fv || o.g.stada) nm.style.fontWeight = '700';
+      const tr = document.createElement('div'); const b = document.createElement('div'); b.className = 'bb' + (o.g.stada ? ' stada' : ''); b.style.width = o.r[vf] / tmx * 100 + '%'; tr.append(b);
+      const vl = document.createElement('span'); vl.className = 'vl'; vl.append(big(m, o.r[vf]) + ' · ' + shr(o.r['ms_' + k + '_' + m]));
+      const d3b = document.createElement('b'); d3b.textContent = ' ' + ppf(o.r['dms_' + k + '_' + m]); tone(d3b, o.r['dms_' + k + '_' + m]); vl.append(d3b);
+      row.append(nm, tr, vl); return row;
+    }));
+    $('#xp-top').__xl = { name: 'Top 10', rows: [[XL[XS.fd], perLab, 'Share', 'Share change (pp)'], ...top.map((o) => [o.g.name, o.r[vf], o.r['ms_' + k + '_' + m], o.r['dms_' + k + '_' + m]])] };
+    /* market split by any dimension, with the focus item inside each slice */
+    const bd = XS.bd, SG = xgroup(rows, bd, R), FB = xgroup(rows.filter((r) => xv(r, XS.fd) === XS.fv), bd, R);
+    $('#xp-brk-title').textContent = 'Market by ' + XL[bd].toLowerCase() + ' · ' + perLab;
+    const brk = [...SG.values()].map((sg) => {
+      const r = xmet(sg, T0, R), fg = FB.get(sg.name), fr = fg ? xmet(fg, sg, R) : null;
+      return { id: sg.name, name: sg.name, v: r[vf], v25: r[k + '25_' + m], g: r['g_' + k + '_' + m], ms: r['ms_' + k + '_' + m], dms: r['dms_' + k + '_' + m], fv: fr ? fr[vf] : null, fg: fr ? fr['g_' + k + '_' + m] : null, fms: fr ? fr['ms_' + k + '_' + m] : null, fdms: fr ? fr['dms_' + k + '_' + m] : null };
+    }).filter((r) => r.v || r.v25);
+    drawTable($('#xp-brk'), brk.slice().sort((a, b) => b.v - a.v).slice(0, 300), [
+      { k: 'name', f: 'name', label: XL[bd], cls: 'nm', text: true },
+      { k: 'v', f: 'v', label: perLab, fmt: tab(m), cls: 'n' },
+      { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
+      { k: 'ms', f: 'ms', label: 'Share of market', fmt: shr, cls: 'n' },
+      { k: 'dms', f: 'dms', label: 'Share change', fmt: ppf, cls: 'n hide-sm', tone: true },
+      { k: 'fv', f: 'fv', label: name, fmt: tab(m), cls: 'n hide-sm' },
+      { k: 'fg', f: 'fg', label: name + ' growth', fmt: pct, cls: 'n hide-md', tone: true },
+      { k: 'fms', f: 'fms', label: name + ' share', fmt: shr, cls: 'n' },
+      { k: 'fdms', f: 'fdms', label: 'Its share change', fmt: ppf, cls: 'n hide-md', tone: true },
+    ], sortXp.brk, render, false);
+    $('#xp-brk-note').textContent = int(brk.length) + ' ' + XP[bd] + (brk.length > 300 ? ' (the 300 biggest shown)' : '') + ". Each slice's size, growth and share of the market, and " + name + "'s sales and share inside it.";
+    /* everything in the market, by product, pack, corporation, molecule or class */
+    const gd = XS.gd, LG = gd === XS.fd ? G : xgroup(rows, gd, R), recent = +R.period.slice(-4) - 2;
+    const qs = $('#xp-search').value.trim().toLowerCase();
+    const lrk = new Map([...LG.values()].map((x) => [x.name, xper(x[m], R.n, R.qn)[k + '26']]).filter((x) => x[1] > 0).sort((a, b) => b[1] - a[1]).map((x, i) => [x[0], i + 1]));
+    let list = [...LG.values()].map((x) => {
+      const r = mets.get(x.name) && gd === XS.fd ? mets.get(x.name) : xmet(x, T0, R);
+      return { id: x.name, name: x.name, stada: x.stada, launch: x.launch < 9999 ? x.launch : null, corp: xtop(x.corp), mol: x.mol.size > 1 ? 'Multiple' : [...x.mol][0], atc: x.atc.size > 1 ? 'Multiple' : [...x.atc][0],
+        v: r[vf], v25: r[k + '25_' + m], g: r['g_' + k + '_' + m], ms: r['ms_' + k + '_' + m], dms: r['dms_' + k + '_' + m], gap: r['gap_' + k + '_' + m], price: r.price, pidx: r.price_idx, rank: lrk.get(x.name) ?? null };
+    }).filter((r) => r.v || r.v25);
+    if (qs) list = list.filter((r) => [r.name, r.corp, r.mol, r.atc].join(' ').toLowerCase().includes(qs));
+    const nAll = list.length;
+    list = list.sort((a, b) => (b.v || 0) - (a.v || 0)).slice(0, 500);
+    const pr = gd === 'product' || gd === 'pack';
+    $('#xp-list-title').textContent = 'All ' + XP[gd] + ' in the market · ' + perLab;
+    drawTable($('#xp-list'), list, [
+      { k: 'name', f: 'name', label: XL[gd], cls: 'nm', text: true, render: (td, r) => {
+        td.append(r.name);
+        if (r.stada) { const s2 = document.createElement('span'); s2.className = 'sd-tag'; s2.textContent = 'STADA'; td.append(s2); }
+        if (pr && r.launch && r.launch >= recent) { const s2 = document.createElement('span'); s2.className = 'sd-tag new'; s2.textContent = 'New'; td.append(s2); }
+      } },
+      ...(gd !== 'corporation' ? [{ k: 'corp', f: 'corp', label: 'Corporation', text: true, cls: 'hide-sm' }] : []),
+      ...(gd !== 'molecule' ? [{ k: 'mol', f: 'mol', label: 'Molecule', text: true, cls: 'hide-md' }] : []),
+      ...(pr ? [{ k: 'atc', f: 'atc', label: 'ATC4', text: true, cls: 'hide-md' }, { k: 'launch', f: 'launch', label: 'Launch', fmt: (v) => v ?? '—', cls: 'n hide-md' }] : []),
+      { k: 'v', f: 'v', label: perLab, fmt: tab(m), cls: 'n' },
+      { k: 'v25', f: 'v25', label: pvLab(k, short.replace(/\d\d$/, (y2) => String(+y2 - 1))), fmt: tab(m), cls: 'n hide-md' },
+      { k: 'g', f: 'g', label: 'Growth ' + PL, fmt: pct, cls: 'n', tone: true },
+      { k: 'ms', f: 'ms', label: 'Share ' + PL, fmt: shr, cls: 'n' },
+      { k: 'dms', f: 'dms', label: 'Share change', fmt: ppf, cls: 'n hide-sm', tone: true },
+      { k: 'gap', f: 'gap', label: 'Growth vs market', fmt: gapf, cls: 'n hide-sm', tone: true },
+      { k: 'price', f: 'price', label: '€ / unit', fmt: (v) => v == null ? '—' : '€' + d3.format(',.2f')(v), cls: 'n hide-md' },
+      { k: 'pidx', f: 'pidx', label: 'Price index', fmt: (v) => v ?? '—', cls: 'n hide-md' },
+      { k: 'rank', f: 'rank', label: 'Rank ' + PL, fmt: (v) => v == null ? '—' : '#' + v, cls: 'n' },
+    ], sortXp.list, render, false);
+    $('#xp-list').querySelectorAll('tbody tr').forEach((tr) => tr.classList.toggle('stada', gd === XS.fd && tr.dataset.k === XS.fv));
+    $('#xp-count').textContent = int(nAll) + ' ' + XP[gd] + (nAll > 500 ? ' · the 500 biggest shown, search to find others' : '');
+  };
+
+
+  /* ---- STADA view: every STADA brand line against its IQVIA market ---- */
+  const SV = { per: 'mat', ch: 'All', seg: '' };
+  const sortSv = { k: 'v', dir: -1 };
+  let svMounted = false, SVC = null;
+  const mountStada = () => {
+    if (svMounted) return;
+    $('#stada').append($('#tpl-stada').content.cloneNode(true));
+    svMounted = true;
+    root.querySelectorAll('#sv-per button').forEach((b) => b.addEventListener('click', () => { SV.per = b.dataset.v; render(); }));
+    $('#sv-ch').addEventListener('change', (e) => { SV.ch = e.target.value; render(); });
+    $('#sv-seg').addEventListener('change', (e) => { SV.seg = e.target.value; render(); });
+    $('#sv-measure').addEventListener('change', (e) => dash.setParams({ metric: e.target.value }));
+    $('#sv-br').addEventListener('click', (ev) => {
+      const tr = ev.target.closest('tbody tr[data-k]'); if (!tr || !SVC) return;
+      const it = SVC.items.find((x) => x.item === tr.dataset.k); if (!it) return;
+      XS.cm = { name: it.market, def: it.definition, item: it.item, pids: it.mp, bp: it.bp };
+      XS.f = {}; XS.fd = 'product'; XS.fv = it.item; XS.gd = 'product';
+      showPage('explore'); window.scrollTo(0, 0);
+    });
+  };
+  const svPrep = () => {
+    const R = xpRows(), d = dash.data('iq_stada');
+    if (!R.rows || d.status !== 'ok') return { R, d };
+    if (SVC && SVC.R === R && SVC.src === d.data) return SVC;
+    const byPid = new Map();
+    for (const r of R.rows) { let a = byPid.get(r.pidn); if (!a) { a = []; byPid.set(r.pidn, a); } a.push(r); }
+    const items = d.data.map((r) => ({ ...r, order: +r.order, bp: new Set(String(r.brand_pids).split(' ').map(Number)), mp: new Set(String(r.pids).split(' ').map(Number)) }));
+    const segOf = new Map(); for (const it of items) for (const pid of it.bp) segOf.set(pid, it.segment);
+    SVC = { R, src: d.data, byPid, items, segOf };
+    return SVC;
+  };
+  const chOk = (r, ch) => ch === 'All' || (ch === 'Retail' ? r.channel === 'Retail' : r.channel !== 'Retail');
+  const drawStada = (p) => {
+    if (!svMounted) return;
+    const m = p.metric === 'units' ? 'units' : 'eur', k = SV.per;
+    $('#sv-measure').value = m; $('#sv-ch').value = SV.ch; $('#sv-seg').value = SV.seg;
+    root.querySelectorAll('#sv-per button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === k)));
+    const C = svPrep();
+    if (!C.items) {
+      const bad = [C.R.a, C.R.k, C.d].find((x) => x && x.status !== 'ok' && x.status !== 'loading');
+      $('#sv-kpis').replaceChildren(); $('#sv-take').replaceChildren();
+      const li = document.createElement('li'); li.textContent = bad ? 'The IQVIA data didn\'t load.' : 'Loading the IQVIA market…'; $('#sv-take').append(li);
+      return;
+    }
+    const R = C.R;
+    root.querySelectorAll('.sv-period').forEach((el) => { el.textContent = R.period; });
+    const short = R.period.replace(' 20', ' '), KL = { q: 'QTR ' + short, ytd: 'YTD ' + short, mat: 'MAT ' + short }, PLb = KL[k];
+    const vf = k + '26_' + m, gf = 'g_' + k + '_' + m;
+    /* total market and STADA, per channel and per segment */
+    const acc = () => xacc(R);
+    const tot = { All: acc(), Hospital: acc(), Retail: acc() }, sta = { All: acc(), Hospital: acc(), Retail: acc() };
+    const segT = {}, segS = {};
+    for (const sg of ['CHC', 'Gx', 'Sx']) { segT[sg] = acc(); segS[sg] = acc(); }
+    for (const r of R.rows) {
+      const hs = r.channel === 'Retail' ? 'Retail' : 'Hospital', st = C.segOf.get(r.pidn);
+      xadd(tot.All, r, R); xadd(tot[hs], r, R);
+      if (st) { xadd(sta.All, r, R); xadd(sta[hs], r, R); }
+      if (chOk(r, SV.ch)) { if (segT[r.segment]) xadd(segT[r.segment], r, R); if (st && segS[st]) xadd(segS[st], r, R); }
+    }
+    const lines = [['All', 'All channels', tot.All, sta.All], ['Hospital', 'Hospital', tot.Hospital, sta.Hospital], ['Retail', 'Retail', tot.Retail, sta.Retail],
+      ...['CHC', 'Gx', 'Sx'].map((sg) => [sg, sg + (SV.ch !== 'All' ? ' · ' + SV.ch : ''), segT[sg], segS[sg]])].map(([key, lab, t, a]) => ({ key, lab, T: xmet(t, t, R), S: xmet(a, t, R) }));
+    const cur = lines.find((l) => l.key === SV.ch) || lines[0];
+    /* brand lines */
+    const brands = C.items.map((it) => {
+      const b = acc(), t = acc(), G = new Map();
+      for (const pid of it.mp) for (const r of (C.byPid.get(pid) || [])) {
+        if (!chOk(r, SV.ch)) continue;
+        xadd(t, r, R);
+        const own = it.bp.has(pid), nm = own ? it.item : r.product;
+        if (own) xadd(b, r, R);
+        let g = G.get(nm); if (!g) { g = acc(); G.set(nm, g); } xadd(g, r, R);
+      }
+      const B = xmet(b, t, R), T = xmet(t, t, R);
+      const vals = [...G].map(([nm, g]) => [nm, xper(g[m], R.n, R.qn)[k + '26']]).filter((x) => x[1] > 0).sort((a1, b1) => b1[1] - a1[1]);
+      const rk = vals.findIndex((x) => x[0] === it.item);
+      return { id: it.item, item: it.item, order: it.order, market: it.market, segment: it.segment, v: B[vf], g: B[gf], mg: T[gf], gap: B['gap_' + k + '_' + m], ms: B['ms_' + k + '_' + m], dms: B['dms_' + k + '_' + m], rank: B[vf] > 0 && rk >= 0 ? rk + 1 : null, n: vals.length, mkt: T[vf], mat: B['mat26_eur'] };
+    });
+    const shown = brands.filter((b) => !SV.seg || b.segment === SV.seg);
+    /* KPI tiles */
+    const tile = (h, val, chip, sub) => {
+      const a = document.createElement('article'); a.className = 'sd-kpi';
+      const h3 = document.createElement('h3'); h3.textContent = h; const v = document.createElement('div'); v.className = 'sd-big'; v.textContent = val; a.append(h3, v);
+      if (chip) { const c = document.createElement('div'); c.className = 'sd-chip'; c.textContent = chip[0]; tone(c, chip[1]); a.append(c); }
+      if (sub) { const sb = document.createElement('div'); sb.className = 'sd-sub'; sb.textContent = sub; a.append(sb); }
+      return a;
+    };
+    const segL = SV.seg ? lines.find((l) => l.key === SV.seg) : cur;
+    const chL = SV.ch === 'All' ? 'all channels' : SV.ch.toLowerCase();
+    const fast = shown.filter((b) => b.gap != null && b.v > 0), up = fast.filter((b) => b.gap > 0).length;
+    $('#sv-kpis').replaceChildren(
+      tile((SV.seg ? SV.seg + ' market' : 'Total market') + ' · ' + PLb, big(m, segL.T[vf]), [pct(segL.T[gf]) + ' vs PY', segL.T[gf]], chL),
+      tile('STADA' + (SV.seg ? ' ' + SV.seg : '') + ' · ' + PLb, big(m, segL.S[vf]), [pct(segL.S[gf]) + ' vs PY', segL.S[gf]], 'Mapped STADA SKUs, ' + chL),
+      tile('STADA share · ' + PLb, d3.format('.2%')(segL.S['ms_' + k + '_' + m] || 0), [(segL.S['dms_' + k + '_' + m] == null ? '—' : d3.format('+.2f')(segL.S['dms_' + k + '_' + m]) + ' pp') + ' vs PY', segL.S['dms_' + k + '_' + m]], 'A year earlier: ' + (segL.S['ms25_' + k + '_' + m] == null ? '—' : d3.format('.2%')(segL.S['ms25_' + k + '_' + m]))),
+      tile('Growth vs market', gapf(segL.S['gap_' + k + '_' + m]), null, 'STADA growth minus market growth'),
+      tile('Brands beating their market', up + ' of ' + fast.length, null, 'Brand lines with sales, ' + PLb));
+    $('#sv-kpis').querySelectorAll('.sd-big')[3].classList.toggle('up', (segL.S['gap_' + k + '_' + m] || 0) > 0);
+    $('#sv-kpis').querySelectorAll('.sd-big')[3].classList.toggle('down', (segL.S['gap_' + k + '_' + m] || 0) < 0);
+    /* takeaways, as in the Overview Charts sheet */
+    const P3 = (o) => ['mat', 'ytd', 'q'].map((kk) => pct(o['g_' + kk + '_' + m])).join(' / ');
+    const tk = lines.map((l) => {
+      const li = document.createElement('li'); const b = document.createElement('b'); b.textContent = l.lab + ': ';
+      const ahead = (l.S['g_mat_' + m] ?? -9) >= (l.T['g_mat_' + m] ?? -9);
+      li.append(b, 'market MAT / YTD / QTR ' + P3(l.T) + '; STADA ' + P3(l.S) + ' (' + (ahead ? 'ahead of' : 'behind') + ' the market on MAT).'); return li;
+    });
+    const li1 = document.createElement('li'), li2 = document.createElement('li');
+    const byGap = brands.filter((b) => b.mat > 200000).map((b) => ({ item: b.item, g: b.gap })).filter((x) => x.g != null).sort((a1, b1) => b1.g - a1.g);
+    li1.append(Object.assign(document.createElement('b'), { textContent: 'Ahead of their market (' + PLb + ', brand lines above €0.2M MAT): ' }), byGap.filter((x) => x.g > 0).slice(0, 4).map((x) => x.item + ' ' + gapf(x.g)).join(', ') || 'none');
+    li2.append(Object.assign(document.createElement('b'), { textContent: 'Behind their market: ' }), byGap.filter((x) => x.g < 0).reverse().slice(0, 4).map((x) => x.item + ' ' + gapf(x.g)).join(', ') || 'none');
+    $('#sv-take').replaceChildren(...tk, li1, li2);
+    /* growth bars: market vs STADA per channel and segment */
+    const box = $('#sv-chart'); box.replaceChildren();
+    const data = lines.map((l) => ({ lab: l.key, a: l.T[gf], b: l.S[gf] }));
+    const W = Math.max(260, box.clientWidth), H = 240, mt2 = 30, mb2 = 26, ml2 = 44;
+    const ext = d3.extent(data.flatMap((o) => [o.a, o.b]).filter((v) => v != null).concat([0]));
+    const y = d3.scaleLinear([Math.min(0, ext[0]), Math.max(0.01, ext[1])], [H - mb2, mt2]).nice();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Market growth against STADA growth by channel and segment');
+    const tks = y.ticks(4);
+    svg.append('g').selectAll('line').data(tks).join('line').attr('class', 'sd-gridline').attr('x1', ml2).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+    svg.append('g').selectAll('text').data(tks).join('text').attr('class', 'sd-tick').attr('x', ml2 - 6).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').text((t) => d3.format('.0%')(t));
+    const x = d3.scaleBand(data.map((o) => o.lab), [ml2, W - 4]).padding(0.28), xi = d3.scaleBand(['a', 'b'], [0, x.bandwidth()]).padding(0.16);
+    svg.append('line').attr('class', 'sd-axis').attr('x1', ml2).attr('x2', W - 4).attr('y1', y(0)).attr('y2', y(0));
+    for (const o of data) for (const kk of ['a', 'b']) {
+      const v = o[kk]; if (v == null) continue;
+      svg.append('rect').attr('x', x(o.lab) + xi(kk)).attr('width', xi.bandwidth()).attr('y', y(Math.max(0, v))).attr('height', Math.max(1, Math.abs(y(v) - y(0)))).attr('rx', 3).style('fill', kk === 'a' ? 'var(--sd-c25)' : 'var(--sd-c26)');
+      svg.append('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').style('font-size', '9.5px').attr('x', x(o.lab) + xi(kk) + xi.bandwidth() / 2).attr('y', v >= 0 ? y(v) - 4 : y(v) + 11).text(d3.format('+.0%')(v));
+    }
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('x', (o) => x(o.lab) + x.bandwidth() / 2).attr('y', H - 6).text((o) => o.lab);
+    const lg = svg.append('g').attr('transform', `translate(${ml2},4)`);
+    [['var(--sd-c25)', 'Total market'], ['var(--sd-c26)', 'STADA']].forEach(([c, t2], i) => { lg.append('rect').attr('x', i * 100).attr('y', 0).attr('width', 10).attr('height', 10).attr('rx', 2).style('fill', c); lg.append('text').attr('class', 'sd-tick').attr('x', i * 100 + 14).attr('y', 9).text(t2); });
+    box.__xl = { name: 'Market vs STADA growth', rows: [['Line', 'Market growth', 'STADA growth'], ...data.map((o) => [o.lab, o.a, o.b])] };
+    $('#sv-tot-title').textContent = 'Total market vs STADA · ' + PLb;
+    const tt = $('#sv-tot'), hr = document.createElement('tr');
+    for (const h of ['', 'Market', 'Growth', 'STADA', 'Growth', 'Share', 'Share change', 'Growth vs market']) { const th = document.createElement('th'); th.textContent = h; if (h) th.className = 'n'; hr.append(th); }
+    tt.tHead.replaceChildren(hr);
+    tt.tBodies[0].replaceChildren(...lines.map((l) => {
+      const tr = document.createElement('tr'); if (l.key === 'All') tr.className = 'sd-total';
+      const lb = document.createElement('td'); lb.className = 'lab'; lb.textContent = l.lab; tr.append(lb);
+      for (const [o, f, fmt, tn] of [[l.T, vf, (v) => big(m, v)], [l.T, gf, pct, 1], [l.S, vf, (v) => big(m, v)], [l.S, gf, pct, 1], [l.S, 'ms_' + k + '_' + m, (v) => v == null ? '—' : d3.format('.2%')(v)], [l.S, 'dms_' + k + '_' + m, (v) => v == null ? '—' : d3.format('+.2f')(v) + ' pp', 1], [l.S, 'gap_' + k + '_' + m, gapf, 1]]) {
+        const td = document.createElement('td'); td.className = 'n'; td.textContent = fmt(o[f]); if (tn) tone(td, o[f]); tr.append(td);
+      }
+      return tr;
+    }));
+    /* brand table */
+    $('#sv-br-title').textContent = 'STADA brands vs their markets · ' + PLb + (SV.ch !== 'All' ? ' · ' + SV.ch : '');
+    $('#sv-br-note').textContent = shown.length + ' brand lines. Rank is the position among all brands in that market. Click a brand to open its market in the Market explorer, with the full analysis: evolution, share trend against the top brands and molecules, competitors and price.';
+    drawTable($('#sv-br'), shown, [
+      { k: 'item', f: 'item', label: 'Brand', cls: 'nm', text: true },
+      { k: 'market', f: 'market', label: 'Market', text: true, cls: 'hide-sm' },
+      { k: 'segment', f: 'segment', label: 'Segment', text: true, cls: 'hide-md' },
+      { k: 'v', f: 'v', label: 'Sales', fmt: tab(m), cls: 'n' },
+      { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
+      { k: 'mg', f: 'mg', label: 'Market growth', fmt: pct, cls: 'n hide-sm', tone: true },
+      { k: 'gap', f: 'gap', label: 'Growth vs market', fmt: gapf, cls: 'n', tone: true },
+      { k: 'ms', f: 'ms', label: 'MS', fmt: shr, cls: 'n' },
+      { k: 'dms', f: 'dms', label: 'MS change', fmt: ppf, cls: 'n hide-sm', tone: true },
+      { k: 'rank', f: 'rank', label: 'Rank', fmt: (v) => v == null ? '—' : '#' + v, cls: 'n' },
+      { k: 'mkt', f: 'mkt', label: 'Market size', fmt: tab(m), cls: 'n hide-md' },
+    ], sortSv, render, false);
+    $('#sv-br').querySelectorAll('tbody tr').forEach((tr) => { const b = shown.find((x) => x.id === tr.dataset.k); const td = tr.querySelector('td.n:last-child'); if (b && td && b.rank) td.title = '#' + b.rank + ' of ' + b.n; });
+    /* growth vs market bars */
+    $('#sv-gap-title').textContent = 'Growth vs market by brand · ' + PLb;
+    const gl = shown.filter((b) => b.gap != null && b.mat > 200000).sort((a1, b1) => b1.gap - a1.gap);
+    const gb = $('#sv-gap'); gb.className = 'sv-gap';
+    gb.replaceChildren(...gl.flatMap((b) => {
+      const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = b.item; nm.title = b.item + ' · ' + b.market;
+      const tr = document.createElement('div'); tr.className = 'tr'; const bar = document.createElement('div'); bar.className = 'bb' + (b.gap < 0 ? ' neg' : '');
+      const w = Math.min(100, Math.abs(b.gap)) / 2; bar.style.width = w + '%'; bar.style.left = b.gap < 0 ? (50 - w) + '%' : '50%'; tr.append(bar);
+      const vl = document.createElement('span'); vl.className = 'vl'; vl.textContent = gapf(b.gap); tone(vl, b.gap);
+      return [nm, tr, vl];
+    }));
+    gb.__xl = { name: 'Growth vs market', rows: [['Brand', 'Market', 'Growth vs market (pp)'], ...gl.map((b) => [b.item, b.market, b.gap])] };
   };
 
   /* ---- coverage warning for the cluster account files ---- */
@@ -3752,89 +4721,142 @@ dash.calc('iq_adjusted', {
     $('#b27-count').textContent = int(sk.length) + ' SKUs';
   };
 
-  /* ---- hospital sell-out (Sulaiman Al Habib, Al Mouwasat) ---- */
+  /* ---- hospital sell-out (Sulaiman Al Habib, Al Mouwasat): every brand, by branch ---- */
   const SO_ACC = (name) => /sulaiman al habib/i.test(name) ? 'Sulaiman Al Habib Hospitals' : /mouwasat/i.test(name) ? 'Al Mouwasat Hospitals' : null;
-  const somodal = $('#so-modal');
-  let soBrand = 'Versatis';
-  sortState.so = { k: 'ytd26', dir: -1 };
-  $('#cm-so').addEventListener('click', () => { somodal.hidden = false; drawSellout(P()); $('#so-close').focus(); });
+  const somodal = $('#so-modal'), soB = $('#so-brand'), soR = $('#so-branch');
+  sortState.so = { k: 'ytd26', dir: -1 }; sortState.soi = { k: 'ytd26', dir: -1 };
+  $('#cm-so').addEventListener('click', () => {
+    const d = dash.data('sellout_rows'), acc = SO_ACC(custSel.name);
+    const br = d.status === 'ok' ? d.data.find((r) => r.account === acc && r.branch.toLowerCase() === custSel.name.toLowerCase()) : null;
+    soB.value = ''; soR.dataset.init = br && custSel.level === 'customer' ? br.branch : '';
+    somodal.hidden = false; drawSellout(P()); $('#so-close').focus();
+  });
   $('#so-close').addEventListener('click', () => { somodal.hidden = true; });
   somodal.addEventListener('click', (ev) => { if (ev.target === somodal) somodal.hidden = true; });
   document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !somodal.hidden) { ev.stopImmediatePropagation(); somodal.hidden = true; } }, true);
-  somodal.querySelectorAll('[data-so]').forEach((b) => b.addEventListener('click', () => { soBrand = b.dataset.so; drawSellout(P()); }));
+  [soB, soR].forEach((el) => el.addEventListener('change', () => drawSellout(P())));
   const drawSellout = (p) => {
     if (!custSel) return;
-    const acc = SO_ACC(custSel.name), d = dash.data('sellout_branch'), box = $('#so-chart');
-    somodal.querySelectorAll('[data-so]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.so === soBrand)));
+    const acc = SO_ACC(custSel.name), d = dash.data('sellout_rows'), box = $('#so-chart');
     if (!ready(box, d) || !acc) return;
-    const all = d.data.filter((r) => r.account === acc && r.brand === soBrand);
-    const branchMatch = all.filter((r) => r.branch.toLowerCase() === custSel.name.toLowerCase());
-    const rows = custSel.level === 'customer' && branchMatch.length ? branchMatch : all;
-    const lm = (all[0] && all[0].latest_month) || LM;
-    const ufmt = (v) => v == null || isNaN(v) ? '—' : cmp.format(v);
-    $('#so-title').textContent = 'Sell-out · ' + (rows === all ? acc : custSel.name) + ' · ' + soBrand;
-    $('#so-sub').textContent = 'Units reported by the hospital, ' + (rows === all ? all.length + ' branches' : 'this branch') + '; 2026 to ' + MON[lm - 1] + '.';
-    const sm = (f) => d3.sum(rows, (r) => +r[f] || 0);
-    const y25 = sm('ytd25'), y26 = sm('ytd26'), fy25 = sm('fy25'), fy24 = sm('fy24'), rr26 = y26 / lm, rr25 = fy25 / 12;
+    const accR = d.data.filter((r) => r.account === acc), lm = (accR[0] && accR[0].latest_month) || LM;
+    const brands = [...d3.rollup(accR, (l) => d3.sum(l, (r) => d3.sum(d3.range(1, 13), (k) => +r['m26_' + k] || 0)), (r) => r.brand)].sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+    const branches = [...d3.rollup(accR, (l) => d3.sum(l, (r) => d3.sum(d3.range(1, 13), (k) => +r['m26_' + k] || 0)), (r) => r.branch)].sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+    fillOpts(soB, 'All brands', brands);
+    if (soR.dataset.init) { fillOpts(soR, 'All branches', branches); soR.value = soR.dataset.init; soR.dataset.init = ''; } else fillOpts(soR, 'All branches', branches);
+    const bSel = soB.value, rSel = soR.value;
+    const rows = accR.filter((r) => (!bSel || r.brand === bSel) && (!rSel || r.branch === rSel));
+    const with25 = rows.length > 0 && rows.every((r) => r.brand === 'Versatis' || r.brand === 'Proxen');
+    const ufmt = (v) => v == null || isNaN(v) ? '—' : cmp.format(v), uf = (v) => v == null || v === '' ? '—' : d3.format(',.0f')(v);
+    const ytd = (list, yy) => d3.sum(list, (r) => d3.sum(d3.range(1, lm + 1), (k) => +r['m' + yy + '_' + k] || 0));
+    $('#so-title').textContent = 'Sell-out · ' + (rSel || acc) + ' · ' + (bSel || 'all brands');
+    $('#so-sub').textContent = 'Units reported by the hospital, 2026 to ' + MON[lm - 1] + '. ' + (with25 ? 'Compared with the same months of 2025.' : '2025 is available for Versatis and Proxen only, so growth shows for those two.') + (acc.startsWith('Al M') && bSel !== 'Versatis' && bSel !== 'Proxen' ? ' No June 2026 report for the other brands.' : '');
+    const y26 = ytd(rows, 26), y25 = with25 ? ytd(rows, 25) : null, fy25 = with25 ? d3.sum(rows, (r) => d3.sum(d3.range(1, 13), (k) => +r['m25_' + k] || 0)) : null, fy24 = with25 ? d3.sum(rows, (r) => +r.fy24 || 0) : null;
+    const rr26 = y26 / lm, rr25 = fy25 != null ? fy25 / 12 : null;
     /* sell-in from IMS for the same account and brand */
     const cm = dash.data('cust_monthly');
     let si = null;
-    if (cm.status === 'ok') {
-      const lst = cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === soBrand && (rows === all ? r.parent === acc || r.customer === acc : r.customer === custSel.name));
-      si = d3.range(1, 13).map((mo) => d3.sum(lst, (r) => +r['u26_' + mo] || 0));
+    if (bSel && cm.status === 'ok') {
+      const own = cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === bSel && r.customer.toLowerCase() === (rSel || '').toLowerCase());
+      const lst = rSel ? own : cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === bSel && (r.parent === acc || r.customer === acc));
+      if (!rSel || own.length) si = d3.range(1, 13).map((mo) => d3.sum(lst, (r) => +r['u26_' + mo] || 0));
     }
     const si26 = si ? d3.sum(si.slice(0, lm)) : null;
     const tile = (h, val, sub, tn) => {
       const a = document.createElement('article'); a.className = 'sd-kpi';
       const h3 = document.createElement('h3'); h3.textContent = h;
-      const b = document.createElement('div'); b.className = 'sd-big'; b.textContent = val; b.dataset.source = 'sellout_branch'; if (tn != null) tone(b, tn);
+      const b = document.createElement('div'); b.className = 'sd-big'; b.textContent = val; b.dataset.source = 'sellout_rows'; if (tn != null) tone(b, tn);
       a.append(h3, b);
       if (sub) { const sb = document.createElement('div'); sb.className = 'sd-sub'; sb.textContent = sub; a.append(sb); }
       return a;
     };
     const g = y25 > 0 ? y26 / y25 - 1 : null, grr = rr25 > 0 ? rr26 / rr25 - 1 : null;
     $('#so-kpis').replaceChildren(
-      tile('Sell-out Jan–' + MON[lm - 1] + ' 2026', ufmt(y26), 'Same months 2025: ' + ufmt(y25)),
-      tile('Growth', pct(g), 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units', g),
-      tile('FY 2025', ufmt(fy25), 'FY 2024: ' + ufmt(fy24) + (fy24 > 0 ? ' (' + pct(fy25 / fy24 - 1) + ')' : '')),
-      tile('RR 2026', ufmt(rr26), 'per month · RR 2025: ' + ufmt(rr25) + ' (' + pct(grr) + ')'),
-      tile('Sell-in (IMS) 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(y26 / si26) + ' of sell-in' : 'No IMS units for this account'));
+      tile('Sell-out Jan–' + MON[lm - 1] + ' 2026', ufmt(y26), with25 ? 'Same months 2025: ' + ufmt(y25) : 'Units, all items chosen'),
+      tile('Growth', pct(g), with25 ? 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units' : 'Needs 2025 data (Versatis, Proxen)', g),
+      tile('FY 2025', ufmt(fy25), with25 ? 'FY 2024: ' + ufmt(fy24) + (fy24 > 0 ? ' (' + pct(fy25 / fy24 - 1) + ')' : '') : 'Not reported for this choice'),
+      tile('RR 2026', ufmt(rr26), 'per month' + (rr25 ? ' · RR 2025: ' + ufmt(rr25) + ' (' + pct(grr) + ')' : '')),
+      tile('Sell-in (IMS) 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(y26 / si26) + ' of sell-in' : bSel ? 'No IMS units for this account and brand' : 'Pick a brand to compare'));
     const s25 = new Map(), s26 = new Map();
-    for (let k = 1; k <= 12; k++) { s25.set(k, sm('m25_' + k)); if (k <= lm) s26.set(k, sm('m26_' + k)); }
+    for (let k = 1; k <= 12; k++) { if (with25) s25.set(k, d3.sum(rows, (r) => +r['m25_' + k] || 0)); if (k <= lm) s26.set(k, d3.sum(rows, (r) => +r['m26_' + k] || 0)); }
     monthBars(box, s25, s26, new Map(), 'units', new Set(), 'Monthly sell-out 2026 vs 2025', { fmt: ufmt });
-    /* branches */
-    const br = rows.map((r) => ({ ...r, share: y26 ? r.ytd26 / y26 : null, d: r.ytd26 - r.ytd25, grr: r.rr25 > 0 && r.rr26 != null ? r.rr26 / r.rr25 - 1 : null }));
-    const uf = (v) => v == null ? '—' : d3.format(',.0f')(v);
-    drawTable($('#so-branches'), br, [
+    /* by branch */
+    const tot = y26;
+    const byBr = [...d3.group(rows, (r) => r.branch)].map(([b, l]) => { const a26 = ytd(l, 26), a25 = with25 ? ytd(l, 25) : null; return { id: 'so|' + b, branch: b, region: l[0].region, ytd25: a25, ytd26: a26, g: a25 > 0 ? a26 / a25 - 1 : null, rr26: a26 / lm, share: tot ? a26 / tot : null }; });
+    drawTable($('#so-branches'), byBr, [
       { k: 'branch', f: 'branch', label: 'Branch', cls: 'nm', text: true },
       { k: 'region', f: 'region', label: 'Region', text: true, cls: 'hide-sm' },
-      { k: 'owner', f: 'owner', label: 'Rep', text: true, cls: 'hide-md' },
-      { k: 'fy25', f: 'fy25', label: 'FY 2025', fmt: uf, cls: 'n hide-sm' },
-      { k: 'ytd25', f: 'ytd25', label: 'YTD 2025', fmt: uf, cls: 'n' },
+      ...(with25 ? [{ k: 'ytd25', f: 'ytd25', label: 'YTD 2025', fmt: uf, cls: 'n' }] : []),
+      { k: 'ytd26', f: 'ytd26', label: 'YTD 2026', fmt: uf, cls: 'n' },
+      ...(with25 ? [{ k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true }] : []),
+      { k: 'rr26', f: 'rr26', label: 'RR 2026', fmt: uf, cls: 'n hide-sm' },
+      { k: 'share', f: 'share', label: 'Share', fmt: shr, cls: 'n' },
+    ], sortState.so, () => drawSellout(P()), false, 'sellout_rows');
+    /* by brand, or by item for one brand */
+    const key = bSel ? 'item' : 'brand';
+    $('#so-it-title').textContent = bSel ? 'By item' : 'By brand';
+    const byIt = [...d3.group(rows, (r) => r[key])].map(([k, l]) => { const w = l.every((r) => r.has25), a26 = ytd(l, 26), a25 = w ? ytd(l, 25) : null; return { id: 'soi|' + k, name: k, ytd25: a25, ytd26: a26, g: a25 > 0 ? a26 / a25 - 1 : null, share: tot ? a26 / tot : null }; });
+    drawTable($('#so-items'), byIt, [
+      { k: 'name', f: 'name', label: bSel ? 'Item' : 'Brand', cls: 'nm', text: true },
+      { k: 'ytd25', f: 'ytd25', label: 'YTD 2025', fmt: uf, cls: 'n hide-sm' },
       { k: 'ytd26', f: 'ytd26', label: 'YTD 2026', fmt: uf, cls: 'n' },
       { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
-      { k: 'rr26', f: 'rr26', label: 'RR 2026', fmt: uf, cls: 'n hide-sm' },
-      { k: 'grr', f: 'grr', label: 'RR vs 2025', fmt: pct, cls: 'n hide-md', tone: true },
-      { k: 'share', f: 'share', label: 'Share', fmt: shr, cls: 'n hide-md' },
-    ], sortState.so, () => drawSellout(P()), false, 'sellout_branch');
+      { k: 'share', f: 'share', label: 'Share', fmt: shr, cls: 'n' },
+    ], sortState.soi, () => drawSellout(P()), false, 'sellout_rows');
     /* sell-in vs sell-out */
     const t2 = $('#so-sisO');
     const hr = document.createElement('tr');
     for (const h of ['Month', 'Sell-in (IMS)', 'Sell-out', 'Gap', 'Cumulative gap']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Month') th.className = 'n'; hr.append(th); }
     t2.tHead.replaceChildren(hr);
+    if (!si) { const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.className = 'lab'; td.textContent = bSel ? 'IMS has no sell-in for this branch on its own; pick "All branches" to compare at account level.' : 'Pick a brand to compare sell-out with what STADA invoiced (IMS).'; tr.append(td); t2.tBodies[0].replaceChildren(tr); return; }
     let cum = 0, tsi = 0, tso = 0;
+    const sg = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + uf(Math.abs(v));
     const body = d3.range(1, lm + 1).map((k) => {
-      const a = si ? si[k - 1] : null, b = s26.get(k) || 0, gp = a == null ? null : a - b;
-      if (gp != null) cum += gp; tsi += a || 0; tso += b;
+      const a = si[k - 1], b = s26.get(k) || 0, gp = a - b; cum += gp; tsi += a; tso += b;
       const tr = document.createElement('tr');
-      for (const [txt, cls, tn] of [[MON[k - 1], 'lab'], [uf(a), 'n'], [uf(b), 'n'], [gp == null ? '—' : (gp > 0 ? '+' : gp < 0 ? '−' : '') + uf(Math.abs(gp)), 'n', gp], [si ? (cum > 0 ? '+' : cum < 0 ? '−' : '') + uf(Math.abs(cum)) : '—', 'n', null]]) {
-        const e = document.createElement('td'); e.textContent = txt; e.className = cls; if (tn != null) tone(e, -tn); tr.append(e);
-      }
+      for (const [txt, cls, tn] of [[MON[k - 1], 'lab'], [uf(a), 'n'], [uf(b), 'n'], [sg(gp), 'n', gp], [sg(cum), 'n', null]]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; if (tn != null) tone(e, -tn); tr.append(e); }
       return tr;
     });
     const tt = document.createElement('tr'); tt.className = 'sd-total';
-    for (const [txt, cls] of [['Jan–' + MON[lm - 1], 'lab'], [uf(si ? tsi : null), 'n'], [uf(tso), 'n'], [si ? (tsi - tso > 0 ? '+' : tsi - tso < 0 ? '−' : '') + uf(Math.abs(tsi - tso)) : '—', 'n'], ['', 'n']]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; tt.append(e); }
+    for (const [txt, cls] of [['Jan–' + MON[lm - 1], 'lab'], [uf(tsi), 'n'], [uf(tso), 'n'], [sg(tsi - tso), 'n'], ['', 'n']]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; tt.append(e); }
     t2.tBodies[0].replaceChildren(...body, tt);
+  };
+
+  /* ---- year-on-year trend (overview) ---- */
+  const drawYears = (p) => {
+    const box = $('#years-chart'), dy = dash.data('yearly'), dt = dash.data('trend');
+    if (!ready(box, dy) || dt.status !== 'ok') return;
+    const m = p.metric === 'units' ? 'units' : 'eur', inC = (co) => !p.countries.length || p.countries.includes(co);
+    const per = new Map(), add = (b, k, v) => { const o = per.get(b) || {}; o[k] = (o[k] || 0) + v; per.set(b, o); };
+    for (const r of dy.data) if (inC(r.country) && p.brandOk(r.brand, r.cls)) { add(r.brand, 'y24', +r['y24_' + m] || 0); add(r.brand, 'lo', +r['lo26_' + m] || 0); add(r.brand, 'b27', +r['b27_' + m] || 0); }
+    const skip = (sc) => sc === 'All brands' || sc === 'Pain portfolio' || sc.startsWith('CLASS:') || sc.startsWith('SKU:');
+    for (const r of dt.data) {
+      if (+r.year !== 2025) continue;
+      const [co, sc, ch, rg] = r.combo.split('|');
+      if (ch !== 'All' || rg !== 'All' || skip(sc) || co !== p.CK[0] && !(p.countries.length > 1 && p.countries.includes(co))) continue;
+      if (!p.brandOk(sc, CLSOF.get(sc))) continue;
+      add(sc, 'y25', +r[m] || 0);
+    }
+    const ks = [['y24', '2024'], ['y25', '2025'], ['lo', 'LO 2026'], ['b27', 'BUD 2027']];
+    const vals = ks.map(([k]) => d3.sum([...per.values()], (o) => o[k] || 0));
+    const nb = ks.map(([k]) => [...per.values()].filter((o) => (o[k] || 0) > 0.5).length);
+    pairChart(box, ks.map(([k, lab], i) => ({ name: lab, sub: nb[i] + ' brands', bars: [{ v: vals[i] || null, c: i === 3 ? 'var(--sd-bud)' : i === 2 ? 'var(--sd-ytg)' : 'var(--sd-c26)' }] })), m, { h: 300, label: 'Yearly totals', gap: 0.35, arrows: [], seq: true, sub: true, names: ['Total'] });
+    $('#years-note').textContent = 'Full-year totals with the number of brands sold each year. 2024 and 2025 are IMS sales, LO 2026 is ACT + YTG from the budget file and BUD 2027 the sell-out budget at CIF 2027. Country, class and brand filters apply' + (p.channels.length || p.regions.length ? '; channel and region do not.' : '.') + ' 2022 and 2023 can be added once that data is shared.';
+  };
+
+  /* ---- budget overview: YTD, rest of year, full year (with BUD 2027) ---- */
+  const drawPlanOverview = (p) => {
+    const box = $('#planov-chart'), m = p.metric === 'units' ? 'units' : 'eur';
+    const k = planAgg(p); if (!ready(box, k.d) || !k.r) return;
+    const r = k.r, V = (f) => +r[f + '_' + m] || 0;
+    const db = dash.data('bud27_brand');
+    const b27 = db.status === 'ok' ? d3.sum(db.data.filter((x) => b27In(p, x)), (x) => +x['b27_' + m] || 0) : null;
+    const lmn = (r.latest_month || LM), rest = lmn < 12 ? MON[lmn] + '–Dec' : '';
+    pairChart(box, [
+      { name: 'YTD Jan–' + MON[lmn - 1], bars: [{ v: V('act25'), lab: 'ACT 25', c: 'var(--sd-c25)' }, { v: V('act26'), lab: 'ACT 26', c: 'var(--sd-c26)' }, { v: V('bud_ytd'), lab: 'BUD 26', c: 'var(--sd-bud)' }] },
+      { name: 'Rest of year ' + rest, bars: [{ v: V('fy25') - V('act25'), lab: rest + ' 25', c: 'var(--sd-c25)' }, { v: V('ytg'), lab: 'YTG LO', c: 'var(--sd-ytg)' }, { v: V('bud_rog'), lab: 'YTG BUD', c: 'var(--sd-bud)' }] },
+      { name: 'Full year', bars: [{ v: V('fy25'), lab: 'FY 25', c: 'var(--sd-c25)' }, { v: V('lo'), lab: 'LO 26', c: 'var(--sd-c26)' }, { v: V('bud_fy'), lab: 'BUD 26', c: 'var(--sd-bud)' }, { v: b27, lab: 'BUD 27', c: 'var(--sd-navy)' }] },
+    ], m, { h: 320, label: 'Budget overview', gap: 0.18, inner: 0.24, arrows: [[0, 1, 'g'], [1, 2, 'gap'], [1, 3, 'g', 1]], names: ['Last year', 'ACT / LO', 'BUD 26', 'BUD 27'] });
   };
 
   /* ---- render ---- */
@@ -3851,17 +4873,20 @@ dash.calc('iq_adjusted', {
     drawControls(p);
     drawCoverage(p);
     drawKpis(p);
-    if (page === 'overview') { drawTrend(p); drawDrivers(p); drawDecliners(p); drawMix(p); }
+    if (page === 'overview') { drawTrend(p); drawDrivers(p); drawDecliners(p); drawMix(p); drawYears(p); }
     else if (page === 'customers') drawCustomers(p);
     else if (page === 'brands') drawBrands(p);
     else if (page === 'plan') drawPlan(p);
     else if (page === 'market') drawMarket(p);
+    else if (page === 'explore') drawExplore(p);
+    else if (page === 'stada') drawStada(p);
     else if (page === 'bud27') drawBud27(p);
+    addDots();
   }
   dash.onData(render);
 
   const named = location.hash.slice(1);
-  if (['overview', 'customers', 'brands', 'plan', 'bud27', 'market'].includes(named)) showPage(named);
+  if (['overview', 'customers', 'brands', 'plan', 'bud27', 'stada', 'market', 'explore'].includes(named)) showPage(named);
 })();
 </script>
 </body></html>
