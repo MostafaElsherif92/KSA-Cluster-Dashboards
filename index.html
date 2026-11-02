@@ -553,6 +553,10 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
           <h3 class="sd-h3" id="so-chart-title">Monthly sell-out, 2026 vs 2025 (units)</h3>
           <div class="sd-legend"><span><i class="sw25"></i>2025</span><span><i class="sw26"></i>2026</span></div>
           <div class="sd-chart" id="so-chart" data-source="sellout_rows" style="min-height:260px"></div>
+          <div class="sd-grid2" style="margin-top:10px">
+            <div><h3 class="sd-h3" id="so-pr-title">Contribution by region</h3><div class="sd-chart" id="so-pie-reg" data-source="sellout_rows" style="min-height:220px"></div></div>
+            <div><h3 class="sd-h3" id="so-pb-title">Contribution by branch</h3><div class="sd-chart" id="so-pie-br" data-source="sellout_rows" style="min-height:220px"></div></div>
+          </div>
         </div>
         <div class="sd-grid2">
           <div><h3 class="sd-h3">By branch</h3><div class="sd-tablebox" style="max-height:26rem"><table class="sd-table" id="so-branches" data-source="sellout_rows"><thead></thead><tbody></tbody></table></div></div>
@@ -1211,7 +1215,7 @@ dash.calc('bud27_sku', {
 dash.calc('sellout_rows', {
   inputs: ['sellout'],
   title: 'Hospital sell-out per branch, brand and item',
-  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per brand and SKU: full-year 2024 and each month of 2025 (Versatis and Proxen only, brand level, from the 25 vs 26 reports) and each month of 2026 to the latest report (every brand, from the monthly hospital reports; Versatis and Proxen totals from the 25 vs 26 reports, split by SKU with the monthly reports).',
+  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per brand and SKU, by month. Sulaiman Al Habib: every brand for 2025 and 2026 from the monthly reports. Al Mouwasat: every brand for 2026 from the monthly reports; Versatis and Proxen also for 2025 (brand level) from the 25 vs 26 report. Full-year 2024 for Versatis and Proxen from the 25 vs 26 reports.',
   fn: (sellout) => {
     const acc = new Map(), r2 = (v) => Math.round(v * 1000) / 1000;
     let lm = 0;
@@ -3162,8 +3166,8 @@ dash.calc('iq_coverage', {
   /* sectors: YTD vs PY with growth, contribution to growth, and the channel split */
   let secView = 'sector';
   root.addEventListener('click', (ev) => { const b = ev.target.closest('#sec-view button'); if (b) { secView = b.dataset.v; render(); } });
-  const PIE = ['#0C4DA2', '#ED1651', '#5B8DD6', '#0A2A66', '#F28C28', '#2A9D8F', '#8E5BB5', '#9AA7BA'];
-  const drawPie = (box, items, m) => {
+  const PIE = ['#0C4DA2', '#ED1651', '#5B8DD6', '#0A2A66', '#F28C28', '#2A9D8F', '#8E5BB5', '#B45309', '#65A30D', '#9AA7BA'];
+  const drawPie = (box, items, m, cap = '2026') => {
     box.replaceChildren();
     const tot = d3.sum(items, (o) => Math.max(0, o.v)); if (!tot) return;
     const W = Math.max(280, box.clientWidth), H = 240, R = Math.min(105, H / 2 - 10), cx = Math.min(W / 2, R + 40), cy = H / 2;
@@ -3174,7 +3178,7 @@ dash.calc('iq_coverage', {
     g.selectAll('text').data(arcs.filter((a) => a.endAngle - a.startAngle > 0.35)).join('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
       .attr('transform', (a) => `translate(${arc.centroid(a)})`).style('fill', '#fff').style('font-size', '11px').text((a) => d3.format('.0%')(a.data.v / tot));
     g.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('y', -4).text(uniFmt(m, [tot])(tot));
-    g.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('y', 13).text('2026');
+    g.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('y', 13).text(cap);
     const lx = cx + R + 30, lg = svg.append('g');
     items.forEach((o, i) => {
       const y = cy - items.length * 11 + i * 22 + 8;
@@ -4856,11 +4860,14 @@ dash.calc('iq_coverage', {
     fillOpts(soI, bSel ? 'All SKUs' : 'All SKUs (pick a brand)', items); soI.disabled = !bSel;
     const iSel = soI.value;
     const rows = accR.filter((r) => (!bSel || r.brand === bSel) && (!iSel || r.item === iSel) && (!rSel || r.branch === rSel));
-    const with25 = !iSel && rows.length > 0 && rows.every((r) => r.brand === 'Versatis' || r.brand === 'Proxen');
+    const cov25 = new Set(accR.filter((r) => r.has25).map((r) => r.brand));
+    const fullCov = accR.some((r) => r.has25 && r.brand !== 'Versatis' && r.brand !== 'Proxen');   /* the account reports every brand for 2025 */
+    const with25 = rows.length > 0 && (fullCov || (rows.every((r) => cov25.has(r.brand)) && (!iSel || rows.some((r) => r.has25))));
     const ufmt = (v) => v == null || isNaN(v) ? '—' : cmp.format(v), uf = (v) => v == null || v === '' ? '—' : d3.format(',.0f')(v);
     const ytd = (list, yy) => d3.sum(list, (r) => d3.sum(d3.range(1, lm + 1), (k) => +r['m' + yy + '_' + k] || 0));
     $('#so-title').textContent = 'Sell-out · ' + (rSel || acc) + ' · ' + (iSel || bSel || 'all brands');
-    $('#so-sub').textContent = 'Units reported by the hospital, 2026 to ' + MON[lm - 1] + '. ' + (with25 ? 'Compared with the same months of 2025.' : iSel ? 'One SKU: 2025 has no SKU split, so there is no growth here.' : '2025 is available for Versatis and Proxen only, so growth shows for those two.') + (acc.startsWith('Al M') && bSel !== 'Versatis' && bSel !== 'Proxen' ? ' No June 2026 report for the other brands.' : '');
+    const habib = acc.startsWith('Sul');
+    $('#so-sub').textContent = 'Units reported by the hospital, 2026 to ' + MON[lm - 1] + '. ' + (with25 ? 'Compared with the same months of 2025.' : iSel ? 'One SKU: 2025 has no SKU split for this brand here, so there is no growth.' : habib ? 'Growth shows for the brands sold in 2025.' : '2025 is available for Versatis and Proxen only, so growth shows for those two.') + (!habib && bSel !== 'Versatis' && bSel !== 'Proxen' ? ' No June 2026 report for the other brands.' : '');
     const y26 = ytd(rows, 26), y25 = with25 ? ytd(rows, 25) : null, fy25 = with25 ? d3.sum(rows, (r) => d3.sum(d3.range(1, 13), (k) => +r['m25_' + k] || 0)) : null, fy24 = with25 ? d3.sum(rows, (r) => +r.fy24 || 0) : null;
     const rr26 = y26 / lm, rr25 = fy25 != null ? fy25 / 12 : null;
     /* sell-in from IMS for the same account and brand */
@@ -4871,7 +4878,7 @@ dash.calc('iq_coverage', {
       const lst = rSel ? own : cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === bSel && (r.parent === acc || r.customer === acc));
       if (!rSel || own.length) si = d3.range(1, 13).map((mo) => d3.sum(lst, (r) => +r['u26_' + mo] || 0));
     }
-    const si26 = si ? d3.sum(si.slice(0, lm)) : null;
+    const lmi = Math.min(lm, LM), si26 = si ? d3.sum(si.slice(0, lmi)) : null, so26i = d3.sum(rows, (r) => d3.sum(d3.range(1, lmi + 1), (k) => +r['m26_' + k] || 0));
     const tile = (h, val, sub, tn) => {
       const a = document.createElement('article'); a.className = 'sd-kpi';
       const h3 = document.createElement('h3'); h3.textContent = h;
@@ -4883,13 +4890,19 @@ dash.calc('iq_coverage', {
     const g = y25 > 0 ? y26 / y25 - 1 : null, grr = rr25 > 0 ? rr26 / rr25 - 1 : null;
     $('#so-kpis').replaceChildren(
       tile('Sell-out Jan–' + MON[lm - 1] + ' 2026', ufmt(y26), with25 ? 'Same months 2025: ' + ufmt(y25) : 'Units, all items chosen'),
-      tile('Growth', pct(g), with25 ? 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units' : iSel ? '2025 has no SKU split' : 'Needs 2025 data (Versatis, Proxen)', g),
-      tile('FY 2025', ufmt(fy25), with25 ? 'FY 2024: ' + ufmt(fy24) + (fy24 > 0 ? ' (' + pct(fy25 / fy24 - 1) + ')' : '') : 'Not reported for this choice'),
+      tile('Growth', pct(g), with25 ? 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units' : iSel ? '2025 has no SKU split here' : habib ? 'Not sold in 2025' : 'Needs 2025 data (Versatis, Proxen)', g),
+      tile('FY 2025', ufmt(fy25), with25 ? (fy24 > 0 && rows.every((r) => r.brand === 'Versatis' || r.brand === 'Proxen') ? 'FY 2024: ' + ufmt(fy24) + ' (' + pct(fy25 / fy24 - 1) + ')' : 'Full year 2025') : 'Not reported for this choice'),
       tile('RR 2026', ufmt(rr26), 'per month' + (rr25 ? ' · RR 2025: ' + ufmt(rr25) + ' (' + pct(grr) + ')' : '')),
-      tile('Sell-in (IMS) 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(y26 / si26) + ' of sell-in' : iSel ? 'Compared at brand level only' : bSel ? 'No IMS units for this account and brand' : 'Pick a brand to compare'));
+      tile('Sell-in (IMS) Jan–' + MON[lmi - 1] + ' 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(so26i / si26) + ' of sell-in (Jan–' + MON[lmi - 1] + ')' : iSel ? 'Compared at brand level only' : bSel ? 'No IMS units for this account and brand' : 'Pick a brand to compare'));
     const s25 = new Map(), s26 = new Map();
     for (let k = 1; k <= 12; k++) { if (with25) s25.set(k, d3.sum(rows, (r) => +r['m25_' + k] || 0)); if (k <= lm) s26.set(k, d3.sum(rows, (r) => +r['m26_' + k] || 0)); }
     monthBars(box, s25, s26, new Map(), 'units', new Set(), 'Monthly sell-out 2026 vs 2025', { fmt: ufmt });
+    /* contribution pies: share of sell-out by region and by branch */
+    const pieItems = (key) => { const L0 = [...d3.rollup(rows, (l) => ytd(l, 26), (r) => r[key] || 'Unassigned')].filter((x) => x[1] > 0), T0s = d3.sum(L0, (x) => x[1]), L = L0.filter((x) => x[1] >= T0s * 0.001).sort((a, b) => b[1] - a[1]); const top = L.slice(0, 9).map(([name, v]) => ({ name, v })); const rest = d3.sum(L.slice(9), (x) => x[1]); if (rest > 0) top.push({ name: 'Other ' + (L.length - 9) + ' branches', v: rest }); return top; };
+    $('#so-pr-title').textContent = 'Contribution by region · Jan–' + MON[lm - 1] + ' 2026';
+    $('#so-pb-title').textContent = 'Contribution by branch · Jan–' + MON[lm - 1] + ' 2026';
+    drawPie($('#so-pie-reg'), pieItems('region'), 'units', '2026 units');
+    drawPie($('#so-pie-br'), pieItems('branch'), 'units', '2026 units');
     /* by branch */
     const tot = y26;
     const byBr = [...d3.group(rows, (r) => r.branch)].map(([b, l]) => { const a26 = ytd(l, 26), a25 = with25 ? ytd(l, 25) : null; return { id: 'so|' + b, branch: b, region: l[0].region, ytd25: a25, ytd26: a26, g: a25 > 0 ? a26 / a25 - 1 : null, rr26: a26 / lm, share: tot ? a26 / tot : null }; });
@@ -4905,7 +4918,7 @@ dash.calc('iq_coverage', {
     /* by brand, or by item for one brand */
     const key = bSel ? 'item' : 'brand';
     $('#so-it-title').textContent = bSel ? 'By SKU' : 'By brand';
-    const byIt = [...d3.group(rows, (r) => r[key])].map(([k, l]) => { const ns = NOSPLIT.test(k), w = l.every((r) => r.has25), a26 = ns ? null : ytd(l, 26), a25 = w ? ytd(l, 25) : null; return { id: 'soi|' + k, name: ns ? 'All SKUs (2025, no SKU split)' : k, ytd25: a25, ytd26: a26, g: !ns && a25 > 0 ? a26 / a25 - 1 : null, share: tot && !ns ? a26 / tot : null }; });
+    const byIt = [...d3.group(rows, (r) => r[key])].map(([k, l]) => { const ns = NOSPLIT.test(k), w = fullCov ? true : l.every((r) => r.has25), a26 = ns ? null : ytd(l, 26), a25 = w ? ytd(l, 25) : null; return { id: 'soi|' + k, name: ns ? 'All SKUs (2025, no SKU split)' : k, ytd25: a25, ytd26: a26, g: !ns && a25 > 0 ? a26 / a25 - 1 : null, share: tot && !ns ? a26 / tot : null }; });
     drawTable($('#so-items'), byIt, [
       { k: 'name', f: 'name', label: bSel ? 'SKU' : 'Brand', cls: 'nm', text: true },
       { k: 'ytd25', f: 'ytd25', label: 'YTD 2025', fmt: uf, cls: 'n hide-sm' },
@@ -4921,14 +4934,14 @@ dash.calc('iq_coverage', {
     if (!si) { const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.className = 'lab'; td.textContent = iSel ? 'Sell-in is compared at brand level: choose All SKUs.' : bSel ? 'IMS has no sell-in for this branch on its own; pick "All branches" to compare at account level.' : 'Pick a brand to compare sell-out with what STADA invoiced (IMS).'; tr.append(td); t2.tBodies[0].replaceChildren(tr); return; }
     let cum = 0, tsi = 0, tso = 0;
     const sg = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + uf(Math.abs(v));
-    const body = d3.range(1, lm + 1).map((k) => {
+    const body = d3.range(1, lmi + 1).map((k) => {
       const a = si[k - 1], b = s26.get(k) || 0, gp = a - b; cum += gp; tsi += a; tso += b;
       const tr = document.createElement('tr');
       for (const [txt, cls, tn] of [[MON[k - 1], 'lab'], [uf(a), 'n'], [uf(b), 'n'], [sg(gp), 'n', gp], [sg(cum), 'n', null]]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; if (tn != null) tone(e, -tn); tr.append(e); }
       return tr;
     });
     const tt = document.createElement('tr'); tt.className = 'sd-total';
-    for (const [txt, cls] of [['Jan–' + MON[lm - 1], 'lab'], [uf(tsi), 'n'], [uf(tso), 'n'], [sg(tsi - tso), 'n'], ['', 'n']]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; tt.append(e); }
+    for (const [txt, cls] of [['Jan–' + MON[lmi - 1], 'lab'], [uf(tsi), 'n'], [uf(tso), 'n'], [sg(tsi - tso), 'n'], ['', 'n']]) { const e = document.createElement('td'); e.textContent = txt; e.className = cls; tt.append(e); }
     t2.tBodies[0].replaceChildren(...body, tt);
   };
 
