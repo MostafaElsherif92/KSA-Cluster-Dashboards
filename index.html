@@ -458,7 +458,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       </article>
     </div>
     <div class="sd-grid2">
-      <article class="sd-card" id="card-region">
+      <article class="sd-card" id="card-mixregion">
         <h2>By region</h2>
         <p class="sd-note"><span class="sd-plab">YTD Jan–Sep</span> 2026 (thick bar) over the same period of 2025 (thin bar), with growth.</p>
         <div class="sd-bars dash-skeleton" id="mix-region" data-source="mix"></div>
@@ -489,8 +489,8 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <div class="sd-chart" id="reg-chart" data-source="mix" style="min-height:280px"></div>
       </article>
       <article class="sd-card" id="card-sector">
-        <h2>By sector and channel</h2>
-        <p class="sd-note">Sales <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025 per customer sector, with growth and contribution to the country's growth (percentage points), then split by channel.</p>
+        <div class="sd-cardhd"><h2 id="sec-title">By sector</h2><div class="sd-seg sm" role="group" aria-label="View" id="sec-view"><button type="button" data-v="sector">Sector</button><button type="button" data-v="channel">Channel</button></div></div>
+        <p class="sd-note" id="sec-note">Sales <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025 per customer sector, with growth and contribution to the country's growth (percentage points).</p>
         <div class="sd-chart" id="sec-chart" data-source="customers" style="min-height:220px"></div>
         <div class="sd-tablebox" style="max-height:20rem"><table class="sd-table" id="sec-table" data-source="customers"><thead></thead><tbody></tbody></table></div>
       </article>
@@ -525,7 +525,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="sd-modal-panel">
         <div class="sd-tools" style="justify-content:space-between;align-items:flex-start">
           <div><h2 id="cm-title" style="margin:0">Customer</h2><p class="sd-note" id="cm-sub" style="margin:4px 0 0"></p></div>
-          <div class="sd-tools"><button type="button" class="sd-btn sd-btn-pri" id="cm-so" hidden>Sell-out: Versatis &amp; Proxen</button><button type="button" class="sd-btn" id="cm-close">Close</button></div>
+          <div class="sd-tools"><select id="cm-brand" aria-label="Brand"></select><select id="cm-sku" aria-label="SKU"></select><div class="sd-seg sm" role="group" aria-label="Measure" id="cm-meas"><button type="button" data-v="eur">Value</button><button type="button" data-v="units">Volume</button></div><button type="button" class="sd-btn sd-btn-pri" id="cm-so" hidden>Sell-out</button><button type="button" class="sd-btn" id="cm-close">Close</button></div>
         </div>
         <div class="sd-kpis" id="cm-kpis" data-source="cust_monthly"></div>
         <div>
@@ -544,7 +544,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="sd-modal-panel">
         <div class="sd-tools" style="justify-content:space-between;align-items:flex-start">
           <div><h2 id="so-title" style="margin:0">Sell-out</h2><p class="sd-note" id="so-sub" style="margin:4px 0 0"></p></div>
-          <div class="sd-tools"><select id="so-brand" aria-label="Brand"></select><select id="so-branch" aria-label="Branch"></select><button type="button" class="sd-btn" id="so-close">Close</button></div>
+          <div class="sd-tools"><select id="so-brand" aria-label="Brand"></select><select id="so-item" aria-label="SKU"></select><select id="so-branch" aria-label="Branch"></select><button type="button" class="sd-btn" id="so-close">Close</button></div>
         </div>
         <div class="sd-kpis" id="so-kpis" data-source="sellout_rows"></div>
         <div>
@@ -565,6 +565,11 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   </section>
 
   <section class="sd-page" id="brands" aria-labelledby="tab-brands" hidden>
+    <article class="sd-card" id="card-brytd">
+      <h2 id="brytd-title">ACT vs YTD budget by brand</h2>
+      <p class="sd-note" id="brytd-note">ACT minus BUD for the months closed, largest gaps first.</p>
+      <div class="sd-chart" id="brytd-chart" data-source="plan_brands plan_skus"></div>
+    </article>
     <article class="sd-card" id="card-brandtable">
       <h2>Brands</h2>
       <p class="sd-note">For the channel and region selected. Click a brand to focus the whole dashboard on it. Share and contribution are against all brands.</p>
@@ -635,6 +640,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="sd-chart dash-skeleton" id="plan-chart" data-source="plan_trend"></div>
     </article>
 
+    <article class="sd-card" id="card-planytd">
+      <h2 id="planytd-title">ACT vs YTD budget by brand</h2>
+      <p class="sd-note" id="planytd-note">ACT minus BUD for the months closed, largest gaps first.</p>
+      <div class="sd-chart" id="planytd-chart" data-source="plan_brands plan_skus"></div>
+    </article>
+
     <article class="sd-card" id="card-plangap">
       <h2 id="plangap-title">LO 2026 vs FY budget by brand</h2>
       <p class="sd-note">LO 2026 minus BUD FY 2026, largest gaps first, with LO as a share of budget.</p>
@@ -677,13 +688,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       </article>
     </div>
     <article class="sd-card" id="card-b27month">
-      <h2>Monthly: BUD 2027 vs LO 2026</h2>
-      <div class="sd-legend"><span><i class="sw25"></i>LO 2026 (ACT + YTG)</span><span><i class="sw26"></i>BUD 2027</span></div>
+      <h2>Monthly: BUD 2027 vs 2026</h2>
+      <div class="sd-legend"><span><i class="sw25"></i><span id="b27m-act">ACT 2026</span></span><span><i class="swytg swdash"></i><span id="b27m-lo">LO 2026 (YTG)</span></span><span><i class="sw26"></i>BUD 2027</span></div>
       <div class="sd-chart" id="b27-month" data-source="bud27_month" style="min-height:280px"></div>
     </article>
     <article class="sd-card" id="card-b27brands">
       <h2>Brands: BUD 2027 vs LO 2026</h2>
-      <p class="sd-note">Click a brand to focus the dashboard on it. CIF impact is the change from moving existing products to 2027 CIF prices; growth at constant CIF leaves that change out, so it shows volume, mix and new launches.</p>
+      <p class="sd-note">Click a brand to focus the dashboard on it. BUD 2027 is at 2027 CIF prices; CIF impact is the part of it that comes from moving existing products from 2026 to 2027 CIF prices.</p>
       <div class="sd-tablebox"><table class="sd-table clickable" id="b27-brands" data-source="bud27_brand"><thead></thead><tbody></tbody></table></div>
     </article>
     <article class="sd-card" id="card-b27skus">
@@ -794,6 +805,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <article class="sd-card" id="card-iqch">
           <div class="sd-cardhd"><h2 id="iq-ch-title">Brand by channel · MAT</h2><div class="sd-seg sm" role="group" aria-label="Period"><button type="button" data-pvk="ch" data-v="q">Quarter</button><button type="button" data-pvk="ch" data-v="ytd">YTD</button><button type="button" data-pvk="ch" data-v="mat">MAT</button></div></div>
           <p class="sd-note">Each channel's market size and growth, the brand's sales and growth there, and its share of that channel.</p>
+          <div class="sd-chart" id="iq-chchart" data-source="iq_mix" style="min-height:200px"></div>
           <div class="sd-tablebox" style="max-height:none"><table class="sd-table" id="iq-chtable" data-source="iq_mix"><thead></thead><tbody></tbody></table></div>
         </article>
       </div>
@@ -837,6 +849,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="sd-tools">
         <div class="sd-seg" role="group" aria-label="Period" id="sv-per"><button type="button" data-v="q">QTR</button><button type="button" data-v="ytd">YTD</button><button type="button" data-v="mat">MAT</button></div>
         <select id="sv-ch" aria-label="IQVIA channel"><option value="All">All channels</option><option value="Hospital">Hospital (LPO + Tender)</option><option value="Retail">Retail</option></select>
+        <select id="sv-brand" aria-label="Brand"></select>
         <select id="sv-seg" aria-label="Segment"><option value="">All segments</option><option value="CHC">CHC</option><option value="Gx">Gx</option><option value="Sx">Sx</option></select>
         <select id="sv-measure" aria-label="Measure"><option value="eur">Value (€)</option><option value="units">Units</option></select>
       </div>
@@ -1082,15 +1095,15 @@ dash.calc('customers', {
 
 dash.calc('cust_monthly', {
   inputs: ['sales', 'sales_bh_jo', 'sales_lb_2025', 'sales_lb_2025_h2', 'sales_lb_2026', 'plan'],
-  title: 'Monthly sales per STADA customer and brand',
-  description: 'For each STADA customer (with its KSA parent group) and brand: sales in euro, units and local value for every month of 2025 and 2026. Months with no sales are left out of each row. Used by the customer page that opens from the customer table.',
+  title: 'Monthly sales per STADA customer, brand and SKU',
+  description: 'For each STADA customer (with its KSA parent group), brand and SKU: sales in euro, units and local value for every month of 2025 and 2026. Months with no sales are left out of each row. Used by the customer page that opens from the customer table.',
   fn: (sales, sales_bh_jo, sales_lb_2025, sales_lb_2025_h2, sales_lb_2026, plan) => {
     const CLS = new Map(plan.map((r) => [r.brand, r.class]));
     const acc = new Map();
     for (const src of [sales, sales_bh_jo, sales_lb_2025, sales_lb_2025_h2, sales_lb_2026]) for (const r of src) {
-      const co = r.country || 'Saudi Arabia', id = co + '|' + r.customer + '|' + r.brand;
+      const co = r.country || 'Saudi Arabia', id = co + '|' + r.customer + '|' + r.brand + '|' + r.sku;
       let a = acc.get(id);
-      if (!a) { a = { id, country: co, customer: r.customer, parent: r.parent || r.customer, brand: r.brand, cls: CLS.get(r.brand) || 'Unclassified' }; acc.set(id, a); }
+      if (!a) { a = { id, country: co, customer: r.customer, parent: r.parent || r.customer, brand: r.brand, sku: r.sku, cls: CLS.get(r.brand) || 'Unclassified' }; acc.set(id, a); }
       const k = String(r.year).slice(2) + '_' + (+r.month);
       a['e' + k] = (a['e' + k] || 0) + (+r.value_eur || 0);
       a['u' + k] = (a['u' + k] || 0) + (+r.units || 0);
@@ -1196,7 +1209,7 @@ dash.calc('bud27_sku', {
 dash.calc('sellout_rows', {
   inputs: ['sellout'],
   title: 'Hospital sell-out per branch, brand and item',
-  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per brand and item: full-year 2024 and each month of 2025 (Versatis and Proxen only, from the 25 vs 26 reports) and each month of 2026 to the latest report (every brand, from the monthly hospital reports).',
+  description: 'Units sold out by each branch of Sulaiman Al Habib Hospitals and Al Mouwasat Hospitals, per brand and SKU: full-year 2024 and each month of 2025 (Versatis and Proxen only, brand level, from the 25 vs 26 reports) and each month of 2026 to the latest report (every brand, from the monthly hospital reports; Versatis and Proxen totals from the 25 vs 26 reports, split by SKU with the monthly reports).',
   fn: (sellout) => {
     const acc = new Map(), r2 = (v) => Math.round(v * 1000) / 1000;
     let lm = 0;
@@ -1213,16 +1226,20 @@ dash.calc('sellout_rows', {
 });
 
 dash.calc('yearly', {
-  inputs: ['sales_2024', 'plan', 'bud27'],
+  inputs: ['sales_2024', 'plan', 'bud27', 'sales', 'sales_bh_jo', 'sales_lb_2025', 'sales_lb_2025_h2'],
   title: 'Yearly totals per brand: 2024, LO 2026 and BUD 2027',
-  description: 'Per country and brand, in euro and units: full-year 2024 sales (IMS), LO 2026 (ACT 2026 + YTG, budget file) and BUD 2027 (sell-out at CIF 2027). Full-year 2025 comes from the monthly sales trend. Used for the year-on-year trend on the overview.',
-  fn: (sales_2024, plan, bud27) => {
+  description: 'Per country and brand, in euro and units: full-year 2024 sales (IMS), LO 2026 (ACT 2026 + YTG, budget file) and BUD 2027 (sell-out at CIF 2027), with the number of SKUs sold or planned in each year (2024 and 2025 from IMS, LO 2026 from the budget file, BUD 2027 from the BUD 2027 export). Full-year 2025 values come from the monthly sales trend. Used for the year-on-year trend on the overview.',
+  fn: (sales_2024, plan, bud27, sales, sales_bh_jo, sales_lb_2025, sales_lb_2025_h2) => {
     const CLS = new Map(plan.map((r) => [r.brand, r.class]));
     const acc = new Map(), r2 = (v) => Math.round(v * 100) / 100;
-    const get = (co, br, cls) => { const id = co + '|' + br; let a = acc.get(id); if (!a) { a = { id, country: co, brand: br, cls: cls || CLS.get(br) || 'Unclassified', y24_eur: 0, y24_units: 0, lo26_eur: 0, lo26_units: 0, b27_eur: 0, b27_units: 0 }; acc.set(id, a); } return a; };
-    for (const r of sales_2024) { const a = get(r.country, r.brand); a.y24_eur += +r.value_eur || 0; a.y24_units += +r.units || 0; }
-    for (const r of plan) if (+r.year === 2026) { const a = get(r.country, r.brand, r.class); a.lo26_eur += (+r.act_eur || 0) + (+r.ytg_eur || 0); a.lo26_units += (+r.act_units || 0) + (+r.ytg_units || 0); }
-    for (const r of bud27) { const a = get(r.country, r.brand, r.cls); a.b27_eur += +r.eur_cif27 || 0; a.b27_units += +r.units || 0; }
+    const get = (co, br, cls) => { const id = co + '|' + br; let a = acc.get(id); if (!a) { a = { id, country: co, brand: br, cls: cls || CLS.get(br) || 'Unclassified', y24_eur: 0, y24_units: 0, lo26_eur: 0, lo26_units: 0, b27_eur: 0, b27_units: 0, y24_skus: 0, y25_skus: 0, lo26_skus: 0, b27_skus: 0 }; acc.set(id, a); } return a; };
+    for (const r of sales_2024) { const a = get(r.country, r.brand); a.y24_eur += +r.value_eur || 0; a.y24_units += +r.units || 0; a.y24_skus += +r.skus || 0; }
+    const sku = { y25: new Map(), lo26: new Map(), b27: new Map() };
+    const addSku = (k, co, br, cls, s, v) => { const key = co + '|' + br + '|' + s; const o = sku[k].get(key) || { co, br, cls, v: 0 }; o.v += v; sku[k].set(key, o); };
+    for (const r of sales.concat(sales_bh_jo, sales_lb_2025, sales_lb_2025_h2)) if (+r.year === 2025) addSku('y25', r.country || 'Saudi Arabia', r.brand, null, r.sku, +r.value_eur || 0);
+    for (const r of plan) if (+r.year === 2026) { const a = get(r.country, r.brand, r.class); a.lo26_eur += (+r.act_eur || 0) + (+r.ytg_eur || 0); a.lo26_units += (+r.act_units || 0) + (+r.ytg_units || 0); addSku('lo26', r.country, r.brand, r.class, r.sku, (+r.act_eur || 0) + (+r.ytg_eur || 0)); }
+    for (const r of bud27) { const a = get(r.country, r.brand, r.cls); a.b27_eur += +r.eur_cif27 || 0; a.b27_units += +r.units || 0; addSku('b27', r.country, r.brand, r.cls, r.sku, +r.eur_cif27 || 0); }
+    for (const k of Object.keys(sku)) for (const o of sku[k].values()) if (o.v > 0) get(o.co, o.br, o.cls)[k + '_skus'] += 1;
     return [...acc.values()].map((a) => { for (const k of Object.keys(a)) if (typeof a[k] === 'number') a[k] = r2(a[k]); return a; });
   },
 });
@@ -2285,6 +2302,12 @@ dash.calc('iq_coverage', {
   const cmp = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
   const int = d3.format(',.0f');
   const big = (m, v) => v == null || isNaN(v) ? '—' : m === 'eur' ? (v < 0 ? '−€' : '€') + cmp.format(Math.abs(v)) : m === 'loc' ? curCode + ' ' + (v < 0 ? '−' : '') + cmp.format(Math.abs(v)) : (v < 0 ? '−' : '') + cmp.format(Math.abs(v));
+  const uniFmt = (m, vals) => {
+    if (m !== 'eur' && m !== 'units') return (v) => big(m, v);
+    const nz = vals.filter((v) => v).map(Math.abs), mn = nz.length ? Math.min(...nz) : 1;
+    if (m === 'eur') { const dg = mn < 1e5 ? 2 : 1; return (v) => v == null ? '—' : (v < 0 ? '−€' : '€') + d3.format(',.' + dg + 'f')(Math.abs(v) / 1e6) + 'M'; }
+    const dg = mn < 1e4 ? 1 : 0; return (v) => v == null ? '—' : (v < 0 ? '−' : '') + d3.format(',.' + dg + 'f')(Math.abs(v) / 1e3) + 'K';
+  };
   const sbig = (m, v) => v == null ? '—' : (v > 0 ? '+' : '') + big(m, v);
   const tab = (m) => (v) => v == null ? '—' : (m === 'eur' ? '€' : '') + int(v);
   const stab = (m) => (v) => v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + (m === 'eur' ? '€' : '') + int(Math.abs(v));
@@ -2703,7 +2726,7 @@ dash.calc('iq_coverage', {
     const bars = [];
     for (const mo of d3.range(1, 13)) {
       const a = s25.get(mo), b = s26.get(mo), g = ytg.get(mo);
-      if (a != null && !isNaN(a)) bars.push({ mo, yr: 2025, v: a });
+      if (a != null && !isNaN(a)) bars.push({ mo, yr: 2025, v: a, ytg: nm.aYtg != null && mo > nm.aYtg });
       if (b != null && !isNaN(b)) bars.push({ mo, yr: 2026, v: b });
       else if (g != null && g !== 0) bars.push({ mo, yr: 2026, v: g, ytg: true });
     }
@@ -2750,11 +2773,11 @@ dash.calc('iq_coverage', {
     const vals = groups.flatMap((g) => g.bars.map((b) => b.v)).filter((v) => v != null && isFinite(v));
     if (!vals.length) { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = 'No data for this selection.'; box.append(n); return; }
     const arrows = o.arrows || [[0, 1, 'g']], lv = (arrows.length ? d3.max(arrows, (a) => a[3] || 0) + 1 : 0) + (o.seq ? 1 : 0);
-    const W = Math.max(300, box.clientWidth), mb = o.sub ? 52 : 32, H = o.h || 300;
+    const hasLab = groups.some((g) => g.bars.some((b) => b.lab)), W = Math.max(300, box.clientWidth), mb = o.sub ? 52 : hasLab ? 48 : 34, H = o.h || 300;
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', o.label || 'Bar chart');
     const x = d3.scaleBand(groups.map((g, i) => i), [4, W - 4]).paddingInner(o.gap ?? 0.28).paddingOuter(0.06);
     const nb = d3.max(groups, (g) => g.bars.length), bw = Math.min(64, x.bandwidth() / nb * 0.9), bp = Math.max(4, bw * (o.inner ?? 0.12)), bx = (gi, bi, n) => x(gi) + (x.bandwidth() - n * bw) / 2 + bi * bw;
-    const fmt = o.fmt || ((v) => big(m, v));
+    const fmt = o.fmt || uniFmt(m, vals);
     /* measure value labels first: small font or vertical when wider than the bar, and lift the arrows above them */
     const mt0 = svg.append('text').attr('class', 'sd-pc-lbl');
     const lw = d3.max(vals, (v) => { mt0.text(fmt(v)); return mt0.node().getComputedTextLength ? mt0.node().getComputedTextLength() : String(fmt(v)).length * 6.5; }) || 0; mt0.remove();
@@ -2769,9 +2792,9 @@ dash.calc('iq_coverage', {
         if (b.v == null) return;
         svg.append('rect').attr('x', bx(gi, bi, n) + bp / 2).attr('width', bw - bp).attr('y', top(bi)).attr('height', Math.max(1, y(0) - top(bi))).attr('rx', 3).style('fill', b.c || (bi ? 'var(--sd-c26)' : 'var(--sd-c25)'));
         { const xx = bx(gi, bi, n) + bw / 2, yy = top(bi) - 5, t = svg.append('text').attr('class', 'sd-pc-lbl').attr('text-anchor', 'middle').attr('x', xx).attr('y', yy).text(fmt(b.v)); if (lmode === 1) t.style('font-size', '9.5px'); else if (lmode === 2) t.style('font-size', '9.5px').attr('text-anchor', 'start').attr('x', xx + 3).attr('transform', `rotate(-90 ${xx + 3} ${yy})`); lbls.push(t); }
-        if (b.lab) svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle').attr('x', bx(gi, bi, n) + bw / 2).attr('y', H - mb + 13).text(b.lab);
+        if (b.lab) svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle').attr('x', bx(gi, bi, n) + bw / 2).attr('y', H - mb + 16).text(b.lab);
       });
-      { const t = svg.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').style('font-weight', 600).attr('x', x(gi) + x.bandwidth() / 2).attr('y', H - mb + (g.bars.some((b) => b.lab) ? 27 : 14)).text(g.name); fitTxt(t, x.step() - 4); if (t.text() !== g.name) t.append('title').text(g.name); }
+      { const t = svg.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').style('font-weight', 600).attr('x', x(gi) + x.bandwidth() / 2).attr('y', H - mb + (g.bars.some((b) => b.lab) ? 36 : 16)).text(g.name); fitTxt(t, x.step() - 4); if (t.text() !== g.name) t.append('title').text(g.name); }
       if (g.sub) { const sy = H - mb + (g.bars.some((b) => b.lab) ? 40 : 28), st = svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle'), parts = Array.isArray(g.sub) ? g.sub : [g.sub]; parts.forEach((ln, k) => st.append('tspan').attr('x', x(gi) + x.bandwidth() / 2).attr('y', sy + k * 12).text(ln)); }
       arrows.forEach(([i, j, kind, l = 0]) => {
         const a = g.bars[i], b = g.bars[j]; if (!a || !b || a.v == null || b.v == null) return;
@@ -3044,18 +3067,29 @@ dash.calc('iq_coverage', {
     const tr = ev.target.closest('tbody tr[data-k]'); if (!tr) return;
     const r = lastCust.find((x) => x.id === tr.dataset.k); if (!r) return;
     custSel = { country: r.country, name: r.customer, level: r.level || 'customer', region: r.region, channel: r.channel, sector: r.sector };
+    CMF.brand = ''; CMF.sku = ''; CMF.m = null;
     cmodal.hidden = false; drawCustPage(P()); $('#cm-close').focus();
   });
+  const CMF = { brand: '', sku: '', m: null };
+  $('#cm-brand').addEventListener('change', (e) => { CMF.brand = e.target.value; CMF.sku = ''; drawCustPage(P()); });
+  $('#cm-sku').addEventListener('change', (e) => { CMF.sku = e.target.value; drawCustPage(P()); });
+  root.querySelectorAll('#cm-meas button').forEach((b) => b.addEventListener('click', () => { CMF.m = b.dataset.v; drawCustPage(P()); }));
   const drawCustPage = (p) => {
     if (!custSel) return;
     const sel = custSel, d = dash.data('cust_monthly'), box = $('#cm-chart');
     $('#cm-title').textContent = sel.name;
-    const scopeTxt = p.brands.length ? (isPainSet(p.brands) ? 'Pain portfolio' : p.brands.length <= 3 ? p.brands.join(' + ') : p.brands.length + ' brands') : p.classes.length ? p.classes.join(' + ') + ' brands' : 'All brands';
+    const scopeTxt = CMF.sku ? CMF.sku : CMF.brand ? CMF.brand : p.brands.length ? (isPainSet(p.brands) ? 'Pain portfolio' : p.brands.length <= 3 ? p.brands.join(' + ') : p.brands.length + ' brands') : p.classes.length ? p.classes.join(' + ') + ' brands' : 'All brands';
     $('#cm-sub').textContent = [sel.country, sel.level === 'parent' ? 'Parent group' : 'STADA customer', sel.region, sel.channel, sel.sector].filter(Boolean).join(' · ') + ' — showing ' + scopeTxt;
     if (!ready(box, d)) { $('#cm-kpis').replaceChildren(); return; }
-    const m = p.metric, pre = m === 'units' ? 'u' : m === 'loc' ? 'l' : 'e';
+    const m = CMF.m || (p.metric === 'units' ? 'units' : p.metric === 'loc' ? 'loc' : 'eur'), pre = m === 'units' ? 'u' : m === 'loc' ? 'l' : 'e';
+    root.querySelectorAll('#cm-meas button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === m)));
     const mine = d.data.filter((r) => r.country === sel.country && (sel.level === 'parent' ? r.parent === sel.name : r.customer === sel.name));
-    const scope = mine.filter((r) => p.brandOk(r.brand, r.cls));
+    const sumAll = (l) => d3.sum(l, (r) => d3.sum(d3.range(1, 13), (mo) => (+r['e26_' + mo] || 0) + (+r['e25_' + mo] || 0)));
+    const bl = [...d3.rollup(mine, sumAll, (r) => r.brand)].filter((x) => x[1] > 0).sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+    fillOpts($('#cm-brand'), 'Brands as filtered', bl); if (!bl.includes(CMF.brand)) CMF.brand = ''; $('#cm-brand').value = CMF.brand;
+    const sl = CMF.brand ? [...d3.rollup(mine.filter((r) => r.brand === CMF.brand), sumAll, (r) => r.sku)].sort((a, b) => b[1] - a[1]).map((x) => x[0]) : [];
+    fillOpts($('#cm-sku'), CMF.brand ? 'All SKUs' : 'All SKUs (pick a brand)', sl); if (!sl.includes(CMF.sku)) CMF.sku = ''; $('#cm-sku').value = CMF.sku; $('#cm-sku').disabled = !CMF.brand;
+    const scope = mine.filter((r) => (CMF.brand ? r.brand === CMF.brand : p.brandOk(r.brand, r.cls)) && (!CMF.sku || r.sku === CMF.sku));
     const months = p.monthMode ? p.months.map((x) => +x.slice(1)) : d3.range(1, LM + 1);
     const v = (r, yy, mo) => +r[pre + yy + '_' + mo] || 0;
     const sumP = (list, yy, ms) => d3.sum(list, (r) => d3.sum(ms, (mo) => v(r, yy, mo)));
@@ -3078,16 +3112,19 @@ dash.calc('iq_coverage', {
       tile('Growth', pct(g), 'Change ' + sbig(m, p26 - p25), g),
       tile('Full year 2025', big(m, fy), 'RR FY 2025: ' + big(m, rrfy) + ' per month'),
       tile('RR 2026', big(m, rr26), 'vs RR FY 2025: ' + pct(grr), null),
-      tile('Brands bought', int(nb), scopeTxt === 'All brands' ? 'in ' + PLAB + ' 2026' : 'Share of the account: ' + (all26 > 0 ? shr(p26 / all26) : '—')));
+      CMF.brand ? tile('SKUs bought', int(new Set(scope.filter((r) => d3.sum(months, (mo) => v(r, 26, mo)) > 0).map((r) => r.sku)).size), 'Share of the account: ' + (all26 > 0 ? shr(p26 / all26) : '—'))
+        : tile('Brands bought', int(nb), scopeTxt === 'All brands' ? 'in ' + PLAB + ' 2026' : 'Share of the account: ' + (all26 > 0 ? shr(p26 / all26) : '—')));
     monthBars(box, s25, s26, new Map(), m, new Set(p.monthMode ? months : []), 'Monthly sales of ' + sel.name + ', 2025 and 2026');
     /* by brand */
     const tot26 = p26;
-    const br = [...d3.group(scope, (r) => r.brand)].map(([b, list]) => {
+    const byKey = CMF.brand ? 'sku' : 'brand';
+    $('#cm-brands').closest('div').previousElementSibling.textContent = CMF.brand ? 'By SKU' : 'By brand';
+    const br = [...d3.group(scope, (r) => r[byKey])].map(([b, list]) => {
       const a = sumP(list, 25, months), c = sumP(list, 26, months), f = sumP(list, 25, d3.range(1, 13));
       return { id: 'cm|' + b, brand: b, cls: list[0].cls, p25: a, p26: c, g: a > 0 ? c / a - 1 : null, d: c - a, share: tot26 ? c / tot26 : null, fy: f };
     }).filter((r) => r.p25 || r.p26 || r.fy);
     drawTable($('#cm-brands'), br, [
-      { k: 'brand', f: 'brand', label: 'Brand', cls: 'nm', text: true },
+      { k: 'brand', f: 'brand', label: CMF.brand ? 'SKU' : 'Brand', cls: 'nm', text: true },
       { k: 'p25', f: 'p25', label: PLAB + ' 2025', fmt: tab(m), cls: 'n hide-sm' },
       { k: 'p26', f: 'p26', label: PLAB + ' 2026', fmt: tab(m), cls: 'n' },
       { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
@@ -3116,23 +3153,49 @@ dash.calc('iq_coverage', {
     mt.tBodies[0].replaceChildren(...body, tr);
     $('#cm-so').hidden = !(sel.country === 'Saudi Arabia' && SO_ACC(sel.name));
     if (!somodal.hidden) drawSellout(p);
-    $('#cm-foot').textContent = (p.skus.length ? 'SKU filter: this page shows the whole brand. ' : '') + 'The channel and region filters do not apply here: the page shows all of this account\'s sales for the brands chosen.';
+    $('#cm-foot').textContent = 'Brand, SKU and value / volume above apply to this page only; without a brand here it follows the brand and class filters of the dashboard. The channel and region filters do not apply: the page shows all of this account\'s sales.';
   };
 
   /* sectors: YTD vs PY with growth, contribution to growth, and the channel split */
+  let secView = 'sector';
+  root.addEventListener('click', (ev) => { const b = ev.target.closest('#sec-view button'); if (b) { secView = b.dataset.v; render(); } });
+  const PIE = ['#0C4DA2', '#ED1651', '#5B8DD6', '#0A2A66', '#F28C28', '#2A9D8F', '#8E5BB5', '#9AA7BA'];
+  const drawPie = (box, items, m) => {
+    box.replaceChildren();
+    const tot = d3.sum(items, (o) => Math.max(0, o.v)); if (!tot) return;
+    const W = Math.max(280, box.clientWidth), H = 240, R = Math.min(105, H / 2 - 10), cx = Math.min(W / 2, R + 40), cy = H / 2;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Split by channel');
+    const arcs = d3.pie().sort(null).value((o) => Math.max(0, o.v))(items), arc = d3.arc().innerRadius(R * 0.55).outerRadius(R);
+    const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+    g.selectAll('path').data(arcs).join('path').attr('d', arc).style('fill', (a, i) => PIE[i % PIE.length]).style('stroke', 'var(--color-panel)').style('stroke-width', 2);
+    g.selectAll('text').data(arcs.filter((a) => a.endAngle - a.startAngle > 0.35)).join('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('transform', (a) => `translate(${arc.centroid(a)})`).style('fill', '#fff').style('font-size', '11px').text((a) => d3.format('.0%')(a.data.v / tot));
+    g.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('y', -4).text(uniFmt(m, [tot])(tot));
+    g.append('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('y', 13).text('2026');
+    const lx = cx + R + 30, lg = svg.append('g');
+    items.forEach((o, i) => {
+      const y = cy - items.length * 11 + i * 22 + 8;
+      lg.append('rect').attr('x', lx).attr('y', y - 9).attr('width', 11).attr('height', 11).attr('rx', 2).style('fill', PIE[i % PIE.length]);
+      lg.append('text').attr('class', 'sd-tick').attr('x', lx + 17).attr('y', y).style('fill', 'var(--color-fg)').text(o.name + ' · ' + uniFmt(m, items.map((x) => x.v))(o.v) + ' · ' + d3.format('.1%')(o.v / tot));
+    });
+    box.__xl = { name: 'Channel split', rows: [['Channel', 'Sales 2026', 'Share'], ...items.map((o) => [o.name, o.v, o.v / tot])] };
+  };
   const drawSectors = (p, cr) => {
-    const m = p.metric, box = $('#sec-chart'), tb = $('#sec-table');
-    const t25 = d3.sum(cr.rows, (r) => +r['ytd25_' + m] || 0);
-    const agg = (list) => { const a = d3.sum(list, (r) => +r['ytd25_' + m] || 0), b = d3.sum(list, (r) => +r['ytd26_' + m] || 0); return { a, b, g: a > 0 ? b / a - 1 : null, c: t25 ? (b - a) / t25 * 100 : null }; };
-    const secs = [...d3.group(cr.rows, (r) => r.sector || 'Unassigned')].map(([k, l]) => ({ k, l, ...agg(l) })).sort((x, y) => y.b - x.b);
-    pairChart(box, secs.slice(0, 8).map((s0) => ({ name: s0.k, sub: ['Contribution', s0.c == null ? '—' : d3.format('+.1f')(s0.c) + ' pp'], bars: [{ v: s0.a }, { v: s0.b }] })), m, { h: 250, label: 'Sales by sector', names: [PLAB + ' 2025', PLAB + ' 2026'], sub: true });
-    const hr = document.createElement('tr');
-    for (const h of ['Sector / channel', PLAB + ' 2025', PLAB + ' 2026', 'Growth', 'Contribution']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Sector / channel') th.className = 'n'; hr.append(th); }
+    const m = p.metric, box = $('#sec-chart'), tb = $('#sec-table'), view = secView;
+    root.querySelectorAll('#sec-view button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === view)));
+    const t25 = d3.sum(cr.rows, (r) => +r['ytd25_' + m] || 0), t26 = d3.sum(cr.rows, (r) => +r['ytd26_' + m] || 0);
+    const agg = (list) => { const a = d3.sum(list, (r) => +r['ytd25_' + m] || 0), b = d3.sum(list, (r) => +r['ytd26_' + m] || 0); return { a, b, g: a > 0 ? b / a - 1 : null, c: t25 ? (b - a) / t25 * 100 : null, sh: t26 ? b / t26 : null, sh25: t25 ? a / t25 : null }; };
+    const dim = view === 'channel' ? 'channel' : 'sector';
+    const secs = [...d3.group(cr.rows, (r) => r[dim] || 'Unassigned')].map(([k, l]) => ({ k, l, ...agg(l) })).sort((x, y) => y.b - x.b);
+    $('#sec-title').textContent = view === 'channel' ? 'By channel' : 'By sector';
+    $('#sec-note').textContent = 'Sales ' + PLAB + ' 2026 vs 2025 per customer ' + dim + ', with growth, share and contribution to the country\'s growth (percentage points).' + (view === 'channel' ? ' The ring shows each channel\'s share of 2026 sales.' : '');
+    if (view === 'channel') drawPie(box, secs.map((s0) => ({ name: s0.k, v: s0.b })), m);
+    else pairChart(box, secs.slice(0, 8).map((s0) => ({ name: s0.k, sub: ['Contribution', s0.c == null ? '—' : d3.format('+.1f')(s0.c) + ' pp'], bars: [{ v: s0.a }, { v: s0.b }] })), m, { h: 250, label: 'Sales by sector', names: [PLAB + ' 2025', PLAB + ' 2026'], sub: true });
+    const hr = document.createElement('tr'), hd = view === 'channel' ? 'Channel' : 'Sector';
+    for (const h of [hd, PLAB + ' 2025', PLAB + ' 2026', 'Growth', 'Share 2026', 'Share change', 'Contribution']) { const th = document.createElement('th'); th.textContent = h; if (h !== hd) th.className = 'n'; hr.append(th); }
     tb.tHead.replaceChildren(hr);
-    const out = [];
-    const line = (lab, o, tot) => { const tr = document.createElement('tr'); if (tot) tr.className = 'sd-total'; for (const [v, c, tn] of [[lab, 'lab'], [tab(m)(o.a), 'n'], [tab(m)(o.b), 'n'], [pct(o.g), 'n', o.g], [pp(o.c), 'n', o.c]]) { const td = document.createElement('td'); td.textContent = v; td.className = c; if (tn != null) tone(td, tn); tr.append(td); } out.push(tr); };
-    for (const s0 of secs) { line(s0.k, s0, true); for (const [ch, l] of [...d3.group(s0.l, (r) => r.channel || 'Unassigned')].sort((x, y) => agg(y[1]).b - agg(x[1]).b)) line('  ' + ch, agg(l)); }
-    tb.tBodies[0].replaceChildren(...out);
+    const line = (lab, o, tot) => { const tr = document.createElement('tr'); if (tot) tr.className = 'sd-total'; const ds = o.sh != null && o.sh25 != null ? (o.sh - o.sh25) * 100 : null; for (const [v, c, tn] of [[lab, 'lab'], [tab(m)(o.a), 'n'], [tab(m)(o.b), 'n'], [pct(o.g), 'n', o.g], [shr(o.sh), 'n'], [ds == null ? '—' : d3.format('+.1f')(ds) + ' pp', 'n', ds], [pp(o.c), 'n', o.c]]) { const td = document.createElement('td'); td.textContent = v; td.className = c; if (tn != null) tone(td, tn); tr.append(td); } return tr; };
+    tb.tBodies[0].replaceChildren(...secs.map((s0) => line(s0.k, s0)), line('Total', agg(cr.rows), true));
   };
   /* regions: YTD 2026 vs 2025 from the mix figures, with growth arrows */
   const drawRegions = (p) => {
@@ -3198,6 +3261,7 @@ dash.calc('iq_coverage', {
   const skuSearch = $('#sku-search');
   skuSearch.addEventListener('input', () => render());
   const drawBrands = (p) => {
+    drawYtdGap(p, $('#brytd-chart'), $('#brytd-title'), $('#brytd-note'));
     const m = p.metric, bt = $('#brand-table');
     const br = brandRows(p, false);
     if (br.d.status === 'ok') {
@@ -3331,6 +3395,36 @@ dash.calc('iq_coverage', {
       })
       .on('mouseleave', () => { t.hidden = true; svg.selectAll('.sd-pbar').style('opacity', 1); });
   };
+  /* horizontal gap bars: actual minus budget per brand or SKU, largest gaps first, with achievement */
+  const gapBars = (box, rows, m, L) => {
+    rows = rows.filter((r) => r.v && !isNaN(r.v)).sort((a, b) => Math.abs(b.v) - Math.abs(a.v)).slice(0, 12).sort((a, b) => a.v - b.v);
+    box.replaceChildren();
+    if (!rows.length) { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = 'No budget gap for this selection.'; box.append(n); return; }
+    const W = Math.max(280, box.clientWidth), rh = 24, H = rows.length * rh + 8;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', L.title);
+    const maxL = L.sku ? 26 : 20, short = (s0) => s0.length > maxL ? s0.slice(0, maxL - 1) + '…' : s0;
+    const nl = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'sd-lbl').text((r) => short(r.name));
+    const lw = Math.min(W * 0.42, (d3.max(nl.nodes(), (n) => n.getComputedTextLength()) || 0) + 10);
+    const vl = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'sd-tick').text((r) => sbig(m, r.v) + (r.a != null ? ' · ' + ach(r.a) : ''));
+    const vw = (d3.max(vl.nodes(), (n) => n.getComputedTextLength()) || 0) + 8;
+    const ext = d3.max(rows, (r) => Math.abs(r.v)), hasNeg = rows.some((r) => r.v < 0), hasPos = rows.some((r) => r.v > 0);
+    const x = d3.scaleLinear([hasNeg ? -ext : 0, hasPos ? ext : 0], [lw + (hasNeg ? vw : 0), W - (hasPos ? vw : 0)]);
+    const yy = (i) => 4 + i * rh;
+    nl.attr('x', 0).attr('y', (r, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
+    svg.append('line').attr('class', 'sd-axis').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', H);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => Math.min(x(0), x(r.v))).attr('width', (r) => Math.max(2, Math.abs(x(r.v) - x(0))))
+      .attr('y', (r, i) => yy(i) + 5).attr('height', rh - 10).attr('rx', 3).style('fill', (r) => r.v >= 0 ? 'var(--sd-up)' : 'var(--sd-down)');
+    vl.attr('x', (r) => r.v >= 0 ? x(r.v) + 6 : x(r.v) - 6).attr('text-anchor', (r) => r.v >= 0 ? 'start' : 'end').attr('y', (r, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
+    const t = tipBox(box);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', 0).attr('width', W).attr('y', (r, i) => yy(i)).attr('height', rh).style('fill', 'transparent')
+      .on('mousemove', (ev, r) => {
+        t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = r.name; t.append(hd);
+        t.append(tipRow(null, L.a, big(m, r.x1)), tipRow(null, L.b, big(m, r.x2)), tipRow(null, 'Gap', sbig(m, r.v)), tipRow(null, L.a + ' vs ' + L.b, ach(r.a)));
+        t.hidden = false; const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
+      })
+      .on('mouseleave', () => { t.hidden = true; });
+    box.__xl = { name: L.title.slice(0, 28), rows: [[L.sku ? 'SKU' : 'Brand', L.a, L.b, 'Gap', 'Achievement'], ...rows.map((r) => [r.name, r.x1, r.x2, r.v, r.a ?? ''])] };
+  };
   const drawPlanGap = (p, m) => {
     const box = $('#plangap-chart');
     const bySku = !!p.oneBrand || p.skus.length > 0;
@@ -3338,42 +3432,32 @@ dash.calc('iq_coverage', {
     const src = bySku ? planSkuRows(p, ['YTD|']) : planBrandRows(p, ['YTD|']);
     box.dataset.source = bySku ? 'plan_skus' : 'plan_brands';
     if (!ready(box, src.d)) return;
-    let rows = src.rows.filter((r) => !p.skus.length || !bySku || p.skus.includes(r.sku))
-      .map((r) => ({ name: bySku ? r.sku : r.brand, v: +r['gap_lo_' + m], a: r['ach_lo_' + m], lo: +r['lo_' + m], bud: +r['bud_fy_' + m] }));
-    rows = rows.filter((r) => r.v && !isNaN(r.v)).sort((a, b) => Math.abs(b.v) - Math.abs(a.v)).slice(0, 12).sort((a, b) => a.v - b.v);
-    box.replaceChildren();
-    if (!rows.length) return;
-    const W = Math.max(280, box.clientWidth), rh = 24, H = rows.length * rh + 8;
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Gap between LO 2026 and FY budget');
-    const maxL = bySku ? 26 : 20, short = (s) => s.length > maxL ? s.slice(0, maxL - 1) + '…' : s;
-    const nl = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'sd-lbl').text((r) => short(r.name));
-    const lw = Math.min(W * 0.42, (d3.max(nl.nodes(), (n) => n.getComputedTextLength()) || 0) + 10);
-    const vl = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'sd-tick').text((r) => sbig(m, r.v) + (r.a != null ? ' · ' + ach(r.a) : ''));
-    const vw = (d3.max(vl.nodes(), (n) => n.getComputedTextLength()) || 0) + 8;
-    const ext = d3.max(rows, (r) => Math.abs(r.v));
-    const hasNeg = rows.some((r) => r.v < 0), hasPos = rows.some((r) => r.v > 0);
-    const x = d3.scaleLinear([hasNeg ? -ext : 0, hasPos ? ext : 0], [lw + (hasNeg ? vw : 0), W - (hasPos ? vw : 0)]);
-    const yy = (i) => 4 + i * rh;
-    nl.attr('x', 0).attr('y', (r, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
-    svg.append('line').attr('class', 'sd-axis').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', H);
-    svg.append('g').selectAll('rect').data(rows).join('rect')
-      .attr('x', (r) => Math.min(x(0), x(r.v))).attr('width', (r) => Math.max(2, Math.abs(x(r.v) - x(0))))
-      .attr('y', (r, i) => yy(i) + 5).attr('height', rh - 10).attr('rx', 3).style('fill', (r) => r.v >= 0 ? 'var(--sd-up)' : 'var(--sd-down)');
-    vl.attr('x', (r) => r.v >= 0 ? x(r.v) + 6 : x(r.v) - 6).attr('text-anchor', (r) => r.v >= 0 ? 'start' : 'end').attr('y', (r, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
-    const t = tipBox(box);
-    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', 0).attr('width', W).attr('y', (r, i) => yy(i)).attr('height', rh).style('fill', 'transparent')
-      .on('mousemove', (ev, r) => {
-        t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = r.name; t.append(hd);
-        t.append(tipRow(null, 'LO 2026', big(m, r.lo)), tipRow(null, 'BUD FY 2026', big(m, r.bud)), tipRow(null, 'Gap', sbig(m, r.v)), tipRow(null, 'LO vs BUD', ach(r.a)));
-        t.hidden = false; const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
-      })
-      .on('mouseleave', () => { t.hidden = true; });
+    const rows = src.rows.filter((r) => !p.skus.length || !bySku || p.skus.includes(r.sku))
+      .map((r) => ({ name: bySku ? r.sku : r.brand, v: +r['gap_lo_' + m], a: r['ach_lo_' + m], x1: +r['lo_' + m], x2: +r['bud_fy_' + m] }));
+    gapBars(box, rows, m, { title: 'Gap between LO 2026 and FY budget', a: 'LO 2026', b: 'BUD FY 2026', sku: bySku });
+  };
+  /* ACT vs budget for the months chosen (YTD, or the selected months only) */
+  const drawYtdGap = (p, box, title, note) => {
+    const m = p.metric === 'units' ? 'units' : 'eur';
+    const bySku = !!p.oneBrand || p.skus.length > 0;
+    const per = p.monthMode ? PLAB + ' 2026' : 'YTD Jan–' + MON[LM - 1] + ' 2026';
+    title.textContent = 'ACT vs budget, ' + per + (bySku ? ', by SKU' : ', by brand');
+    if (note) note.textContent = 'ACT minus BUD for ' + (p.monthMode ? 'the month(s) selected only' : 'the months closed') + ', largest gaps first, with ACT as a share of budget. Country, class, brand and SKU filters apply; channel and region don\'t, as the budget file has no customer split.';
+    const src = bySku ? planSkuRows(p, p.PLK) : planBrandRows(p, p.PLK);
+    box.dataset.source = bySku ? 'plan_skus' : 'plan_brands';
+    if (!ready(box, src.d)) return;
+    const rows = src.rows.filter((r) => !p.skus.length || !bySku || p.skus.includes(r.sku)).map((r) => {
+      const a = +r['act26_' + m] || 0, b = +r['bud_ytd_' + m] || 0;
+      return { name: bySku ? r.sku : r.brand, v: a - b, a: b > 0 ? a / b : null, x1: a, x2: b };
+    });
+    gapBars(box, rows, m, { title: 'Gap between ACT and budget', a: 'ACT', b: 'BUD', sku: bySku });
   };
   const drawPlan = (p) => {
     const m = p.metric === 'units' ? 'units' : 'eur';
     $('#plan-sarnote').hidden = p.metric !== 'loc';
     drawPlanOverview(p);
     drawPlanKpis(p, m);
+    drawYtdGap(p, $('#planytd-chart'), $('#planytd-title'), $('#planytd-note'));
     drawPlanTrend(p, m, LM);
     drawPlanGap(p, m);
     const bt = $('#planbrand-table'), br = planBrandRows(p, p.PLK);
@@ -3959,6 +4043,7 @@ dash.calc('iq_coverage', {
       const hr = document.createElement('tr');
       for (const h of ['Channel', 'Market', 'Market growth', 'Brand', 'Brand growth', 'Share', 'Share change']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Channel') th.className = 'n'; hr.append(th); }
       ct.tHead.replaceChildren(hr);
+      growthBars($('#iq-chchart'), tms.map((t) => { const r = brs.find((x) => x.name === t.name); return { lab: t.name, a: t['g_' + kC + '_' + m], b: r ? r['g_' + kC + '_' + m] : null }; }), ['Market', q.mbrand], 'Market and brand growth by channel');
       ct.tBodies[0].replaceChildren(...tms.map((t) => {
         const r = brs.find((x) => x.name === t.name);
         const tr = document.createElement('tr');
@@ -4368,8 +4453,31 @@ dash.calc('iq_coverage', {
   };
 
 
+  /* grouped growth bars: two series per group (market and item), labels with one decimal */
+  const growthBars = (box, data, names, label) => {
+    box.replaceChildren();
+    const W = Math.max(260, box.clientWidth), H = 240, mt2 = 30, mb2 = 26, ml2 = 44;
+    const ext = d3.extent(data.flatMap((o) => [o.a, o.b]).filter((v) => v != null).concat([0]));
+    const y = d3.scaleLinear([Math.min(0, ext[0]), Math.max(0.01, ext[1])], [H - mb2, mt2]).nice();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', label);
+    const tks = y.ticks(4);
+    svg.append('g').selectAll('line').data(tks).join('line').attr('class', 'sd-gridline').attr('x1', ml2).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+    svg.append('g').selectAll('text').data(tks).join('text').attr('class', 'sd-tick').attr('x', ml2 - 6).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').text((t) => d3.format('.0%')(t));
+    const x = d3.scaleBand(data.map((o) => o.lab), [ml2, W - 4]).padding(0.28), xi = d3.scaleBand(['a', 'b'], [0, x.bandwidth()]).padding(0.16);
+    svg.append('line').attr('class', 'sd-axis').attr('x1', ml2).attr('x2', W - 4).attr('y1', y(0)).attr('y2', y(0));
+    for (const o of data) for (const kk of ['a', 'b']) {
+      const v = o[kk]; if (v == null) continue;
+      svg.append('rect').attr('x', x(o.lab) + xi(kk)).attr('width', xi.bandwidth()).attr('y', y(Math.max(0, v))).attr('height', Math.max(1, Math.abs(y(v) - y(0)))).attr('rx', 3).style('fill', kk === 'a' ? 'var(--sd-c25)' : 'var(--sd-c26)');
+      svg.append('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').style('font-size', '9.5px').attr('x', x(o.lab) + xi(kk) + xi.bandwidth() / 2).attr('y', v >= 0 ? y(v) - 4 : y(v) + 11).text(d3.format('+.1%')(v));
+    }
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('x', (o) => x(o.lab) + x.bandwidth() / 2).attr('y', H - 6).text((o) => o.lab);
+    const lg = svg.append('g').attr('transform', `translate(${ml2},4)`);
+    let lx = 0; names.forEach((t2, i) => { lg.append('rect').attr('x', lx).attr('y', 0).attr('width', 10).attr('height', 10).attr('rx', 2).style('fill', i ? 'var(--sd-c26)' : 'var(--sd-c25)'); const tx = lg.append('text').attr('class', 'sd-tick').attr('x', lx + 14).attr('y', 9).text(t2); lx += 14 + (tx.node().getComputedTextLength ? tx.node().getComputedTextLength() : t2.length * 6.5) + 18; });
+    box.__xl = { name: 'Growth', rows: [['', names[0] + ' growth', names[1] + ' growth'], ...data.map((o) => [o.lab, o.a, o.b])] };
+  };
   /* ---- STADA view: every STADA brand line against its IQVIA market ---- */
-  const SV = { per: 'mat', ch: 'All', seg: '' };
+  const SV = { per: 'mat', ch: 'All', seg: '', br: '' };
+  const svFam = (item) => /^(Vitamin D3|Apo-Go)$/.test(item) ? item : item.split(' ')[0];
   const sortSv = { k: 'v', dir: -1 };
   let svMounted = false, SVC = null;
   const mountStada = () => {
@@ -4379,6 +4487,7 @@ dash.calc('iq_coverage', {
     root.querySelectorAll('#sv-per button').forEach((b) => b.addEventListener('click', () => { SV.per = b.dataset.v; render(); }));
     $('#sv-ch').addEventListener('change', (e) => { SV.ch = e.target.value; render(); });
     $('#sv-seg').addEventListener('change', (e) => { SV.seg = e.target.value; render(); });
+    $('#sv-brand').addEventListener('change', (e) => { SV.br = e.target.value; render(); });
     $('#sv-measure').addEventListener('change', (e) => dash.setParams({ metric: e.target.value }));
     $('#sv-br').addEventListener('click', (ev) => {
       const tr = ev.target.closest('tbody tr[data-k]'); if (!tr || !SVC) return;
@@ -4421,14 +4530,20 @@ dash.calc('iq_coverage', {
     const tot = { All: acc(), Hospital: acc(), Retail: acc() }, sta = { All: acc(), Hospital: acc(), Retail: acc() };
     const segT = {}, segS = {};
     for (const sg of ['CHC', 'Gx', 'Sx']) { segT[sg] = acc(); segS[sg] = acc(); }
+    const fams = [...d3.rollup(C.items, (l) => l.length, (it) => svFam(it.item)).keys()];
+    if (SV.br && !fams.includes(SV.br)) SV.br = '';
+    fillOpts($('#sv-brand'), 'All brands', fams); $('#sv-brand').value = SV.br;
+    const selI = SV.br ? C.items.filter((it) => svFam(it.item) === SV.br) : null;
+    const mSet = selI ? new Set(selI.flatMap((it) => [...it.mp])) : null, bSet = selI ? new Set(selI.flatMap((it) => [...it.bp])) : null;
     for (const r of R.rows) {
-      const hs = r.channel === 'Retail' ? 'Retail' : 'Hospital', st = C.segOf.get(r.pidn);
+      if (mSet && !mSet.has(r.pidn)) continue;
+      const hs = r.channel === 'Retail' ? 'Retail' : 'Hospital', st = bSet ? (bSet.has(r.pidn) ? C.segOf.get(r.pidn) : null) : C.segOf.get(r.pidn);
       xadd(tot.All, r, R); xadd(tot[hs], r, R);
       if (st) { xadd(sta.All, r, R); xadd(sta[hs], r, R); }
       if (chOk(r, SV.ch)) { if (segT[r.segment]) xadd(segT[r.segment], r, R); if (st && segS[st]) xadd(segS[st], r, R); }
     }
     const lines = [['All', 'All channels', tot.All, sta.All], ['Hospital', 'Hospital', tot.Hospital, sta.Hospital], ['Retail', 'Retail', tot.Retail, sta.Retail],
-      ...['CHC', 'Gx', 'Sx'].map((sg) => [sg, sg + (SV.ch !== 'All' ? ' · ' + SV.ch : ''), segT[sg], segS[sg]])].map(([key, lab, t, a]) => ({ key, lab, T: xmet(t, t, R), S: xmet(a, t, R) }));
+      ...(SV.br ? [] : ['CHC', 'Gx', 'Sx'].map((sg) => [sg, sg + (SV.ch !== 'All' ? ' · ' + SV.ch : ''), segT[sg], segS[sg]]))].map(([key, lab, t, a]) => ({ key, lab, T: xmet(t, t, R), S: xmet(a, t, R) }));
     const cur = lines.find((l) => l.key === SV.ch) || lines[0];
     /* brand lines */
     const brands = C.items.map((it) => {
@@ -4445,7 +4560,7 @@ dash.calc('iq_coverage', {
       const rk = vals.findIndex((x) => x[0] === it.item);
       return { id: it.item, item: it.item, order: it.order, market: it.market, segment: it.segment, v: B[vf], g: B[gf], mg: T[gf], gap: B['gap_' + k + '_' + m], ms: B['ms_' + k + '_' + m], dms: B['dms_' + k + '_' + m], rank: B[vf] > 0 && rk >= 0 ? rk + 1 : null, n: vals.length, mkt: T[vf], mat: B['mat26_eur'] };
     });
-    const shown = brands.filter((b) => !SV.seg || b.segment === SV.seg);
+    const shown = brands.filter((b) => (!SV.seg || b.segment === SV.seg) && (!SV.br || svFam(b.item) === SV.br));
     /* KPI tiles */
     const tile = (h, val, chip, sub) => {
       const a = document.createElement('article'); a.className = 'sd-kpi';
@@ -4454,14 +4569,14 @@ dash.calc('iq_coverage', {
       if (sub) { const sb = document.createElement('div'); sb.className = 'sd-sub'; sb.textContent = sub; a.append(sb); }
       return a;
     };
-    const segL = SV.seg ? lines.find((l) => l.key === SV.seg) : cur;
+    const segL = SV.seg && !SV.br ? lines.find((l) => l.key === SV.seg) : cur;
     const chL = SV.ch === 'All' ? 'all channels' : SV.ch.toLowerCase();
     const fast = shown.filter((b) => b.gap != null && b.v > 0), up = fast.filter((b) => b.gap > 0).length;
     $('#sv-kpis').replaceChildren(
-      tile((SV.seg ? SV.seg + ' market' : 'Total market') + ' · ' + PLb, big(m, segL.T[vf]), [pct(segL.T[gf]) + ' vs PY', segL.T[gf]], chL),
-      tile('STADA' + (SV.seg ? ' ' + SV.seg : '') + ' · ' + PLb, big(m, segL.S[vf]), [pct(segL.S[gf]) + ' vs PY', segL.S[gf]], 'Mapped STADA SKUs, ' + chL),
-      tile('STADA share · ' + PLb, d3.format('.2%')(segL.S['ms_' + k + '_' + m] || 0), [(segL.S['dms_' + k + '_' + m] == null ? '—' : d3.format('+.2f')(segL.S['dms_' + k + '_' + m]) + ' pp') + ' vs PY', segL.S['dms_' + k + '_' + m]], 'A year earlier: ' + (segL.S['ms25_' + k + '_' + m] == null ? '—' : d3.format('.2%')(segL.S['ms25_' + k + '_' + m]))),
-      tile('Growth vs market', gapf(segL.S['gap_' + k + '_' + m]), null, 'STADA growth minus market growth'),
+      tile((SV.br ? SV.br + ' market' + (new Set(selI.map((it) => it.market)).size > 1 ? 's' : '') : SV.seg ? SV.seg + ' market' : 'Total market') + ' · ' + PLb, big(m, segL.T[vf]), [pct(segL.T[gf]) + ' vs PY', segL.T[gf]], chL),
+      tile((SV.br || 'STADA' + (SV.seg ? ' ' + SV.seg : '')) + ' · ' + PLb, big(m, segL.S[vf]), [pct(segL.S[gf]) + ' vs PY', segL.S[gf]], 'Mapped STADA SKUs, ' + chL),
+      tile((SV.br || 'STADA') + ' share · ' + PLb, d3.format('.2%')(segL.S['ms_' + k + '_' + m] || 0), [(segL.S['dms_' + k + '_' + m] == null ? '—' : d3.format('+.2f')(segL.S['dms_' + k + '_' + m]) + ' pp') + ' vs PY', segL.S['dms_' + k + '_' + m]], 'A year earlier: ' + (segL.S['ms25_' + k + '_' + m] == null ? '—' : d3.format('.2%')(segL.S['ms25_' + k + '_' + m]))),
+      tile('Growth vs market', gapf(segL.S['gap_' + k + '_' + m]), null, (SV.br || 'STADA') + ' growth minus market growth'),
       tile('Brands beating their market', up + ' of ' + fast.length, null, 'Brand lines with sales, ' + PLb));
     $('#sv-kpis').querySelectorAll('.sd-big')[3].classList.toggle('up', (segL.S['gap_' + k + '_' + m] || 0) > 0);
     $('#sv-kpis').querySelectorAll('.sd-big')[3].classList.toggle('down', (segL.S['gap_' + k + '_' + m] || 0) < 0);
@@ -4469,38 +4584,18 @@ dash.calc('iq_coverage', {
     const P3 = (o) => ['mat', 'ytd', 'q'].map((kk) => pct(o['g_' + kk + '_' + m])).join(' / ');
     const tk = lines.map((l) => {
       const li = document.createElement('li'); const b = document.createElement('b'); b.textContent = l.lab + ': ';
-      const ahead = (l.S['g_mat_' + m] ?? -9) >= (l.T['g_mat_' + m] ?? -9);
-      li.append(b, 'market MAT / YTD / QTR ' + P3(l.T) + '; STADA ' + P3(l.S) + ' (' + (ahead ? 'ahead of' : 'behind') + ' the market on MAT).'); return li;
+      const sg = l.S['g_mat_' + m], tg = l.T['g_mat_' + m];
+      li.append(b, 'market MAT / YTD / QTR ' + P3(l.T) + '; ' + (SV.br || 'STADA') + ' ' + P3(l.S) + ' (' + (sg == null ? 'no sales a year earlier' : sg >= (tg ?? -9) ? 'ahead of the market on MAT' : 'behind the market on MAT') + ').'); return li;
     });
     const li1 = document.createElement('li'), li2 = document.createElement('li');
-    const byGap = brands.filter((b) => b.mat > 200000).map((b) => ({ item: b.item, g: b.gap })).filter((x) => x.g != null).sort((a1, b1) => b1.g - a1.g);
+    const byGap = shown.filter((b) => b.mat > 200000).map((b) => ({ item: b.item, g: b.gap })).filter((x) => x.g != null).sort((a1, b1) => b1.g - a1.g);
     li1.append(Object.assign(document.createElement('b'), { textContent: 'Ahead of their market (' + PLb + ', brand lines above €0.2M MAT): ' }), byGap.filter((x) => x.g > 0).slice(0, 4).map((x) => x.item + ' ' + gapf(x.g)).join(', ') || 'none');
     li2.append(Object.assign(document.createElement('b'), { textContent: 'Behind their market: ' }), byGap.filter((x) => x.g < 0).reverse().slice(0, 4).map((x) => x.item + ' ' + gapf(x.g)).join(', ') || 'none');
     $('#sv-take').replaceChildren(...tk, li1, li2);
-    /* growth bars: market vs STADA per channel and segment */
-    const box = $('#sv-chart'); box.replaceChildren();
-    const data = lines.map((l) => ({ lab: l.key, a: l.T[gf], b: l.S[gf] }));
-    const W = Math.max(260, box.clientWidth), H = 240, mt2 = 30, mb2 = 26, ml2 = 44;
-    const ext = d3.extent(data.flatMap((o) => [o.a, o.b]).filter((v) => v != null).concat([0]));
-    const y = d3.scaleLinear([Math.min(0, ext[0]), Math.max(0.01, ext[1])], [H - mb2, mt2]).nice();
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Market growth against STADA growth by channel and segment');
-    const tks = y.ticks(4);
-    svg.append('g').selectAll('line').data(tks).join('line').attr('class', 'sd-gridline').attr('x1', ml2).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
-    svg.append('g').selectAll('text').data(tks).join('text').attr('class', 'sd-tick').attr('x', ml2 - 6).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').text((t) => d3.format('.0%')(t));
-    const x = d3.scaleBand(data.map((o) => o.lab), [ml2, W - 4]).padding(0.28), xi = d3.scaleBand(['a', 'b'], [0, x.bandwidth()]).padding(0.16);
-    svg.append('line').attr('class', 'sd-axis').attr('x1', ml2).attr('x2', W - 4).attr('y1', y(0)).attr('y2', y(0));
-    for (const o of data) for (const kk of ['a', 'b']) {
-      const v = o[kk]; if (v == null) continue;
-      svg.append('rect').attr('x', x(o.lab) + xi(kk)).attr('width', xi.bandwidth()).attr('y', y(Math.max(0, v))).attr('height', Math.max(1, Math.abs(y(v) - y(0)))).attr('rx', 3).style('fill', kk === 'a' ? 'var(--sd-c25)' : 'var(--sd-c26)');
-      svg.append('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').style('font-size', '9.5px').attr('x', x(o.lab) + xi(kk) + xi.bandwidth() / 2).attr('y', v >= 0 ? y(v) - 4 : y(v) + 11).text(d3.format('+.0%')(v));
-    }
-    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('x', (o) => x(o.lab) + x.bandwidth() / 2).attr('y', H - 6).text((o) => o.lab);
-    const lg = svg.append('g').attr('transform', `translate(${ml2},4)`);
-    [['var(--sd-c25)', 'Total market'], ['var(--sd-c26)', 'STADA']].forEach(([c, t2], i) => { lg.append('rect').attr('x', i * 100).attr('y', 0).attr('width', 10).attr('height', 10).attr('rx', 2).style('fill', c); lg.append('text').attr('class', 'sd-tick').attr('x', i * 100 + 14).attr('y', 9).text(t2); });
-    box.__xl = { name: 'Market vs STADA growth', rows: [['Line', 'Market growth', 'STADA growth'], ...data.map((o) => [o.lab, o.a, o.b])] };
-    $('#sv-tot-title').textContent = 'Total market vs STADA · ' + PLb;
+    growthBars($('#sv-chart'), lines.map((l) => ({ lab: l.key, a: l.T[gf], b: l.S[gf] })), [SV.br ? 'Market' : 'Total market', SV.br || 'STADA'], 'Market growth against STADA growth by channel and segment');
+    $('#sv-tot-title').textContent = (SV.br ? SV.br + ' vs its market' : 'Total market vs STADA') + ' · ' + PLb;
     const tt = $('#sv-tot'), hr = document.createElement('tr');
-    for (const h of ['', 'Market', 'Growth', 'STADA', 'Growth', 'Share', 'Share change', 'Growth vs market']) { const th = document.createElement('th'); th.textContent = h; if (h) th.className = 'n'; hr.append(th); }
+    for (const h of ['', 'Market', 'Growth', SV.br || 'STADA', 'Growth', 'Share', 'Share change', 'Growth vs market']) { const th = document.createElement('th'); th.textContent = h; if (h) th.className = 'n'; hr.append(th); }
     tt.tHead.replaceChildren(hr);
     tt.tBodies[0].replaceChildren(...lines.map((l) => {
       const tr = document.createElement('tr'); if (l.key === 'All') tr.className = 'sd-total';
@@ -4616,9 +4711,8 @@ dash.calc('iq_coverage', {
     };
     const g = lo > 0 ? b27 / lo - 1 : null, gc = loE > 0 ? (b27e - price) / loE - 1 : null, gu = lou > 0 ? b27u / lou - 1 : null;
     kp.replaceChildren(
-      tile('BUD 2027' + (u ? ' · units' : ' · CIF 2027'), big(m, b27), u ? 'Final quantity 2027' : PT === 'new' ? 'New launches at their 2027 CIF' : 'At 2026 CIF prices: ' + big('eur', b27e - price), null, PT === 'new' ? null : [pct(g) + ' vs LO 2026', g]),
+      tile('BUD 2027' + (u ? ' · units' : ' · CIF 2027'), big(m, b27), u ? 'Final quantity 2027' : 'Final Amount EURO 2027 at 2027 CIF prices', null, PT === 'new' ? null : [pct(g) + ' vs LO 2026', g]),
       tile('LO 2026', ex ? big(m, lo) : '—', ex ? 'ACT Jan–' + MON[LM - 1] + ' + YTG ' + (LM < 12 ? MON[LM] + '–Dec' : '') : 'New launches have no 2026 sales'),
-      tile('Growth at constant CIF', pct(gc), 'BUD 2027 at 2026 CIF prices vs LO 2026: ' + (PT === 'existing' ? 'volume and mix of existing products' : 'volume, mix and new launches'), gc),
       tile('CIF price impact', ex ? sbig('eur', price) : '—', ex ? 'Existing products, 2027 vs 2026 CIF (' + pct(contE26 > 0 ? price / contE26 : null) + ')' : 'New launches have no 2026 CIF', ex ? price : null),
       tile('New launches', nw ? big(m, newV) : '—', nw ? (b27 ? shr(newV / b27) : '—') + ' of BUD 2027' : 'Not included: existing products only'),
       tile('Units', big('units', b27u), 'LO 2026: ' + big('units', lou), null, [pct(gu) + ' vs LO 2026', gu]));
@@ -4677,7 +4771,8 @@ dash.calc('iq_coverage', {
         if (ex) a.set(+r.month, (a.get(+r.month) || 0) + (+r['lo26_' + m] || 0));
         b.set(+r.month, (b.get(+r.month) || 0) + bv);
       }
-      monthBars(mb, a, b, new Map(), m, new Set(), 'Monthly BUD 2027 vs LO 2026', { a: 'LO 2026', b: 'BUD 2027' });
+      $('#b27m-act').textContent = 'ACT 2026 (Jan–' + MON[LM - 1] + ')'; $('#b27m-lo').textContent = 'LO 2026 YTG (' + (LM < 12 ? MON[LM] + '–Dec' : '—') + ')';
+      monthBars(mb, a, b, new Map(), m, new Set(), 'Monthly BUD 2027 vs ACT and LO 2026', { a: 'ACT / LO 2026', b: 'BUD 2027', aYtg: LM });
     }
 
     /* brand table */
@@ -4686,10 +4781,9 @@ dash.calc('iq_coverage', {
       { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-md' },
       { k: 'fy', f: 'fy', label: 'FY 2025', fmt: tab(m), cls: 'n hide-md' },
       { k: 'lo', f: 'lo', label: 'LO 2026', fmt: tab(m), cls: 'n' },
-      ...(u ? [] : [{ k: 'b2726', f: 'b27_26', label: 'BUD 27 at CIF 26', fmt: tab('eur'), cls: 'n hide-sm' }, { k: 'price', f: 'price', label: 'CIF impact', fmt: stab('eur'), cls: 'n hide-sm', tone: true }]),
+      ...(u ? [] : [{ k: 'price', f: 'price', label: 'CIF impact', fmt: stab('eur'), cls: 'n hide-sm', tone: true }]),
       { k: 'b27', f: 'b27', label: 'BUD 2027', fmt: tab(m), cls: 'n' },
       { k: 'g', f: 'g', label: 'vs LO 2026', fmt: pct, cls: 'n', tone: true },
-      ...(u ? [] : [{ k: 'gc', f: 'gc', label: 'At constant CIF', fmt: pct, cls: 'n hide-sm', tone: true }]),
       { k: 'gu', f: 'gu', label: 'Units growth', fmt: pct, cls: 'n hide-md', tone: true },
       { k: 'share', f: 'share', label: 'Share of BUD 27', fmt: shr, cls: 'n hide-md' },
       { k: 'status', f: 'status', label: 'Status', text: true, render: (td, r) => { const sp = document.createElement('span'); sp.className = 'sd-pill ' + (r.status === 'New' ? 'New' : r.status === 'Not in BUD 27' ? 'Lost' : 'Steady'); sp.textContent = r.status; td.append(sp); } },
@@ -4723,18 +4817,19 @@ dash.calc('iq_coverage', {
 
   /* ---- hospital sell-out (Sulaiman Al Habib, Al Mouwasat): every brand, by branch ---- */
   const SO_ACC = (name) => /sulaiman al habib/i.test(name) ? 'Sulaiman Al Habib Hospitals' : /mouwasat/i.test(name) ? 'Al Mouwasat Hospitals' : null;
-  const somodal = $('#so-modal'), soB = $('#so-brand'), soR = $('#so-branch');
+  const somodal = $('#so-modal'), soB = $('#so-brand'), soR = $('#so-branch'), soI = $('#so-item');
   sortState.so = { k: 'ytd26', dir: -1 }; sortState.soi = { k: 'ytd26', dir: -1 };
   $('#cm-so').addEventListener('click', () => {
     const d = dash.data('sellout_rows'), acc = SO_ACC(custSel.name);
     const br = d.status === 'ok' ? d.data.find((r) => r.account === acc && r.branch.toLowerCase() === custSel.name.toLowerCase()) : null;
-    soB.value = ''; soR.dataset.init = br && custSel.level === 'customer' ? br.branch : '';
+    soB.value = ''; soI.value = ''; soR.dataset.init = br && custSel.level === 'customer' ? br.branch : '';
     somodal.hidden = false; drawSellout(P()); $('#so-close').focus();
   });
   $('#so-close').addEventListener('click', () => { somodal.hidden = true; });
   somodal.addEventListener('click', (ev) => { if (ev.target === somodal) somodal.hidden = true; });
   document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !somodal.hidden) { ev.stopImmediatePropagation(); somodal.hidden = true; } }, true);
-  [soB, soR].forEach((el) => el.addEventListener('change', () => drawSellout(P())));
+  soB.addEventListener('change', () => { soI.value = ''; drawSellout(P()); });
+  [soI, soR].forEach((el) => el.addEventListener('change', () => drawSellout(P())));
   const drawSellout = (p) => {
     if (!custSel) return;
     const acc = SO_ACC(custSel.name), d = dash.data('sellout_rows'), box = $('#so-chart');
@@ -4745,18 +4840,22 @@ dash.calc('iq_coverage', {
     fillOpts(soB, 'All brands', brands);
     if (soR.dataset.init) { fillOpts(soR, 'All branches', branches); soR.value = soR.dataset.init; soR.dataset.init = ''; } else fillOpts(soR, 'All branches', branches);
     const bSel = soB.value, rSel = soR.value;
-    const rows = accR.filter((r) => (!bSel || r.brand === bSel) && (!rSel || r.branch === rSel));
-    const with25 = rows.length > 0 && rows.every((r) => r.brand === 'Versatis' || r.brand === 'Proxen');
+    const NOSPLIT = / \(no SKU split before 2026\)$/;
+    const items = bSel ? [...d3.rollup(accR.filter((r) => r.brand === bSel && !NOSPLIT.test(r.item)), (l) => d3.sum(l, (r) => d3.sum(d3.range(1, 13), (k) => +r['m26_' + k] || 0)), (r) => r.item)].sort((a, b) => b[1] - a[1]).map((x) => x[0]) : [];
+    fillOpts(soI, bSel ? 'All SKUs' : 'All SKUs (pick a brand)', items); soI.disabled = !bSel;
+    const iSel = soI.value;
+    const rows = accR.filter((r) => (!bSel || r.brand === bSel) && (!iSel || r.item === iSel) && (!rSel || r.branch === rSel));
+    const with25 = !iSel && rows.length > 0 && rows.every((r) => r.brand === 'Versatis' || r.brand === 'Proxen');
     const ufmt = (v) => v == null || isNaN(v) ? '—' : cmp.format(v), uf = (v) => v == null || v === '' ? '—' : d3.format(',.0f')(v);
     const ytd = (list, yy) => d3.sum(list, (r) => d3.sum(d3.range(1, lm + 1), (k) => +r['m' + yy + '_' + k] || 0));
-    $('#so-title').textContent = 'Sell-out · ' + (rSel || acc) + ' · ' + (bSel || 'all brands');
-    $('#so-sub').textContent = 'Units reported by the hospital, 2026 to ' + MON[lm - 1] + '. ' + (with25 ? 'Compared with the same months of 2025.' : '2025 is available for Versatis and Proxen only, so growth shows for those two.') + (acc.startsWith('Al M') && bSel !== 'Versatis' && bSel !== 'Proxen' ? ' No June 2026 report for the other brands.' : '');
+    $('#so-title').textContent = 'Sell-out · ' + (rSel || acc) + ' · ' + (iSel || bSel || 'all brands');
+    $('#so-sub').textContent = 'Units reported by the hospital, 2026 to ' + MON[lm - 1] + '. ' + (with25 ? 'Compared with the same months of 2025.' : iSel ? 'One SKU: 2025 has no SKU split, so there is no growth here.' : '2025 is available for Versatis and Proxen only, so growth shows for those two.') + (acc.startsWith('Al M') && bSel !== 'Versatis' && bSel !== 'Proxen' ? ' No June 2026 report for the other brands.' : '');
     const y26 = ytd(rows, 26), y25 = with25 ? ytd(rows, 25) : null, fy25 = with25 ? d3.sum(rows, (r) => d3.sum(d3.range(1, 13), (k) => +r['m25_' + k] || 0)) : null, fy24 = with25 ? d3.sum(rows, (r) => +r.fy24 || 0) : null;
     const rr26 = y26 / lm, rr25 = fy25 != null ? fy25 / 12 : null;
     /* sell-in from IMS for the same account and brand */
     const cm = dash.data('cust_monthly');
     let si = null;
-    if (bSel && cm.status === 'ok') {
+    if (bSel && !iSel && cm.status === 'ok') {
       const own = cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === bSel && r.customer.toLowerCase() === (rSel || '').toLowerCase());
       const lst = rSel ? own : cm.data.filter((r) => r.country === 'Saudi Arabia' && r.brand === bSel && (r.parent === acc || r.customer === acc));
       if (!rSel || own.length) si = d3.range(1, 13).map((mo) => d3.sum(lst, (r) => +r['u26_' + mo] || 0));
@@ -4773,10 +4872,10 @@ dash.calc('iq_coverage', {
     const g = y25 > 0 ? y26 / y25 - 1 : null, grr = rr25 > 0 ? rr26 / rr25 - 1 : null;
     $('#so-kpis').replaceChildren(
       tile('Sell-out Jan–' + MON[lm - 1] + ' 2026', ufmt(y26), with25 ? 'Same months 2025: ' + ufmt(y25) : 'Units, all items chosen'),
-      tile('Growth', pct(g), with25 ? 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units' : 'Needs 2025 data (Versatis, Proxen)', g),
+      tile('Growth', pct(g), with25 ? 'Change ' + (y26 - y25 >= 0 ? '+' : '−') + ufmt(Math.abs(y26 - y25)) + ' units' : iSel ? '2025 has no SKU split' : 'Needs 2025 data (Versatis, Proxen)', g),
       tile('FY 2025', ufmt(fy25), with25 ? 'FY 2024: ' + ufmt(fy24) + (fy24 > 0 ? ' (' + pct(fy25 / fy24 - 1) + ')' : '') : 'Not reported for this choice'),
       tile('RR 2026', ufmt(rr26), 'per month' + (rr25 ? ' · RR 2025: ' + ufmt(rr25) + ' (' + pct(grr) + ')' : '')),
-      tile('Sell-in (IMS) 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(y26 / si26) + ' of sell-in' : bSel ? 'No IMS units for this account and brand' : 'Pick a brand to compare'));
+      tile('Sell-in (IMS) 2026', ufmt(si26), si26 ? 'Sell-out covers ' + d3.format('.0%')(y26 / si26) + ' of sell-in' : iSel ? 'Compared at brand level only' : bSel ? 'No IMS units for this account and brand' : 'Pick a brand to compare'));
     const s25 = new Map(), s26 = new Map();
     for (let k = 1; k <= 12; k++) { if (with25) s25.set(k, d3.sum(rows, (r) => +r['m25_' + k] || 0)); if (k <= lm) s26.set(k, d3.sum(rows, (r) => +r['m26_' + k] || 0)); }
     monthBars(box, s25, s26, new Map(), 'units', new Set(), 'Monthly sell-out 2026 vs 2025', { fmt: ufmt });
@@ -4794,10 +4893,10 @@ dash.calc('iq_coverage', {
     ], sortState.so, () => drawSellout(P()), false, 'sellout_rows');
     /* by brand, or by item for one brand */
     const key = bSel ? 'item' : 'brand';
-    $('#so-it-title').textContent = bSel ? 'By item' : 'By brand';
-    const byIt = [...d3.group(rows, (r) => r[key])].map(([k, l]) => { const w = l.every((r) => r.has25), a26 = ytd(l, 26), a25 = w ? ytd(l, 25) : null; return { id: 'soi|' + k, name: k, ytd25: a25, ytd26: a26, g: a25 > 0 ? a26 / a25 - 1 : null, share: tot ? a26 / tot : null }; });
+    $('#so-it-title').textContent = bSel ? 'By SKU' : 'By brand';
+    const byIt = [...d3.group(rows, (r) => r[key])].map(([k, l]) => { const ns = NOSPLIT.test(k), w = l.every((r) => r.has25), a26 = ns ? null : ytd(l, 26), a25 = w ? ytd(l, 25) : null; return { id: 'soi|' + k, name: ns ? 'All SKUs (2025, no SKU split)' : k, ytd25: a25, ytd26: a26, g: !ns && a25 > 0 ? a26 / a25 - 1 : null, share: tot && !ns ? a26 / tot : null }; });
     drawTable($('#so-items'), byIt, [
-      { k: 'name', f: 'name', label: bSel ? 'Item' : 'Brand', cls: 'nm', text: true },
+      { k: 'name', f: 'name', label: bSel ? 'SKU' : 'Brand', cls: 'nm', text: true },
       { k: 'ytd25', f: 'ytd25', label: 'YTD 2025', fmt: uf, cls: 'n hide-sm' },
       { k: 'ytd26', f: 'ytd26', label: 'YTD 2026', fmt: uf, cls: 'n' },
       { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
@@ -4808,7 +4907,7 @@ dash.calc('iq_coverage', {
     const hr = document.createElement('tr');
     for (const h of ['Month', 'Sell-in (IMS)', 'Sell-out', 'Gap', 'Cumulative gap']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Month') th.className = 'n'; hr.append(th); }
     t2.tHead.replaceChildren(hr);
-    if (!si) { const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.className = 'lab'; td.textContent = bSel ? 'IMS has no sell-in for this branch on its own; pick "All branches" to compare at account level.' : 'Pick a brand to compare sell-out with what STADA invoiced (IMS).'; tr.append(td); t2.tBodies[0].replaceChildren(tr); return; }
+    if (!si) { const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.className = 'lab'; td.textContent = iSel ? 'Sell-in is compared at brand level: choose All SKUs.' : bSel ? 'IMS has no sell-in for this branch on its own; pick "All branches" to compare at account level.' : 'Pick a brand to compare sell-out with what STADA invoiced (IMS).'; tr.append(td); t2.tBodies[0].replaceChildren(tr); return; }
     let cum = 0, tsi = 0, tso = 0;
     const sg = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + uf(Math.abs(v));
     const body = d3.range(1, lm + 1).map((k) => {
@@ -4840,8 +4939,9 @@ dash.calc('iq_coverage', {
     const ks = [['y24', '2024'], ['y25', '2025'], ['lo', 'LO 2026'], ['b27', 'BUD 2027']];
     const vals = ks.map(([k]) => d3.sum([...per.values()], (o) => o[k] || 0));
     const nb = ks.map(([k]) => [...per.values()].filter((o) => (o[k] || 0) > 0.5).length);
-    pairChart(box, ks.map(([k, lab], i) => ({ name: lab, sub: nb[i] + ' brands', bars: [{ v: vals[i] || null, c: i === 3 ? 'var(--sd-bud)' : i === 2 ? 'var(--sd-ytg)' : 'var(--sd-c26)' }] })), m, { h: 300, label: 'Yearly totals', gap: 0.35, arrows: [], seq: true, sub: true, names: ['Total'] });
-    $('#years-note').textContent = 'Full-year totals with the number of brands sold each year. 2024 and 2025 are IMS sales, LO 2026 is ACT + YTG from the budget file and BUD 2027 the sell-out budget at CIF 2027. Country, class and brand filters apply' + (p.channels.length || p.regions.length ? '; channel and region do not.' : '.') + ' 2022 and 2023 can be added once that data is shared.';
+    const nsk = ks.map(([k]) => d3.sum(dy.data.filter((r) => inC(r.country) && p.brandOk(r.brand, r.cls)), (r) => +r[(k === 'lo' ? 'lo26' : k === 'b27' ? 'b27' : k) + '_skus'] || 0));
+    pairChart(box, ks.map(([k, lab], i) => ({ name: lab, sub: nb[i] + ' brands · ' + nsk[i] + ' SKUs', bars: [{ v: vals[i] || null, c: i === 3 ? 'var(--sd-bud)' : i === 2 ? 'var(--sd-ytg)' : 'var(--sd-c26)' }] })), m, { h: 300, label: 'Yearly totals', gap: 0.35, arrows: [], seq: true, sub: true, names: ['Total'] });
+    $('#years-note').textContent = 'Full-year totals with the number of brands and SKUs sold each year (SKUs counted per country). 2024 and 2025 are IMS sales, LO 2026 is ACT + YTG from the budget file and BUD 2027 the sell-out budget at CIF 2027. Country, class and brand filters apply' + (p.channels.length || p.regions.length ? '; channel and region do not.' : '.') + ' 2022 and 2023 can be added once that data is shared.';
   };
 
   /* ---- budget overview: YTD, rest of year, full year (with BUD 2027) ---- */
