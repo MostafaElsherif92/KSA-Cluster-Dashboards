@@ -235,6 +235,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .sd-count { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-left: auto; }
 .sd-tablebox { max-height: 34rem; overflow: auto; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
 .sd-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--cds-font-size-caption); }
+.sd-tsm th, .sd-tsm th button { font-size: 0.68rem !important; white-space: normal !important; line-height: 1.25; }
 .sd-table th { position: sticky; top: 0; background: var(--color-panel); z-index: 1; text-align: left; font-weight: 500; color: var(--color-fg-muted); border-bottom: 1px solid var(--color-border-line); padding: 0; white-space: nowrap; }
 .sd-table th button { font: inherit; color: inherit; background: none; border: 0; padding: 8px 10px; cursor: pointer; width: 100%; text-align: inherit; }
 .sd-table th[aria-sort="ascending"] button::after { content: " ▲"; color: var(--sd-blue); }
@@ -487,12 +488,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <h2>By region: <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025</h2>
         <p class="sd-note">The arrows show growth vs the same months of 2025. Brand, class, channel and country filters apply.</p>
         <div class="sd-chart" id="reg-chart" data-source="mix" style="min-height:280px"></div>
+        <div class="sd-tablebox" style="max-height:20rem"><table class="sd-table sd-tsm" id="reg-table" data-source="mix"><thead></thead><tbody></tbody></table></div>
       </article>
       <article class="sd-card" id="card-sector">
         <div class="sd-cardhd"><h2 id="sec-title">By sector</h2><div class="sd-seg sm" role="group" aria-label="View" id="sec-view"><button type="button" data-v="sector">Sector</button><button type="button" data-v="channel">Channel</button></div></div>
         <p class="sd-note" id="sec-note">Sales <span class="sd-plab">YTD Jan–Sep</span> 2026 vs 2025 per customer sector, with growth and contribution to the country's growth (percentage points).</p>
         <div class="sd-chart" id="sec-chart" data-source="customers" style="min-height:220px"></div>
-        <div class="sd-tablebox" style="max-height:20rem"><table class="sd-table" id="sec-table" data-source="customers"><thead></thead><tbody></tbody></table></div>
+        <div class="sd-tablebox" style="max-height:20rem"><table class="sd-table sd-tsm" id="sec-table" data-source="customers"><thead></thead><tbody></tbody></table></div>
       </article>
     </div>
     <article class="sd-card" id="card-custtable">
@@ -890,7 +892,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="xp-filters" id="xp-filters"></div>
       <p class="sd-note" id="xp-sum" data-source="iq_all iq_packs">Loading the IQVIA market…</p>
     </div>
-    <div class="sd-tools xp-focus">
+    <div class="sd-tools xp-focus" hidden>
       <label for="xp-fdim"><b>Focus on</b></label><select id="xp-fdim"></select>
       <input id="xp-fval" list="xp-fdl" placeholder="Type to pick…" aria-label="Focus item" autocomplete="off"><datalist id="xp-fdl"></datalist>
       <span class="sd-note" id="xp-fnote"></span>
@@ -2706,7 +2708,8 @@ dash.calc('iq_coverage', {
   /* ---- monthly trend ---- */
   /* Monthly bars: 2025 vs 2026, optional YTG bars for the months still to come, value labels on the 2026 / YTG bars */
   const monthBars = (box, s25, s26, ytg, m, hi, label, nm = {}) => {
-    const NA = nm.a || '2025', NB = nm.b || '2026', NC = nm.c || 'YTG 2026', unitFmt = nm.fmt || ((v) => big(m, v));
+    const NA = nm.a || '2025', NB = nm.b || '2026', NC = nm.c || 'YTG 2026', mx0 = d3.max([...s25.values(), ...s26.values(), ...ytg.values()].filter((v) => v != null && !isNaN(v)).map(Math.abs)) || 0;
+    const unitFmt = nm.fmt || (m === 'eur' && mx0 >= 1e6 ? (v) => v == null ? '—' : (v < 0 ? '−€' : '€') + d3.format(',.1f')(Math.abs(v) / 1e6) + 'M' : (v) => big(m, v));
     box.replaceChildren();
     const all = [...s25.values(), ...s26.values(), ...ytg.values()].filter((v) => v != null && !isNaN(v));
     if (!all.length) return;
@@ -2782,7 +2785,7 @@ dash.calc('iq_coverage', {
     const mt0 = svg.append('text').attr('class', 'sd-pc-lbl');
     const lw = d3.max(vals, (v) => { mt0.text(fmt(v)); return mt0.node().getComputedTextLength ? mt0.node().getComputedTextLength() : String(fmt(v)).length * 6.5; }) || 0; mt0.remove();
     const lmode = lw <= bw - bp / 2 ? 0 : lw * 0.85 <= bw - bp / 2 ? 1 : 2, lift = lmode === 2 ? lw * 0.85 + 8 : 16;
-    const mt = 20 + lv * 26 + (lmode === 2 ? lift - 16 : 0);
+    const mt = 30 + lv * 30 + (lmode === 2 ? lift - 16 : 0);
     const y = d3.scaleLinear([0, d3.max(vals) || 1], [H - mb, mt + 16]);
     const fitTxt = (t, w) => { const n = t.node(); if (!n.getComputedTextLength) return; let s0 = t.text(); while (s0.length > 3 && n.getComputedTextLength() > w) { s0 = s0.slice(0, -1); t.text(s0.trimEnd() + '…'); } };
     const lbls = [];
@@ -2800,7 +2803,7 @@ dash.calc('iq_coverage', {
         const a = g.bars[i], b = g.bars[j]; if (!a || !b || a.v == null || b.v == null) return;
         const x0 = bx(gi, i, n) + bw / 2, x1 = bx(gi, j, n) + bw / 2;
         if (kind === 'g') {
-          const ya = Math.min(top(i), top(j)) - lift - 8 - l * 24, gv = a.v > 0 ? b.v / a.v - 1 : null;
+          const ya = Math.min(top(i), top(j)) - lift - 18 - l * 28, gv = a.v > 0 ? b.v / a.v - 1 : null;
           svg.append('path').attr('class', 'sd-evo-arrow').attr('d', `M${x0},${top(i) - lift - 2} L${x0},${ya} L${x1},${ya} L${x1},${top(j) - lift}`).attr('marker-end', 'url(#sd-ah2)');
           const t = gv == null ? '—' : d3.format('+.0%')(gv), pw = t.length * 6.5 + 12;
           svg.append('rect').attr('class', 'sd-evo-pill').attr('x', (x0 + x1) / 2 - pw / 2).attr('y', ya - 9).attr('width', pw).attr('height', 18).attr('rx', 9);
@@ -3204,7 +3207,13 @@ dash.calc('iq_coverage', {
     const sc = p.monthMode && p.skus.length ? p.SCB : p.SC, m = p.metric;
     const combos = new Set(cross(p.PK, p.CK, sc, p.CH, ['All']).map(([a, b, c, e, f]) => a + b + '|' + c + '|' + e + '|' + f));
     const inSet = d.data.filter((r) => combos.has(r.combo) && r.dim === 'region');
-    const rows = groupSum(inSet, (r) => r.name, null, (r) => ({ name: r.name })).filter((r) => r['ytd26_' + m] || r['ytd25_' + m]).sort((a, b) => b['ytd26_' + m] - a['ytd26_' + m]).slice(0, 8);
+    const all = groupSum(inSet, (r) => r.name, null, (r) => ({ name: r.name })).filter((r) => r['ytd26_' + m] || r['ytd25_' + m]).sort((a, b) => b['ytd26_' + m] - a['ytd26_' + m]);
+    const rows = all.slice(0, 8);
+    { const tb = $('#reg-table'), a25 = d3.sum(all, (r) => +r['ytd25_' + m] || 0), a26 = d3.sum(all, (r) => +r['ytd26_' + m] || 0);
+      const hr = document.createElement('tr'); for (const h of ['Region', PLAB + ' 2025', PLAB + ' 2026', 'Growth', 'Share 2026', 'Share change', 'Contribution']) { const th = document.createElement('th'); th.textContent = h; if (h !== 'Region') th.className = 'n'; hr.append(th); } tb.tHead.replaceChildren(hr);
+      const line = (lab, x25, x26, tot) => { const tr = document.createElement('tr'); if (tot) tr.className = 'sd-total'; const g = x25 > 0 ? x26 / x25 - 1 : null, sh = a26 ? x26 / a26 : null, ds = a25 && a26 ? (x26 / a26 - x25 / a25) * 100 : null, c = a25 ? (x26 - x25) / a25 * 100 : null;
+        for (const [v, cl, tn] of [[lab, 'lab'], [tab(m)(x25), 'n'], [tab(m)(x26), 'n'], [pct(g), 'n', g], [shr(sh), 'n'], [ds == null ? '—' : d3.format('+.1f')(ds) + ' pp', 'n', ds], [pp(c), 'n', c]]) { const td = document.createElement('td'); td.textContent = v; td.className = cl; if (tn != null) tone(td, tn); tr.append(td); } return tr; };
+      tb.tBodies[0].replaceChildren(...all.map((r) => line(r.name, +r['ytd25_' + m] || 0, +r['ytd26_' + m] || 0)), line('Total', a25, a26, true)); }
     pairChart(box, rows.map((r) => ({ name: r.name, bars: [{ v: r['ytd25_' + m] }, { v: r['ytd26_' + m] }] })), m, { h: 280, label: 'Sales by region', names: [PLAB + ' 2025', PLAB + ' 2026'] });
   };
 
@@ -3668,7 +3677,7 @@ dash.calc('iq_coverage', {
     defs.append('marker').attr('id', 'sd-arrowhead').attr('viewBox', '0 0 10 10').attr('refX', 9).attr('refY', 5).attr('markerWidth', 7).attr('markerHeight', 7).attr('orient', 'auto-start-reverse')
       .append('path').attr('d', 'M0,0 L10,5 L0,10 z').style('fill', 'var(--color-fg-muted)');
     // growth rows
-    const rowsDef = [['Market', T], [bname, B]];
+    const rowsDef = B ? [['Market', T], [bname, B]] : [['Market', T]];
     rowsDef.forEach(([lab, row], k) => {
       svg.append('text').attr('class', 'sd-evo-lbl').attr('x', 4).attr('y', rowsY[k]).style('fill', k === 0 ? 'var(--sd-red)' : 'var(--sd-blue)').text(lab.length > 14 ? lab.slice(0, 13) + '…' : lab);
       yrs.forEach((yy) => {
@@ -3893,7 +3902,7 @@ dash.calc('iq_coverage', {
 
 
   /* market share lines: the chosen item and the biggest others (brands or molecules), each quarter, YTD or rolling MAT */
-  const PAL = ['#ED1651', '#5B8DD6', '#2A9D8F', '#8E5BB5', '#F28C28', '#6B7280', '#C2185B', '#14B8A6'];
+  const PAL = ['#ED1651', '#5B8DD6', '#2A9D8F', '#8E5BB5', '#F28C28', '#6B7280', '#0A2A66', '#14B8A6', '#B45309', '#65A30D'];
   const pickSeries = (G, mains, nTop) => {
     const L = [...G].map(([name, vals]) => ({ name, vals, w: d3.sum(vals.slice(-4)), main: mains.has(name) })).filter((x) => x.w > 0 || x.main).sort((a, b) => b.w - a.w);
     const mn = L.filter((x) => x.main).slice(0, 2);
@@ -3910,7 +3919,7 @@ dash.calc('iq_coverage', {
     const y = d3.scaleLinear([0, Math.min(1, (d3.max(S, (x) => d3.max(x.pts, (p) => p.v)) || 0.05) * 1.1)], [H - mb2, mt]).nice();
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Market share trend');
     const ticks = y.ticks(5);
-    const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => d3.format('.0%')(t));
+    const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => d3.format(ticks.length > 1 && ticks[1] - ticks[0] < 0.01 ? '.1%' : '.0%')(t));
     const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
     tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
     svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 44).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
@@ -4327,6 +4336,7 @@ dash.calc('iq_coverage', {
     $('#xp-fdim').value = XS.fd; $('#xp-bdim').value = XS.bd; $('#xp-gdim').value = XS.gd;
     const fvIn = $('#xp-fval'); if (document.activeElement !== fvIn) fvIn.value = XS.fv;
     const Bg = G.get(XS.fv), name = XS.fv || '—';
+    sum.textContent += ' Item in the KPIs: ' + name + ' (click a row in the list below to change it).';
     const B = Bg ? xmet(Bg, T0, R) : null;
     $('#xp-fnote').textContent = Bg ? (Bg.stada ? 'STADA · ' : '') + (XS.fd === 'product' || XS.fd === 'pack' ? xtop(Bg.corp) + ' · ' + [...Bg.mol].slice(0, 2).join(', ') : '') : 'Nothing in this market.';
     /* rank among the items of the focus kind */
@@ -4365,12 +4375,12 @@ dash.calc('iq_coverage', {
     /* evolution and share trend */
     const view = XS.view, eb = $('#xp-evo');
     $('#xp-evo-title').textContent = view === 'q' ? 'Quarterly sales: ' + name + ' vs rest of market' : (view === 'ytd' ? 'Market by YTD year' : 'Market by MAT year');
-    $('#xp-evo-note').textContent = view === 'q' ? 'Each bar is one quarter; the blue part is ' + name + '.' : 'Bars show the market, with ' + name + "'s share at the foot of each bar. Arrows show market growth year on year, the top arrow the 4-year CAGR; the rows below compare market and " + name + ' growth.';
+    $('#xp-evo-note').textContent = view === 'q' ? 'Each bar is one quarter; the blue part is ' + name + '.' : 'Bars show the market. Arrows show market growth year on year, the top arrow the 4-year CAGR; the row below repeats market growth.';
     const sr = shareRows(R.Q, T0[m], Bg ? Bg[m] : null);
-    if (view === 'q') qBars(eb, sr, m, name); else { eb.replaceChildren(); drawEvolution(eb, T, B, view, m, name); }
+    if (view === 'q') qBars(eb, sr, m, name); else { eb.replaceChildren(); drawEvolution(eb, T, null, view, m, name); }
     const xv2 = XS.msv;
     root.querySelectorAll('[data-xmsv]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.xmsv === xv2)));
-    $('#xp-ms-title').textContent = 'Market share trend: ' + (xv2 === 'mol' ? 'molecules' : name + ' and the top 7 ' + XP[XS.fd]) + ' ' + (k === 'q' ? '(each quarter)' : k === 'ytd' ? '(YTD)' : '(rolling MAT)');
+    $('#xp-ms-title').textContent = 'Market share trend: top 10 ' + (xv2 === 'mol' ? 'molecules' : XP[XS.fd]) + ' ' + (k === 'q' ? '(each quarter)' : k === 'ytd' ? '(YTD)' : '(rolling MAT)');
     $('#xp-ms-note').textContent = k === 'q' ? 'Each point is the share in that quarter alone.' : k === 'ytd' ? 'Each point is the share from January to the end of that quarter, so it restarts each year.' : 'Each point is the share over the 12 months ending that quarter.';
     {
       const GM = new Map(), mains = new Set();
@@ -4380,7 +4390,7 @@ dash.calc('iq_coverage', {
         let a = GM.get(key); if (!a) { a = new Array(R.n).fill(0); GM.set(key, a); }
         const src = r[m]; for (let i = 0; i < R.n; i++) a[i] += src[i];
       }
-      multiShare($('#xp-ms'), R.Q, T0[m], pickSeries(GM, mains, 8), k);
+      multiShare($('#xp-ms'), R.Q, T0[m], pickSeries(GM, new Set(), 10).map((x) => ({ ...x, main: mains.has(x.name) })), k);
     }
     /* top 10 of the focus kind */
     $('#xp-top-title').textContent = 'Top 10 ' + XP[XS.fd] + ' · ' + perLab;
@@ -4795,7 +4805,7 @@ dash.calc('iq_coverage', {
     if (ds.status !== 'ok') { st.tBodies[0].replaceChildren(); return; }
     const q = $('#b27-search').value.trim().toLowerCase();
     const sk = ds.data.filter((r) => b27In(p, r) && (PT === 'all' || (PT === 'new') === (r.launch === 'New Launches')) && (!q || [r.sku, r.brand, r.lo_sku].join(' ').toLowerCase().includes(q)))
-      .map((r) => ({ ...r, b27: u ? r.b27_units : r.b27_eur, lo: u ? r.lo26_units : r.lo26_eur, g: u ? r.g_units : r.g_eur }));
+      .map((r) => ({ ...r, b27: u ? r.b27_units : r.b27_eur, lo: u ? r.lo26_units : r.lo26_eur, g: u ? r.g_units : r.g_eur, gu: r.g_units }));
     $('#b27-sku-title').textContent = 'SKUs: BUD 2027 vs LO 2026' + (p.skus.length ? ' (SKU filter not applied: names differ in BUD 2027)' : '');
     drawTable(st, sk, [
       ...(p.countries.length === 1 ? [] : [{ k: 'country', f: 'country', label: 'Country', text: true, cls: 'hide-sm' }]),
@@ -4805,7 +4815,8 @@ dash.calc('iq_coverage', {
       { k: 'lo_sku', f: 'lo_sku', label: '2026 SKU', text: true, cls: 'hide-md' },
       { k: 'lo', f: 'lo', label: 'LO 2026', fmt: (v) => v == null ? '—' : tab(m)(v), cls: 'n' },
       { k: 'b27', f: 'b27', label: 'BUD 2027', fmt: tab(m), cls: 'n' },
-      { k: 'g', f: 'g', label: 'Growth', fmt: pct, cls: 'n', tone: true },
+      { k: 'g', f: 'g', label: u ? 'Units growth' : 'Value growth', fmt: pct, cls: 'n', tone: true },
+      ...(u ? [] : [{ k: 'gu', f: 'gu', label: 'Units growth', fmt: pct, cls: 'n', tone: true }]),
       { k: 'c26', f: 'cif26_lc', label: 'CIF 2026', fmt: (v) => v == null ? '—' : d3.format(',.2f')(v), cls: 'n hide-sm' },
       { k: 'c27', f: 'cif27_lc', label: 'CIF 2027', fmt: (v) => v == null ? '—' : d3.format(',.2f')(v), cls: 'n hide-sm' },
       { k: 'cur', f: 'currency', label: 'Cur.', text: true, cls: 'hide-md' },
