@@ -576,12 +576,24 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <p class="sd-note" id="brytd-note">ACT minus BUD for the months closed, largest gaps first.</p>
       <div class="sd-chart" id="brytd-chart" data-source="plan_brands plan_skus"></div>
     </article>
+    <article class="sd-card" id="card-brtrend">
+      <h2 id="brtrend-title">Brand monthly trend</h2>
+      <p class="sd-note" id="brtrend-note">Monthly sales from January 2025 to the latest month, for the top brands in the selection.</p>
+      <div class="sd-tools"><div class="sd-seg" role="group" aria-label="Brand trend view"><button type="button" data-trv="br|line" aria-pressed="true">Jan 2025 – latest</button><button type="button" data-trv="br|yoy" aria-pressed="false">2026 vs 2025</button></div></div>
+      <div class="sd-chart" id="brtrend-chart" data-source="trend" style="min-height:300px"></div>
+    </article>
     <article class="sd-card" id="card-brandtable">
       <h2>Brands</h2>
       <p class="sd-note">For the channel and region selected. Click a brand to focus the whole dashboard on it. Share and contribution are against all brands.</p>
       <div class="sd-tablebox">
         <table class="sd-table clickable" id="brand-table" data-source="brands" data-row-key="id"><thead></thead><tbody></tbody></table>
       </div>
+    </article>
+    <article class="sd-card" id="card-skutrend">
+      <h2 id="skutrend-title">SKU monthly trend</h2>
+      <p class="sd-note" id="skutrend-note">Monthly sales from January 2025 to the latest month, for the top SKUs in the selection.</p>
+      <div class="sd-tools"><div class="sd-seg" role="group" aria-label="SKU trend view"><button type="button" data-trv="sku|line" aria-pressed="true">Jan 2025 – latest</button><button type="button" data-trv="sku|yoy" aria-pressed="false">2026 vs 2025</button></div></div>
+      <div class="sd-chart" id="skutrend-chart" data-source="trend" style="min-height:300px"></div>
     </article>
     <article class="sd-card" id="card-skutable">
       <h2 id="sku-title">SKUs</h2>
@@ -678,7 +690,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   </section>
 
   <section class="sd-page" id="bud27" aria-labelledby="tab-bud27" hidden>
-    <p class="sd-note sd-intro">BUD 2027 is the sell-out (IMS) budget: <b>Final Amount EURO 2027 with CIF 2027</b>, parameter SO only. It is compared with LO 2026 (ACT 2026 + YTG) from the ACT/BUD/YTG file. Brand names are aligned between the two files (for example Pafinur = Rupatadine, Movapo = APO-GO, Infaxa = Rivaroxaban); SKU names differ, so each BUD 2027 SKU is matched by name to its 2026 SKU. The country, class and brand filters apply here; channel and region do not.</p>
+    <p class="sd-note sd-intro">BUD 2027 is the sell-out (IMS) budget: <b>Final Amount EURO 2027 with CIF 2027</b>, parameter SO only. It is compared with LO 2026 (ACT 2026 + YTG) from the ACT/BUD/YTG file. Brand names are aligned between the two files (for example Pafinur = Rupatadine, Movapo = APO-GO, Infaxa = Rivaroxaban); SKU names differ, so each BUD 2027 SKU is matched by name to its 2026 SKU. The country, class, brand and SKU filters apply here (BUD 2027 SKUs are matched to the 2026 SKU names); channel and region do not.</p>
     <div class="sd-tools"><span class="sd-lab" id="lab-b27t">PRODUCTS</span><div class="sd-seg" role="group" aria-labelledby="lab-b27t"><button type="button" data-b27t="all">All products</button><button type="button" data-b27t="existing">Existing products</button><button type="button" data-b27t="new">New launches</button></div><span class="sd-note" id="b27-tnote"></span></div>
     <div class="sd-kpis" id="b27-kpis" data-source="bud27_brand"></div>
     <div class="sd-grid2">
@@ -1172,6 +1184,33 @@ dash.calc('bud27_month', {
       if (+r.year === 2025) { a.act25_eur += +r.act_eur || 0; a.act25_units += +r.act_units || 0; }
     }
     return [...acc.values()].map((a) => { for (const k of Object.keys(a)) if (typeof a[k] === 'number' && k !== 'month') a[k] = r2(a[k]); return a; });
+  },
+});
+
+dash.calc('bud27_skum', {
+  inputs: ['bud27', 'plan'],
+  title: 'BUD 2027 and LO 2026 per SKU and month',
+  description: 'Per country, brand, SKU and month: BUD 2027 sell-out in euro (CIF 2027 and CIF 2026) and units with the part from new launches, LO 2026 (ACT + YTG) and ACT 2025. BUD 2027 SKUs are listed under their matched 2026 SKU name (or their own name when they have no 2026 match), so the SKU filter works on both files.',
+  fn: (bud27, plan) => {
+    const acc = new Map(), r2 = (v) => Math.round(v * 100) / 100;
+    const get = (co, br, cls, sku, mo) => {
+      const id = co + '|' + br + '|' + sku + '|' + mo; let a = acc.get(id);
+      if (!a) { a = { id, country: co, brand: br, cls, sku, month: mo, b27_eur: 0, b27_eur26: 0, b27_units: 0, new_eur: 0, new_eur26: 0, new_units: 0, lo26_eur: 0, lo26_units: 0, fy25_eur: 0, fy25_units: 0 }; acc.set(id, a); }
+      if (!a.cls && cls) a.cls = cls; return a;
+    };
+    for (const r of bud27) {
+      const a = get(r.country, r.brand, r.cls, r.lo_sku || r.sku, +r.month);
+      a.b27_eur += +r.eur_cif27 || 0; a.b27_eur26 += +r.eur_cif26 || 0; a.b27_units += +r.units || 0;
+      if (r.launch === 'New Launches') { a.new_eur += +r.eur_cif27 || 0; a.new_eur26 += +r.eur_cif26 || 0; a.new_units += +r.units || 0; }
+    }
+    for (const r of plan) {
+      if (+r.year !== 2026 && +r.year !== 2025) continue;
+      const a = get(r.country, r.brand, r.class, r.sku, +r.month);
+      if (+r.year === 2026) { a.lo26_eur += (+r.act_eur || 0) + (+r.ytg_eur || 0); a.lo26_units += (+r.act_units || 0) + (+r.ytg_units || 0); }
+      else { a.fy25_eur += +r.act_eur || 0; a.fy25_units += +r.act_units || 0; }
+    }
+    return [...acc.values()].filter((a) => a.b27_eur || a.b27_units || a.lo26_eur || a.lo26_units || a.fy25_eur || a.fy25_units)
+      .map((a) => { for (const k of Object.keys(a)) if (typeof a[k] === 'number' && k !== 'month') a[k] = r2(a[k]); return a; });
   },
 });
 
@@ -2601,6 +2640,8 @@ dash.calc('iq_coverage', {
       const sk = new Map();
       if (a.status === 'ok') for (const r of a.data) if (p.brands.includes(r.brand) && r.combo === p.CK[0] + '|' + r.brand + '|All|All') sk.set(r.sku, (sk.get(r.sku) || 0) + r.ytd26_eur);
       if (b.status === 'ok') for (const r of b.data) if (p.brands.includes(r.brand) && r.combo === 'YTD|' + p.CK[0] + '|' + r.brand + '|All' && !sk.has(r.sku)) sk.set(r.sku, -1);
+      const b7s = dash.data('bud27_sku');
+      if (b7s.status === 'ok') for (const r of b7s.data) if (p.brands.includes(r.brand) && !r.lo_sku && (p.CK[0] === 'All countries' || r.country === p.CK[0]) && !sk.has(r.sku)) sk.set(r.sku, -2);
       fSku.update([...sk.entries()].sort((x, y) => y[1] - x[1]).map(([s]) => [s, s]), p.skus, false);
     }
     const all = top((r) => p.CK.includes(r.country));
@@ -2703,7 +2744,7 @@ dash.calc('iq_coverage', {
     const b7 = dash.data('bud27_brand'), kb = $('#k-b27'), kg = $('#k-b27-g');
     kb.classList.toggle('dash-skeleton', b7.status === 'loading');
     if (b7.status === 'ok') {
-      const rr = b7.data.filter((x) => b27In(p, x)), bv = d3.sum(rr, (x) => +x['b27_' + m] || 0), lv = d3.sum(rr, (x) => +x['lo26_' + m] || 0);
+      const rr = b27Rows(p, 'brand').rows, bv = d3.sum(rr, (x) => +x['b27_' + m] || 0), lv = d3.sum(rr, (x) => +x['lo26_' + m] || 0);
       kb.textContent = big(m, bv); kg.textContent = (lv > 0 ? pct(bv / lv - 1) : '—') + ' vs LO 2026'; kg.classList.remove('up', 'down'); if (lv > 0) tone(kg, bv / lv - 1);
     }
     $('#k-bud-sub').textContent = p.channels.length || p.regions.length ? 'Country level: the budget has no channel or region split' : (p.metric === 'loc' ? 'In euro: the budget has no local currency' : 'ACT as a share of BUD');
@@ -3273,8 +3314,75 @@ dash.calc('iq_coverage', {
   });
   const skuSearch = $('#sku-search');
   skuSearch.addEventListener('input', () => render());
+  /* ---- monthly trend lines per brand or SKU (Jan 2025 to the latest month) ---- */
+  const TRV = { br: 'line', sku: 'line' };
+  root.querySelectorAll('[data-trv]').forEach((b) => b.addEventListener('click', () => { const [k, v] = b.dataset.trv.split('|'); TRV[k] = v; render(); }));
+  const trendLines = (box, S, m, view, label) => {
+    box.replaceChildren();
+    const mon = (i) => MON[(i - 1) % 12] + ' ' + (i > 12 ? '26' : '25');
+    let idx = [];
+    if (view === 'yoy') idx = d3.range(1, 13); else { const mx = d3.max(S, (sr) => d3.max([...sr.v.keys()].filter((k) => sr.v.get(k)))) || 12; idx = d3.range(1, mx + 1); }
+    const ser = view === 'yoy' ? S.flatMap((sr) => [{ ...sr, nm: sr.name + ' 2025', y: 25, pts: idx.map((i) => ({ i, v: sr.v.get(i) })) }, { ...sr, nm: sr.name + ' 2026', y: 26, pts: idx.filter((i) => i <= LM).map((i) => ({ i, v: sr.v.get(i + 12) })) }])
+      : S.map((sr) => ({ ...sr, nm: sr.name, y: 0, pts: idx.map((i) => ({ i, v: sr.v.get(i) })) }));
+    for (const sr of ser) sr.pts = sr.pts.filter((q) => q.v != null && !isNaN(q.v));
+    const all = ser.flatMap((sr) => sr.pts.map((q) => q.v));
+    if (!all.length) { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = 'No sales for this selection.'; box.append(n); return; }
+    const W = Math.max(300, box.clientWidth), H = 300, mb2 = 26, mt = 14, fmt = uniFmt(m, all);
+    const y = d3.scaleLinear([Math.min(0, d3.min(all)), d3.max(all) * 1.08 || 1], [H - mb2, mt]).nice();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', label);
+    const ticks = y.ticks(5);
+    const tl = svg.append('g').selectAll('text').data(ticks).join('text').attr('class', 'sd-tick').text((t) => fmt(t));
+    const ml = Math.ceil(d3.max(tl.nodes(), (n2) => n2.getComputedTextLength()) || 0) + 10;
+    tl.attr('x', ml - 8).attr('y', (t) => y(t)).attr('text-anchor', 'end').attr('dominant-baseline', 'middle');
+    svg.insert('g', ':first-child').selectAll('line').data(ticks).join('line').attr('class', 'sd-gridline').attr('x1', ml).attr('x2', W - 8).attr('y1', (t) => y(t)).attr('y2', (t) => y(t));
+    const x = d3.scalePoint(idx, [ml + 8, W - 12]);
+    const lab = (i) => view === 'yoy' ? MON[i - 1] : mon(i);
+    const every = Math.ceil(idx.length / Math.max(2, Math.floor((W - ml) / 52)));
+    svg.append('g').selectAll('text').data(idx.filter((i, k) => k % every === 0)).join('text').attr('class', 'sd-tick').attr('text-anchor', 'middle').attr('x', (i) => x(i)).attr('y', H - 6).text(lab);
+    if (view !== 'yoy' && idx.includes(13)) svg.append('line').attr('x1', (x(12) + x(13)) / 2).attr('x2', (x(12) + x(13)) / 2).attr('y1', mt).attr('y2', H - mb2).style('stroke', 'var(--color-fg-muted)').style('stroke-dasharray', '3 4').style('opacity', 0.6);
+    for (const sr of ser) {
+      svg.append('path').datum(sr.pts).attr('d', d3.line().x((q) => x(q.i)).y((q) => y(q.v))).style('fill', 'none').style('stroke', sr.c).style('stroke-width', sr.y === 25 ? 1.5 : 2.2).style('stroke-dasharray', sr.y === 25 ? '5 4' : null).style('opacity', sr.y === 25 ? 0.75 : 1).style('stroke-linejoin', 'round');
+      if (sr.y !== 25) svg.append('g').selectAll('circle').data(sr.pts).join('circle').attr('cx', (q) => x(q.i)).attr('cy', (q) => y(q.v)).attr('r', 2.6).style('fill', sr.c);
+    }
+    const t = tipBox(box);
+    svg.append('g').selectAll('rect').data(idx).join('rect').attr('x', (i) => x(i) - x.step() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb2 - mt).style('fill', 'transparent')
+      .on('mousemove', (ev, i) => {
+        t.replaceChildren(); const hd = document.createElement('div'); hd.className = 't'; hd.textContent = view === 'yoy' ? MON[i - 1] + ' 2026 vs 2025' : lab(i); t.append(hd);
+        if (view === 'yoy') S.forEach((sr) => { const a = sr.v.get(i), b = i <= LM ? sr.v.get(i + 12) : null; if (a == null && b == null) return; t.append(tipRow(sr.c, sr.name, (b == null ? '—' : fmt(b)) + ' vs ' + (a == null ? '—' : fmt(a)) + (a && b != null ? ' (' + pct(b / a - 1) + ')' : ''))); });
+        else ser.map((sr) => ({ sr, v: (sr.pts.find((q) => q.i === i) || {}).v })).filter((o) => o.v != null).sort((a, b) => b.v - a.v).forEach((o) => t.append(tipRow(o.sr.c, o.sr.nm, fmt(o.v))));
+        t.hidden = false; const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
+      }).on('mouseleave', () => { t.hidden = true; });
+    const lg = document.createElement('div'); lg.className = 'sd-legend ms-lg';
+    for (const sr of S) { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = sr.c; sp.append(i, sr.name); lg.append(sp); }
+    if (view === 'yoy') { const sp = document.createElement('span'); sp.textContent = 'solid = 2026, dashed = 2025'; lg.append(sp); }
+    box.append(lg);
+    const cols = view === 'yoy' ? S.flatMap((sr) => [sr.name + ' 2025', sr.name + ' 2026']) : S.map((sr) => sr.name);
+    box.__xl = { name: label.slice(0, 28), rows: [['Month', ...cols], ...idx.map((i) => [view === 'yoy' ? MON[i - 1] : lab(i), ...(view === 'yoy' ? S.flatMap((sr) => [sr.v.get(i) ?? '', i <= LM ? sr.v.get(i + 12) ?? '' : '']) : S.map((sr) => sr.v.get(i) ?? ''))])] };
+  };
+  const drawTrendCard = (p, kind) => {
+    const box = $('#' + kind + 'trend-chart'), d = dash.data('trend');
+    root.querySelectorAll('[data-trv^="' + (kind === 'br' ? 'br' : 'sku') + '|"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.trv.split('|')[1] === TRV[kind === 'br' ? 'br' : 'sku'])));
+    if (!ready(box, d)) return;
+    const m = p.metric, isB = kind === 'br';
+    const src = isB ? brandRows(p, true) : skuRows(p);
+    if (src.d.status !== 'ok') { box.replaceChildren(); return; }
+    const sel = isB ? p.brands : p.skus, nm = (r) => isB ? r.brand : r.sku;
+    let names = src.rows.filter((r) => !sel.length || sel.includes(nm(r))).sort((a, b) => (+b['ytd26_' + m] || 0) - (+a['ytd26_' + m] || 0)).map(nm);
+    names = [...new Set(names)].slice(0, sel.length ? 10 : 7);
+    const S = names.map((n, k) => ({ name: n, c: PAL[k % PAL.length], v: new Map() })), bySc = new Map(S.map((sr) => [(isB ? '' : 'SKU:') + sr.name, sr]));
+    const ok = new Set(cross(p.CK, p.CH, p.RG).map((a) => a.join('|')));
+    for (const r of d.data) {
+      const [k, sc, c, g] = r.combo.split('|'); const sr = bySc.get(sc); if (!sr || !ok.has(k + '|' + c + '|' + g)) continue;
+      const i = (+r.year - 2025) * 12 + +r.month; if (i < 1) continue;
+      sr.v.set(i, (sr.v.get(i) || 0) + (r[m] == null ? NaN : +r[m]));
+    }
+    const view = TRV[isB ? 'br' : 'sku'];
+    $('#' + kind + 'trend-note').textContent = (sel.length ? 'The ' + (isB ? 'brands' : 'SKUs') + ' selected' : 'Top ' + names.length + ' ' + (isB ? 'brands' : 'SKUs') + ' by YTD 2026 sales' + (isB ? '' : ' in ' + (p.brands.length ? (p.brands.length <= 2 ? p.brands.join(' + ') : p.brands.length + ' brands') : 'all brands'))) + (view === 'yoy' ? ', each month of 2026 against the same month of 2025.' : ', every month from January 2025 to ' + MON[LM - 1] + ' 2026.') + ' Country, channel, region and measure filters apply.';
+    trendLines(box, S, m, view, (isB ? 'Brand' : 'SKU') + ' monthly trend');
+  };
   const drawBrands = (p) => {
     drawYtdGap(p, $('#brytd-chart'), $('#brytd-title'), $('#brytd-note'));
+    drawTrendCard(p, 'br'); drawTrendCard(p, 'sku');
     const m = p.metric, bt = $('#brand-table');
     const br = brandRows(p, false);
     if (br.d.status === 'ok') {
@@ -4681,16 +4789,30 @@ dash.calc('iq_coverage', {
   });
   $('#b27-search').addEventListener('input', () => render());
   const b27In = (p, r) => (p.countries.length ? p.countries.includes(r.country) : true) && p.brandOk(r.brand, r.cls);
+  /* BUD 27 rows for the selection: brand level, or summed from the SKU x month rows when SKUs are picked */
+  const b27Rows = (p, lvl) => {
+    if (!p.skus.length) { const d = dash.data(lvl === 'month' ? 'bud27_month' : 'bud27_brand'); return d.status === 'ok' ? { d, rows: d.data.filter((r) => b27In(p, r)) } : { d, rows: [] }; }
+    const d = dash.data('bud27_skum'); if (d.status !== 'ok') return { d, rows: [] };
+    const ks = new Set(p.skus), acc = new Map();
+    for (const r of d.data) if (ks.has(r.sku) && (p.countries.length ? p.countries.includes(r.country) : true)) {
+      const id = r.country + '|' + r.brand + (lvl === 'month' ? '|' + r.month : ''); let a = acc.get(id);
+      if (!a) { a = { id, country: r.country, brand: r.brand, cls: r.cls, month: lvl === 'month' ? r.month : null }; acc.set(id, a); }
+      for (const f of ['b27_eur', 'b27_eur26', 'b27_units', 'new_eur', 'new_eur26', 'new_units', 'lo26_eur', 'lo26_units', 'fy25_eur', 'fy25_units']) a[f] = (a[f] || 0) + (+r[f] || 0);
+    }
+    return { d, rows: [...acc.values()] };
+  };
   /* products shown: all, existing (base) products only, or new launches only */
   let b27Type = 'all';
   root.querySelectorAll('[data-b27t]').forEach((b) => b.addEventListener('click', () => { b27Type = b.dataset.b27t; render(); }));
   const drawBud27 = (p) => {
-    const db = dash.data('bud27_brand'), dm = dash.data('bud27_month'), ds = dash.data('bud27_sku');
+    const bR = b27Rows(p, 'brand'), db = bR.d, mR = b27Rows(p, 'month'), dm = mR.d, ds = dash.data('bud27_sku');
     const kp = $('#b27-kpis');
     const u = p.metric === 'units', m = u ? 'units' : 'eur', V = (r, f) => +r[f + '_' + m] || 0;
     if (db.status !== 'ok') { kp.replaceChildren(); kp.classList.toggle('dash-skeleton', db.status === 'loading'); return; }
     kp.classList.remove('dash-skeleton');
-    const rows = db.data.filter((r) => b27In(p, r));
+    const rows = bR.rows, srcB = p.skus.length ? 'bud27_skum' : 'bud27_brand';
+    for (const id of ['b27-kpis', 'b27-bridge', 'b27-cif', 'b27-brands']) $('#' + id).dataset.source = srcB;
+    $('#b27-month').dataset.source = p.skus.length ? 'bud27_skum' : 'bud27_month';
     const PT = b27Type, ex = PT !== 'new', nw = PT !== 'existing';
     root.querySelectorAll('[data-b27t]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.b27t === PT)));
     $('#b27-tnote').textContent = PT === 'existing' ? 'Products already sold in 2026 (launch type "Base"), against their LO 2026.' : PT === 'new' ? 'Launch type "New Launches": no LO 2026 to compare with.' : 'Existing products and new launches together.';
@@ -4717,7 +4839,7 @@ dash.calc('iq_coverage', {
     const tile = (h, val, sub, tn, chip) => {
       const a = document.createElement('article'); a.className = 'sd-kpi';
       const h3 = document.createElement('h3'); h3.textContent = h;
-      const b = document.createElement('div'); b.className = 'sd-big'; b.textContent = val; b.dataset.source = 'bud27_brand'; if (tn != null) tone(b, tn);
+      const b = document.createElement('div'); b.className = 'sd-big'; b.textContent = val; b.dataset.source = srcB; if (tn != null) tone(b, tn);
       a.append(h3, b);
       if (chip) { const c = document.createElement('div'); c.className = 'sd-chip'; c.textContent = chip[0]; tone(c, chip[1]); a.append(c); }
       if (sub) { const sb = document.createElement('div'); sb.className = 'sd-sub'; sb.textContent = sub; a.append(sb); }
@@ -4780,7 +4902,7 @@ dash.calc('iq_coverage', {
     const mb = $('#b27-month');
     if (ready(mb, dm)) {
       const a = new Map(), b = new Map();
-      for (const r of dm.data) if (b27In(p, r)) {
+      for (const r of mR.rows) {
         const nv = +r['new_' + m] || 0, bv = PT === 'new' ? nv : PT === 'existing' ? (+r['b27_' + m] || 0) - nv : +r['b27_' + m] || 0;
         if (ex) a.set(+r.month, (a.get(+r.month) || 0) + (+r['lo26_' + m] || 0));
         b.set(+r.month, (b.get(+r.month) || 0) + bv);
@@ -4801,16 +4923,17 @@ dash.calc('iq_coverage', {
       { k: 'gu', f: 'gu', label: 'Units growth', fmt: pct, cls: 'n hide-md', tone: true },
       { k: 'share', f: 'share', label: 'Share of BUD 27', fmt: shr, cls: 'n hide-md' },
       { k: 'status', f: 'status', label: 'Status', text: true, render: (td, r) => { const sp = document.createElement('span'); sp.className = 'sd-pill ' + (r.status === 'New' ? 'New' : r.status === 'Not in BUD 27' ? 'Lost' : 'Steady'); sp.textContent = r.status; td.append(sp); } },
-    ], sortState.b27b, render, false, 'bud27_brand');
+    ], sortState.b27b, render, false, srcB);
     $('#b27-brands').querySelectorAll('tbody tr').forEach((tr) => { const r = lastB27.find((x) => x.id === tr.dataset.k); tr.classList.toggle('sel', !!r && p.brands.includes(r.brand)); });
 
     /* SKU table */
     const st = $('#b27-skus');
     if (ds.status !== 'ok') { st.tBodies[0].replaceChildren(); return; }
     const q = $('#b27-search').value.trim().toLowerCase();
-    const sk = ds.data.filter((r) => b27In(p, r) && (PT === 'all' || (PT === 'new') === (r.launch === 'New Launches')) && (!q || [r.sku, r.brand, r.lo_sku].join(' ').toLowerCase().includes(q)))
+    const skS = new Set(p.skus);
+    const sk = ds.data.filter((r) => b27In(p, r) && (!skS.size || skS.has(r.sku) || skS.has(r.lo_sku)) && (PT === 'all' || (PT === 'new') === (r.launch === 'New Launches')) && (!q || [r.sku, r.brand, r.lo_sku].join(' ').toLowerCase().includes(q)))
       .map((r) => ({ ...r, b27: u ? r.b27_units : r.b27_eur, lo: u ? r.lo26_units : r.lo26_eur, g: u ? r.g_units : r.g_eur, gu: r.g_units }));
-    $('#b27-sku-title').textContent = 'SKUs: BUD 2027 vs LO 2026' + (p.skus.length ? ' (SKU filter not applied: names differ in BUD 2027)' : '');
+    $('#b27-sku-title').textContent = 'SKUs: BUD 2027 vs LO 2026' + (p.skus.length ? ' · ' + (p.skus.length === 1 ? p.skus[0] : p.skus.length + ' SKUs selected') : '');
     drawTable(st, sk, [
       ...(p.countries.length === 1 ? [] : [{ k: 'country', f: 'country', label: 'Country', text: true, cls: 'hide-sm' }]),
       { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' },
@@ -4974,7 +5097,7 @@ dash.calc('iq_coverage', {
     const k = planAgg(p); if (!ready(box, k.d) || !k.r) return;
     const r = k.r, V = (f) => +r[f + '_' + m] || 0;
     const db = dash.data('bud27_brand');
-    const b27 = db.status === 'ok' ? d3.sum(db.data.filter((x) => b27In(p, x)), (x) => +x['b27_' + m] || 0) : null;
+    const b27 = db.status === 'ok' ? d3.sum(b27Rows(p, 'brand').rows, (x) => +x['b27_' + m] || 0) : null;
     const lmn = (r.latest_month || LM), rest = lmn < 12 ? MON[lmn] + '–Dec' : '';
     pairChart(box, [
       { name: 'YTD Jan–' + MON[lmn - 1], bars: [{ v: V('act25'), lab: 'ACT 25', c: 'var(--sd-c25)' }, { v: V('act26'), lab: 'ACT 26', c: 'var(--sd-c26)' }, { v: V('bud_ytd'), lab: 'BUD 26', c: 'var(--sd-bud)' }] },
