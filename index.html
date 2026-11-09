@@ -161,6 +161,11 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .sd-page { display: grid; gap: var(--cds-gap-md); }
 .sd-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr)); gap: var(--cds-gap-md); }
 .sd-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: 6px; align-content: start; border-top: 3px solid var(--sd-blue); }
+.sd-kpi { cursor: default; }
+.sd-fulltip { position: fixed; z-index: 60; pointer-events: none; background: var(--color-panel); color: var(--color-fg); border: 1px solid var(--color-border-line); border-top: 3px solid var(--sd-blue); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.16); padding: 8px 12px; font-size: 12.5px; line-height: 1.45; max-width: min(340px, calc(100vw - 24px)); font-variant-numeric: tabular-nums; }
+.sd-fulltip b { display: block; font-size: 17px; font-weight: 650; color: var(--sd-navy, var(--color-fg)); margin: 2px 0 4px; }
+.sd-fulltip .h { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--color-fg-muted); }
+.sd-fulltip .l { color: var(--color-fg-muted); }
 .sd-kpi h3 { margin: 0; font-size: var(--cds-font-size-caption); font-weight: 500; color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .sd-big { font-family: var(--font-anthropic-sans); font-weight: 650; letter-spacing: -0.01em; font-variant-numeric: tabular-nums lining-nums; font-size: var(--cds-font-size-title); line-height: 1.1; color: var(--sd-navy); min-height: 1.1em; }
 .sd-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--sd-tint); width: fit-content; }
@@ -2344,7 +2349,34 @@ dash.calc('iq_coverage', {
     return p;
   };
   const enc = (v) => encodeURIComponent(String(v));
-  const cmp = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+  /* compact formatter that remembers the full value behind each short label, for the KPI hover tooltip */
+  const cmp0 = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+  const FULL = new Map(), fullFmt = (v) => Math.abs(v) >= 100 ? d3.format(',.0f')(v) : d3.format(',.2~f')(v);
+  const cmp = { format: (v) => { const t = cmp0.format(v); if (/[KMBT]$/.test(t) && isFinite(v)) { let st = FULL.get(t); if (!st) FULL.set(t, st = new Set()); st.add(fullFmt(Math.abs(v))); } return t; } };
+  const fullText = (txt) => { let hit = false; const out = String(txt || '').replace(/\d+(?:\.\d+)?[KMBT]\b/g, (k) => { const st = FULL.get(k); if (st && st.size === 1) { hit = true; return [...st][0]; } return k; }); return hit ? out : null; };
+  const fTip = document.createElement('div'); fTip.className = 'sd-fulltip'; fTip.hidden = true; fTip.setAttribute('role', 'tooltip');
+  (root.body || root).append(fTip);
+  let fCard = null;
+  const showFull = (card, ev) => {
+    const parts = []; const bigs = card.querySelectorAll('.sd-big');
+    bigs.forEach((b) => { const f = fullText(b.textContent.trim()); if (f) parts.push(['b', f]); });
+    card.querySelectorAll('.sd-sub, .sd-chip, .sd-note').forEach((x) => { const f = fullText(x.textContent.replace(/\s+/g, ' ').trim()); if (f) parts.push(['l', f]); });
+    if (!parts.length) { fTip.hidden = true; return; }
+    fTip.replaceChildren(); const h = document.createElement('div'); h.className = 'h'; h.textContent = (card.querySelector('h3') || {}).textContent || ''; fTip.append(h);
+    for (const [k, t] of parts) { const e2 = document.createElement(k === 'b' ? 'b' : 'div'); if (k === 'l') e2.className = 'l'; e2.textContent = t; fTip.append(e2); }
+    fTip.hidden = false; placeFull(card, ev);
+  };
+  const placeFull = (card, ev) => {
+    const r = card.getBoundingClientRect(), tw = fTip.offsetWidth, th = fTip.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    let x = ev && ev.clientX != null ? ev.clientX + 14 : r.left + 12, y = ev && ev.clientY != null ? ev.clientY + 16 : r.bottom + 6;
+    if (x + tw > vw - 8) x = Math.max(8, vw - tw - 8); if (y + th > vh - 8) y = Math.max(8, (ev && ev.clientY != null ? ev.clientY : r.top) - th - 12);
+    fTip.style.left = x + 'px'; fTip.style.top = y + 'px';
+  };
+  root.addEventListener('mouseover', (ev) => { const c = ev.target.closest && ev.target.closest('.sd-kpi'); if (c && c !== fCard) { fCard = c; showFull(c, ev); } else if (!c && fCard) { fCard = null; fTip.hidden = true; } });
+  root.addEventListener('mousemove', (ev) => { if (fCard && !fTip.hidden) placeFull(fCard, ev); });
+  root.addEventListener('mouseleave', () => { fCard = null; fTip.hidden = true; });
+  root.addEventListener('click', (ev) => { const c = ev.target.closest && ev.target.closest('.sd-kpi'); if (c) { if (fCard === c && !fTip.hidden) { fTip.hidden = true; fCard = null; } else { fCard = c; showFull(c, ev); } } else if (fCard) { fCard = null; fTip.hidden = true; } });
+  window.addEventListener('scroll', () => { if (fCard) { fCard = null; fTip.hidden = true; } }, { passive: true, capture: true });
   const int = d3.format(',.0f');
   const big = (m, v) => v == null || isNaN(v) ? '—' : m === 'eur' ? (v < 0 ? '−€' : '€') + cmp.format(Math.abs(v)) : m === 'loc' ? curCode + ' ' + (v < 0 ? '−' : '') + cmp.format(Math.abs(v)) : (v < 0 ? '−' : '') + cmp.format(Math.abs(v));
   const uniFmt = (m, vals) => {
@@ -5108,6 +5140,7 @@ dash.calc('iq_coverage', {
 
   /* ---- render ---- */
   function render() {
+    FULL.clear(); fTip.hidden = true; fCard = null;
     const p = P();
     const kd = dash.data('kpi');
     LM = kd.status === 'ok' && kd.data[0] ? kd.data[0].latest_month : LM;
