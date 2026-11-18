@@ -342,7 +342,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   <div class="sd-controls" role="group" aria-label="Filters">
     <div class="sd-field"><span class="sd-lab" id="lab-month">Period</span><div class="sd-ms" id="f-month" data-source="kpi"></div></div>
     <div class="sd-field"><span class="sd-lab" id="lab-country">Country</span><div class="sd-ms" id="f-country" data-source="kpi"></div></div>
-    <div class="sd-field"><span class="sd-lab" id="lab-cls">Product class</span><div class="sd-ms" id="f-cls" data-source="brands"></div></div>
+    <div class="sd-field"><span class="sd-lab" id="lab-cls">Segment</span><div class="sd-ms" id="f-cls" data-source="brands"></div></div>
     <div class="sd-field"><span class="sd-lab" id="lab-scope">Brand</span><div class="sd-ms" id="f-scope" data-source="kpi"></div></div>
     <div class="sd-field"><span class="sd-lab" id="lab-sku">SKU</span><div class="sd-ms" id="f-sku" data-source="skus plan_skus"></div></div>
     <div class="sd-field"><span class="sd-lab" id="lab-channel">Channel</span><div class="sd-ms" id="f-channel" data-source="kpi"></div></div>
@@ -1220,6 +1220,7 @@ dash.calc('bud27_skum', {
 });
 
 dash.calc('bud27_sku', {
+  /* segment: global segment per SKU (Sx, Gx, CHC) from the BUD 27 allocation file; LO-only SKUs take their brand class */
   inputs: ['bud27', 'plan'],
   title: 'BUD 2027 per SKU with CIF prices',
   description: 'Per country, brand and BUD 2027 SKU: BUD 2027 sell-out value (CIF 2027 and CIF 2026) and units, CIF price per unit in local currency for 2026 and 2027 and its change, the price impact in euro, and the matching 2026 SKU in the ACT/BUD/YTG file with its LO 2026 (ACT + YTG). SKU names differ between the two files, so each BUD 2027 SKU was matched by name within the same country and brand; the match score (0 to 1) shows how close the names are. 2026 SKUs with no BUD 2027 line are listed as "Not in BUD 27".',
@@ -1228,7 +1229,7 @@ dash.calc('bud27_sku', {
     for (const r of bud27) {
       const id = r.country + '|' + r.brand + '|' + r.sku;
       let a = acc.get(id);
-      if (!a) { a = { id, country: r.country, brand: r.brand, cls: r.cls, sku: r.sku, launch: r.launch, currency: r.currency, lo_sku: r.lo_sku || '', match: +r.match || null, b27_eur: 0, b27_eur26: 0, b27_units: 0, c26: 0, c27: 0, cu: 0 }; acc.set(id, a); }
+      if (!a) { a = { id, country: r.country, brand: r.brand, cls: r.cls, segment: r.segment || '', sku: r.sku, launch: r.launch, currency: r.currency, lo_sku: r.lo_sku || '', match: +r.match || null, b27_eur: 0, b27_eur26: 0, b27_units: 0, c26: 0, c27: 0, cu: 0 }; acc.set(id, a); }
       const u = +r.units || 0;
       a.b27_eur += +r.eur_cif27 || 0; a.b27_eur26 += +r.eur_cif26 || 0; a.b27_units += u;
       if (+r.cif27_lc > 0) { a.c27 += +r.cif27_lc * Math.max(u, 0.001); a.c26 += (+r.cif26_lc || 0) * Math.max(u, 0.001); a.cu += Math.max(u, 0.001); }
@@ -1244,13 +1245,13 @@ dash.calc('bud27_sku', {
       const l = a.lo_sku ? lo.get(a.country + '|' + a.brand + '|' + a.lo_sku) : null;
       if (l) used.add(a.country + '|' + a.brand + '|' + a.lo_sku);
       const c26 = a.cu ? a.c26 / a.cu : null, c27 = a.cu ? a.c27 / a.cu : null;
-      out.push({ id: a.id, country: a.country, brand: a.brand, cls: a.cls, sku: a.sku, launch: a.launch, currency: a.currency, lo_sku: a.lo_sku, match: a.match,
+      out.push({ id: a.id, country: a.country, brand: a.brand, cls: a.cls, segment: a.segment, sku: a.sku, launch: a.launch, currency: a.currency, lo_sku: a.lo_sku, match: a.match,
         b27_eur: r2(a.b27_eur), b27_eur26: r2(a.b27_eur26), b27_units: r2(a.b27_units), price_eff: c26 > 0 ? r2(a.b27_eur - a.b27_eur26) : null,
         cif26_lc: c26 === null ? null : r4(c26), cif27_lc: c27 === null ? null : r4(c27), price_chg: c26 > 0 ? r4(c27 / c26 - 1) : null,
         lo26_eur: l ? r2(l.eur) : null, lo26_units: l ? r2(l.units) : null,
         g_eur: l && l.eur > 0 ? r4(a.b27_eur / l.eur - 1) : null, g_units: l && l.units > 0 ? r4(a.b27_units / l.units - 1) : null });
     }
-    for (const [k, l] of lo) if (!used.has(k) && (l.eur || l.units)) out.push({ id: k + '|LO', country: l.country, brand: l.brand, cls: l.cls, sku: l.sku, launch: 'Not in BUD 27', currency: '', lo_sku: l.sku, match: null,
+    for (const [k, l] of lo) if (!used.has(k) && (l.eur || l.units)) out.push({ id: k + '|LO', country: l.country, brand: l.brand, cls: l.cls, segment: ({ Specialty: 'Sx', Generic: 'Gx', 'Consumer Health': 'CHC' })[l.cls] || '', sku: l.sku, launch: 'Not in BUD 27', currency: '', lo_sku: l.sku, match: null,
       b27_eur: 0, b27_eur26: 0, b27_units: 0, price_eff: 0, cif26_lc: null, cif27_lc: null, price_chg: null, lo26_eur: r2(l.eur), lo26_units: r2(l.units), g_eur: l.eur > 0 ? -1 : null, g_units: l.units > 0 ? -1 : null });
     return out;
   },
@@ -2313,6 +2314,9 @@ dash.calc('iq_coverage', {
   const cross = (...lists) => lists.reduce((acc, l) => acc.flatMap((a) => l.map((x) => a.concat([x]))), [[]]);
   const isPainSet = (b) => b.length === PAIN.size && b.every((x) => PAIN.has(x));
   let SKUBRAND = new Map(), CLSOF = new Map();
+  const SEGAB = { Specialty: 'Sx', Generic: 'Gx', 'Consumer Health': 'CHC' }, segOf = (cls) => SEGAB[cls] || cls || '';
+  /* SKU-level global segment from BUD 27 (by BUD SKU and by its matched 2026 SKU), brand class otherwise */
+  const skuSeg = (sku, brand) => { const d = dash.data('bud27_sku'); if (d.status === 'ok' && (!skuSeg.m || skuSeg.d !== d.data)) { skuSeg.d = d.data; skuSeg.m = new Map(); for (const r of d.data) if (r.segment) { skuSeg.m.set(r.sku, r.segment); if (r.lo_sku) skuSeg.m.set(r.lo_sku, r.segment); } } return (skuSeg.m && skuSeg.m.get(sku)) || segOf(CLSOF.get(brand)); };
 
   /* The filters, normalised. Every list empty = "all". Keys are the slices the calculations hold. */
   const P = () => {
@@ -2352,15 +2356,29 @@ dash.calc('iq_coverage', {
   /* compact formatter that remembers the full value behind each short label, for the KPI hover tooltip */
   const cmp0 = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
   const FULL = new Map(), fullFmt = (v) => Math.abs(v) >= 100 ? d3.format(',.0f')(v) : d3.format(',.2~f')(v);
-  const cmp = { format: (v) => { const t = cmp0.format(v); if (/[KMBT]$/.test(t) && isFinite(v)) { let st = FULL.get(t); if (!st) FULL.set(t, st = new Set()); st.add(fullFmt(Math.abs(v))); } return t; } };
+  const RECENT = [];
+  const cmp = { format: (v) => { const t = cmp0.format(v); if (/[KMBT]$/.test(t) && isFinite(v)) { const f = fullFmt(Math.abs(v)); let st = FULL.get(t); if (!st) FULL.set(t, st = new Set()); st.add(f); RECENT.push([t, f]); if (RECENT.length > 4000) RECENT.splice(0, 2000); } return t; } };
+  /* when a tile's value, chip or note is written, remember the exact numbers just formatted for it */
+  const stampFull = (el, txt) => {
+    let hit = false;
+    const out = String(txt).replace(/\d+(?:\.\d+)?[KMBT]\b/g, (k) => { for (let i = RECENT.length - 1; i >= 0; i--) if (RECENT[i][0] === k) { hit = true; return RECENT[i][1]; } return k; });
+    if (hit) el.dataset.full = out; else delete el.dataset.full;
+  };
+  {
+    const d0 = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+    if (d0 && d0.set) Object.defineProperty(Node.prototype, 'textContent', { configurable: true, enumerable: d0.enumerable, get: d0.get, set(v) {
+      d0.set.call(this, v);
+      if (this.nodeType === 1 && typeof v === 'string' && this.classList && (this.classList.contains('sd-big') || this.classList.contains('sd-sub') || this.classList.contains('sd-chip'))) stampFull(this, v);
+    } });
+  }
   const fullText = (txt) => { let hit = false; const out = String(txt || '').replace(/\d+(?:\.\d+)?[KMBT]\b/g, (k) => { const st = FULL.get(k); if (st && st.size === 1) { hit = true; return [...st][0]; } return k; }); return hit ? out : null; };
   const fTip = document.createElement('div'); fTip.className = 'sd-fulltip'; fTip.hidden = true; fTip.setAttribute('role', 'tooltip');
   (root.body || root).append(fTip);
   let fCard = null;
   const showFull = (card, ev) => {
     const parts = []; const bigs = card.querySelectorAll('.sd-big');
-    bigs.forEach((b) => { const f = fullText(b.textContent.trim()); if (f) parts.push(['b', f]); });
-    card.querySelectorAll('.sd-sub, .sd-chip, .sd-note').forEach((x) => { const f = fullText(x.textContent.replace(/\s+/g, ' ').trim()); if (f) parts.push(['l', f]); });
+    bigs.forEach((b) => { const f = b.dataset.full || fullText(b.textContent.trim()); if (f) parts.push(['b', f]); });
+    card.querySelectorAll('.sd-sub, .sd-chip, .sd-note').forEach((x) => { const f = x.dataset.full || fullText(x.textContent.replace(/\s+/g, ' ').trim()); if (f) parts.push(['l', f]); });
     if (!parts.length) { fTip.hidden = true; return; }
     fTip.replaceChildren(); const h = document.createElement('div'); h.className = 'h'; h.textContent = (card.querySelector('h3') || {}).textContent || ''; fTip.append(h);
     for (const [k, t] of parts) { const e2 = document.createElement(k === 'b' ? 'b' : 'div'); if (k === 'l') e2.className = 'l'; e2.textContent = t; fTip.append(e2); }
@@ -2372,7 +2390,20 @@ dash.calc('iq_coverage', {
     if (x + tw > vw - 8) x = Math.max(8, vw - tw - 8); if (y + th > vh - 8) y = Math.max(8, (ev && ev.clientY != null ? ev.clientY : r.top) - th - 12);
     fTip.style.left = x + 'px'; fTip.style.top = y + 'px';
   };
-  root.addEventListener('mouseover', (ev) => { const c = ev.target.closest && ev.target.closest('.sd-kpi'); if (c && c !== fCard) { fCard = c; showFull(c, ev); } else if (!c && fCard) { fCard = null; fTip.hidden = true; } });
+  /* bars and slices carrying data-tip ("title|line|line") show their full values in the same tooltip */
+  const fullV = (m, v) => v == null || !isFinite(v) ? '—' : (v < 0 ? '−' : '') + (m === 'eur' ? '€' : m === 'loc' ? curCode + ' ' : '') + fullFmt(Math.abs(v));
+  const fullS = (m, v) => (v > 0 ? '+' : '') + fullV(m, v);
+  let fBar = null;
+  const showBarTip = (el, ev) => {
+    const parts = String(el.getAttribute('data-tip')).split('|'); fTip.replaceChildren();
+    const h = document.createElement('div'); h.className = 'h'; h.textContent = parts[0]; fTip.append(h);
+    parts.slice(1).forEach((t, i) => { const e2 = document.createElement(i ? 'div' : 'b'); if (i) e2.className = 'l'; e2.textContent = t; fTip.append(e2); });
+    fTip.hidden = false; placeFull(el, ev);
+  };
+  root.addEventListener('mouseover', (ev) => { const b = ev.target.closest && ev.target.closest('[data-tip]'); if (b) { fBar = b; fCard = null; showBarTip(b, ev); } else if (fBar) { fBar = null; fTip.hidden = true; } });
+  root.addEventListener('mousemove', (ev) => { if (fBar && !fTip.hidden) placeFull(fBar, ev); });
+  root.addEventListener('click', (ev) => { const b = ev.target.closest && ev.target.closest('[data-tip]'); if (b) showBarTip(b, ev); });
+  root.addEventListener('mouseover', (ev) => { if (fBar) return; const c = ev.target.closest && ev.target.closest('.sd-kpi'); if (c && c !== fCard) { fCard = c; showFull(c, ev); } else if (!c && fCard) { fCard = null; fTip.hidden = true; } });
   root.addEventListener('mousemove', (ev) => { if (fCard && !fTip.hidden) placeFull(fCard, ev); });
   root.addEventListener('mouseleave', () => { fCard = null; fTip.hidden = true; });
   root.addEventListener('click', (ev) => { const c = ev.target.closest && ev.target.closest('.sd-kpi'); if (c) { if (fCard === c && !fTip.hidden) { fTip.hidden = true; fCard = null; } else { fCard = c; showFull(c, ev); } } else if (fCard) { fCard = null; fTip.hidden = true; } });
@@ -2661,7 +2692,7 @@ dash.calc('iq_coverage', {
     const bc = dash.data('brands');
     const clsOf = new Map(bc.status === 'ok' ? bc.data.map((r) => [r.brand, r.cls]) : []);
     if (clsOf.size) CLSOF = clsOf;
-    fCls.update([...new Set(clsOf.values())].sort().map((c) => [c, c]), p.classes, false);
+    fCls.update([...new Set(clsOf.values())].sort().map((c) => [c, segOf(c) && segOf(c) !== c ? c + ' (' + segOf(c) + ')' : c]), p.classes, false);
     const base = new Map();
     for (const r of k.data) if (r.channel === 'All' && r.region === 'All' && p.CK.includes(r.country) && !r.scope.startsWith('SKU:') && !r.scope.startsWith('CLASS:') && r.scope !== 'All brands' && r.scope !== 'Pain portfolio' && p.clsOk(clsOf.get(r.scope))) base.set(r.scope, (base.get(r.scope) || 0) + r.ytd26_eur);
     fScope.update([...base.entries()].sort((a, b) => b[1] - a[1]).map(([b]) => [b, b]), arr(raw.scope).filter((b) => b !== 'All brands' && b !== 'Pain portfolio').concat(arr(raw.scope).includes('Pain portfolio') ? [...PAIN] : []), false);
@@ -2870,7 +2901,8 @@ dash.calc('iq_coverage', {
       const n = g.bars.length, top = (bi) => y(Math.max(0, g.bars[bi].v || 0));
       g.bars.forEach((b, bi) => {
         if (b.v == null) return;
-        svg.append('rect').attr('x', bx(gi, bi, n) + bp / 2).attr('width', bw - bp).attr('y', top(bi)).attr('height', Math.max(1, y(0) - top(bi))).attr('rx', 3).style('fill', b.c || (bi ? 'var(--sd-c26)' : 'var(--sd-c25)'));
+        svg.append('rect').attr('x', bx(gi, bi, n) + bp / 2).attr('width', bw - bp).attr('y', top(bi)).attr('height', Math.max(1, y(0) - top(bi))).attr('rx', 3).style('fill', b.c || (bi ? 'var(--sd-c26)' : 'var(--sd-c25)')).style('cursor', 'pointer')
+          .attr('data-tip', g.name + (b.lab || o.names?.[bi] ? ' · ' + (b.lab || o.names[bi]) : '') + '|' + (o.fullF ? o.fullF(b.v) : fullV(m, b.v)));
         { const xx = bx(gi, bi, n) + bw / 2, yy = top(bi) - 5, t = svg.append('text').attr('class', 'sd-pc-lbl').attr('text-anchor', 'middle').attr('x', xx).attr('y', yy).text(fmt(b.v)); if (lmode === 1) t.style('font-size', '9.5px'); else if (lmode === 2) t.style('font-size', '9.5px').attr('text-anchor', 'start').attr('x', xx + 3).attr('transform', `rotate(-90 ${xx + 3} ${yy})`); lbls.push(t); }
         if (b.lab) svg.append('text').attr('class', 'sd-pc-sub').attr('text-anchor', 'middle').attr('x', bx(gi, bi, n) + bw / 2).attr('y', H - mb + 16).text(b.lab);
       });
@@ -3247,7 +3279,8 @@ dash.calc('iq_coverage', {
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Split by channel');
     const arcs = d3.pie().sort(null).value((o) => Math.max(0, o.v))(items), arc = d3.arc().innerRadius(R * 0.55).outerRadius(R);
     const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
-    g.selectAll('path').data(arcs).join('path').attr('d', arc).style('fill', (a, i) => PIE[i % PIE.length]).style('stroke', 'var(--color-panel)').style('stroke-width', 2);
+    g.selectAll('path').data(arcs).join('path').attr('d', arc).style('fill', (a, i) => PIE[i % PIE.length]).style('stroke', 'var(--color-panel)').style('stroke-width', 2)
+      .style('cursor', 'pointer').attr('data-tip', (a) => (a.data.name || a.data.label || a.data.k || '') + '|' + fullV(m, a.data.v) + '|' + shr(Math.max(0, a.data.v) / tot) + ' of total');
     g.selectAll('text').data(arcs.filter((a) => a.endAngle - a.startAngle > 0.35)).join('text').attr('class', 'sd-lbl').attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
       .attr('transform', (a) => `translate(${arc.centroid(a)})`).style('fill', '#fff').style('font-size', '11px').text((a) => d3.format('.0%')(a.data.v / tot));
     g.append('text').attr('class', 'sd-evo-lbl').attr('text-anchor', 'middle').attr('y', -4).text(uniFmt(m, [tot])(tot));
@@ -3418,16 +3451,16 @@ dash.calc('iq_coverage', {
     const m = p.metric, bt = $('#brand-table');
     const br = brandRows(p, false);
     if (br.d.status === 'ok') {
-      const rows = br.rows.filter((r) => r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]);
-      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-sm' }, ...numCols(m, 'Share')], sortState.brand, render, br.exact, p.ds('brands'));
+      const rows = br.rows.filter((r) => r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]).map((r) => ({ ...r, seg: segOf(r.cls || CLSOF.get(r.brand)) }));
+      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, { k: 'seg', f: 'seg', label: 'Segment', text: true }, ...numCols(m, 'Share')], sortState.brand, render, br.exact, p.ds('brands'));
       bt.querySelectorAll('tbody tr').forEach((tr) => tr.classList.toggle('sel', p.brands.includes(tr.dataset.k.split('|').pop())));
     } else bt.tBodies[0].replaceChildren();
     const st = $('#sku-table'), sr = skuRows(p);
     $('#sku-title').textContent = 'SKUs · ' + (p.brands.length ? (isPainSet(p.brands) ? 'Pain portfolio' : p.brands.length <= 2 ? p.brands.join(' + ') : p.brands.length + ' brands') : p.classes.length ? p.classes.join(' + ') : 'All brands');
     if (sr.d.status === 'ok') {
       const q = skuSearch.value.trim().toLowerCase();
-      lastSku = sr.rows.filter((r) => (r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q))).map((r) => ({ ...r, cls: CLSOF.get(r.brand) || '' }));
-      drawTable(st, lastSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-md' }, ...numCols(m, 'Share')], sortState.sku, render, sr.exact, p.ds('skus'));
+      lastSku = sr.rows.filter((r) => (r['fy25_' + m] || r['ytd25_' + m] || r['ytd26_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q))).map((r) => ({ ...r, cls: CLSOF.get(r.brand) || '', seg: skuSeg(r.sku, r.brand) }));
+      drawTable(st, lastSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, { k: 'seg', f: 'seg', label: 'Segment', text: true }, ...numCols(m, 'Share')], sortState.sku, render, sr.exact, p.ds('skus'));
       st.querySelectorAll('tbody tr').forEach((tr) => { const r = lastSku.find((x) => x.id === tr.dataset.k); tr.classList.toggle('sel', !!r && p.skus.includes(r.sku)); });
     } else st.tBodies[0].replaceChildren();
   };
@@ -3615,16 +3648,16 @@ dash.calc('iq_coverage', {
     drawPlanGap(p, m);
     const bt = $('#planbrand-table'), br = planBrandRows(p, p.PLK);
     if (br.d.status === 'ok') {
-      const rows = br.rows.filter((r) => r['fy25_' + m] || r['act26_' + m] || r['bud_fy_' + m] || r['ytg_' + m]);
-      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, ...planCols(m)], sortState.pbrand, render, br.exact, 'plan_brands');
+      const rows = br.rows.filter((r) => r['fy25_' + m] || r['act26_' + m] || r['bud_fy_' + m] || r['ytg_' + m]).map((r) => ({ ...r, seg: segOf(CLSOF.get(r.brand) || r.cls) }));
+      drawTable(bt, rows, [{ k: 'name', f: 'brand', label: 'Brand', cls: 'nm', text: true }, { k: 'seg', f: 'seg', label: 'Segment', text: true }, ...planCols(m)], sortState.pbrand, render, br.exact, 'plan_brands');
       bt.querySelectorAll('tbody tr').forEach((tr) => tr.classList.toggle('sel', p.brands.includes(tr.dataset.k.split('|').pop())));
     } else bt.tBodies[0].replaceChildren();
     const st = $('#plansku-table'), sr = planSkuRows(p, p.PLK);
     $('#planskus-title').textContent = 'SKUs: ACT, BUD, YTG and LO · ' + selName(p).split(', ')[1];
     if (sr.d.status === 'ok') {
       const q = planSearch.value.trim().toLowerCase();
-      lastPlanSku = sr.rows.filter((r) => (r['fy25_' + m] || r['act26_' + m] || r['bud_fy_' + m] || r['ytg_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q)));
-      drawTable(st, lastPlanSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, ...planCols(m)], sortState.psku, render, sr.exact, 'plan_skus');
+      lastPlanSku = sr.rows.filter((r) => (r['fy25_' + m] || r['act26_' + m] || r['bud_fy_' + m] || r['ytg_' + m]) && (!q || (r.sku + ' ' + r.brand).toLowerCase().includes(q))).map((r) => ({ ...r, seg: skuSeg(r.sku, r.brand) }));
+      drawTable(st, lastPlanSku, [{ k: 'name', f: 'sku', label: 'SKU', cls: 'nm', text: true }, { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' }, { k: 'seg', f: 'seg', label: 'Segment', text: true }, ...planCols(m)], sortState.psku, render, sr.exact, 'plan_skus');
       st.querySelectorAll('tbody tr').forEach((tr) => { const r = lastPlanSku.find((x) => x.id === tr.dataset.k); tr.classList.toggle('sel', !!r && p.skus.includes(r.sku)); });
       $('#plansku-count').textContent = int(lastPlanSku.length) + (lastPlanSku.length === 1 ? ' SKU' : ' SKUs');
     } else { st.tBodies[0].replaceChildren(); $('#plansku-count').textContent = ''; }
@@ -3679,7 +3712,7 @@ dash.calc('iq_coverage', {
     $('#iq-measure').value = p.metric === 'units' ? 'units' : 'eur';
     const allB = rows.filter((r) => r.stada && r.nfc === 'All' && r.channel === 'All');
     const classes = [...new Set(allB.map((r) => r.cls))].sort();
-    iqCls.update(classes.map((c) => [c, c]), p.classes, false);
+    iqCls.update(classes.map((c) => [c, segOf(c) && segOf(c) !== c ? c + ' (' + segOf(c) + ')' : c]), p.classes, false);
     const brands = allB.filter((r) => p.clsOk(r.cls));
     const bsum = d3.rollups(brands, (v) => d3.sum(v, (r) => r.mat26_eur), (r) => r.label).sort((a, b) => b[1] - a[1]);
     fillSelect($('#iq-brand'), [['', 'All STADA brands (overview)'], ...bsum.map(([b]) => [b, b])], q.mbrand);
@@ -3767,9 +3800,10 @@ dash.calc('iq_coverage', {
     if (d.status !== 'ok') { t.tBodies[0].replaceChildren(); return; }
     const rows = d.data, miss = rows.filter((r) => r.status === 'Not in IQVIA'), inn = rows.filter((r) => r.status === 'In IQVIA');
     $('#iq-cov-note').textContent = inn.length + ' of ' + (inn.length + miss.length) + ' STADA brands with Saudi sales are in the IQVIA data' + (miss.length ? '. Not in IQVIA: ' + miss.sort((a, b) => b.act26_eur - a.act26_eur).map((r) => r.brand).join(', ') + ' (IQVIA does not audit them, so they have no market view).' : '.') + ' Sorted by sales; brands with no sales yet come last.';
+    for (const r of rows) r.seg = segOf(r.cls);
     drawTable(t, rows, [
       { k: 'brand', f: 'brand', label: 'Brand', cls: 'nm', text: true },
-      { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-sm' },
+      { k: 'cls', f: 'seg', label: 'Segment', text: true, cls: 'hide-sm' },
       { k: 'st', f: 'status', label: 'In IQVIA?', text: true, render: (td, r) => { const sp = document.createElement('span'); sp.className = 'sd-tag' + (r.status === 'Not in IQVIA' ? ' new' : ''); sp.textContent = r.status; td.append(sp); } },
       { k: 'a26', f: 'act26_eur', label: 'ACT YTD 2026', fmt: tab('eur'), cls: 'n' },
       { k: 'a25', f: 'act25_eur', label: 'ACT 2025', fmt: tab('eur'), cls: 'n hide-sm' },
@@ -4902,7 +4936,8 @@ dash.calc('iq_coverage', {
       svg.append('line').attr('class', 'sd-axis').attr('x1', 0).attr('x2', W).attr('y1', y(0)).attr('y2', y(0));
       svg.append('g').selectAll('rect').data(bars).join('rect').attr('x', (b) => x(b.lab)).attr('width', x.bandwidth()).attr('rx', 3)
         .attr('y', (b) => y(Math.max(b.y0, b.y1))).attr('height', (b) => Math.max(1, Math.abs(y(b.y0) - y(b.y1))))
-        .style('fill', (b) => b.kind === 'total' ? (b.lab === 'BUD 2027' ? 'var(--sd-c26)' : 'var(--sd-c25)') : b.v >= 0 ? 'var(--sd-up)' : 'var(--sd-down)').style('opacity', (b) => b.kind === 'total' ? 1 : 0.85);
+        .style('fill', (b) => b.kind === 'total' ? (b.lab === 'BUD 2027' ? 'var(--sd-c26)' : 'var(--sd-c25)') : b.v >= 0 ? 'var(--sd-up)' : 'var(--sd-down)').style('opacity', (b) => b.kind === 'total' ? 1 : 0.85)
+        .style('cursor', 'pointer').attr('data-tip', (b) => b.lab + '|' + (b.kind === 'total' ? fullV(u ? 'units' : 'eur', b.v) : fullS(u ? 'units' : 'eur', b.v)) + (b.kind === 'total' ? '' : '|from ' + fullV(u ? 'units' : 'eur', b.y0) + ' to ' + fullV(u ? 'units' : 'eur', b.y1)));
       for (let i = 0; i < bars.length - 1; i++) svg.append('line').attr('x1', x(bars[i].lab) + x.bandwidth()).attr('x2', x(bars[i + 1].lab)).attr('y1', y(bars[i].y1)).attr('y2', y(bars[i].y1)).style('stroke', 'var(--color-fg-muted)').style('stroke-dasharray', '3 3');
       svg.append('g').selectAll('text').data(bars).join('text').attr('class', 'sd-barval').attr('text-anchor', 'middle').attr('x', (b) => x(b.lab) + x.bandwidth() / 2)
         .attr('y', (b) => y(Math.max(b.y0, b.y1)) - 5).text((b) => b.kind === 'total' ? big(u ? 'units' : 'eur', b.v) : sbig(u ? 'units' : 'eur', b.v));
@@ -4925,7 +4960,7 @@ dash.calc('iq_coverage', {
       const yy = (i) => 4 + i * rh;
       nl.attr('x', 0).attr('y', (o, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
       svg.append('line').attr('class', 'sd-axis').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', H);
-      svg.append('g').selectAll('rect').data(pr).join('rect').attr('x', (o) => Math.min(x(0), x(o.price))).attr('width', (o) => Math.max(2, Math.abs(x(o.price) - x(0))))
+      svg.append('g').selectAll('rect').data(pr).join('rect').attr('data-tip', (o) => o.brand + ' · CIF price impact|' + fullS('eur', o.price) + '|Price change ' + pct(o.pchg)).style('cursor', 'pointer').attr('x', (o) => Math.min(x(0), x(o.price))).attr('width', (o) => Math.max(2, Math.abs(x(o.price) - x(0))))
         .attr('y', (o, i) => yy(i) + 5).attr('height', rh - 10).attr('rx', 3).style('fill', (o) => o.price >= 0 ? 'var(--sd-up)' : 'var(--sd-down)');
       vl.attr('x', (o) => o.price >= 0 ? x(o.price) + 6 : x(o.price) - 6).attr('text-anchor', (o) => o.price >= 0 ? 'start' : 'end').attr('y', (o, i) => yy(i) + rh / 2).attr('dominant-baseline', 'middle');
     } else { const n = document.createElement('p'); n.className = 'sd-note'; n.textContent = PT === 'new' ? 'New launches have no 2026 CIF price, so there is no price change to show.' : 'No CIF price change for this selection.'; cb.append(n); }
@@ -4944,9 +4979,10 @@ dash.calc('iq_coverage', {
     }
 
     /* brand table */
+    for (const o of byB) o.seg = segOf(o.cls);
     lastB27 = drawTable($('#b27-brands'), byB, [
       { k: 'brand', f: 'brand', label: 'Brand', cls: 'nm', text: true },
-      { k: 'cls', f: 'cls', label: 'Class', text: true, cls: 'hide-md' },
+      { k: 'seg', f: 'seg', label: 'Segment', text: true },
       { k: 'fy', f: 'fy', label: 'FY 2025', fmt: tab(m), cls: 'n hide-md' },
       { k: 'lo', f: 'lo', label: 'LO 2026', fmt: tab(m), cls: 'n' },
       ...(u ? [] : [{ k: 'price', f: 'price', label: 'CIF impact', fmt: stab('eur'), cls: 'n hide-sm', tone: true }]),
@@ -4970,6 +5006,7 @@ dash.calc('iq_coverage', {
       ...(p.countries.length === 1 ? [] : [{ k: 'country', f: 'country', label: 'Country', text: true, cls: 'hide-sm' }]),
       { k: 'brand', f: 'brand', label: 'Brand', text: true, cls: 'hide-sm' },
       { k: 'sku', f: 'sku', label: 'SKU (BUD 2027)', cls: 'nm', text: true },
+      { k: 'seg', f: 'segment', label: 'Segment', text: true },
       { k: 'launch', f: 'launch', label: 'Type', text: true, cls: 'hide-md' },
       { k: 'lo_sku', f: 'lo_sku', label: '2026 SKU', text: true, cls: 'hide-md' },
       { k: 'lo', f: 'lo', label: 'LO 2026', fmt: (v) => v == null ? '—' : tab(m)(v), cls: 'n' },
@@ -5140,7 +5177,7 @@ dash.calc('iq_coverage', {
 
   /* ---- render ---- */
   function render() {
-    FULL.clear(); fTip.hidden = true; fCard = null;
+    FULL.clear(); RECENT.length = 0; fTip.hidden = true; fCard = null;
     const p = P();
     const kd = dash.data('kpi');
     LM = kd.status === 'ok' && kd.data[0] ? kd.data[0].latest_month : LM;
